@@ -118,6 +118,31 @@ export const de = {
       duplicateId: "Die Datei enthält doppelte Einträge.",
     },
   },
+  demo: {
+    banner: "Demo-Modus – Beispieldaten",
+    start: "Demo ansehen",
+    startFooter: "Demo starten",
+    reset: "Demo zurücksetzen",
+    end: "Demo beenden",
+    resetTitle: "Demo zurücksetzen?",
+    resetText:
+      "Alle Änderungen im Demo-Modus gehen verloren und die Beispieldaten werden neu erzeugt. Deine echten Daten sind davon nicht betroffen.",
+    // Sample texts, one entry per demo application (order matters).
+    applications: [
+      { role: "Product Designer", workation: "unklar", salary: "60–70 k €", nextStep: "Bewerbung abschicken", notes: "Spannendes Datenprodukt, kleines Team. Portfolio-Case zu Dashboards passt gut.", history: [] },
+      { role: "UX Designer", workation: null, salary: null, nextStep: "Gehaltsvorstellung recherchieren", notes: null, history: [] },
+      { role: "Senior UX Designer", workation: "30 Tage EU", salary: "65–75 k €", nextStep: "Nachfassen per E-Mail", notes: "Hybrid mit 2 Bürotagen in München.", history: [] },
+      { role: "UI Designer", workation: null, salary: "55 k €", nextStep: null, notes: "Vor Ort, eher Plan B.", history: [] },
+      { role: "Product Designer (Health)", workation: "90 Tage EU", salary: "70–80 k €", nextStep: "Erstgespräch 14:00 per Video", notes: "Fragen vorbereiten: Teamgröße, Design-System, Remote-Kultur.", history: ["Eingang der Bewerbung bestätigt, Rückmeldung in ca. 2 Wochen.", "Termin über Kalenderlink gebucht."] },
+      { role: "Design Lead", workation: "unklar", salary: "80–90 k €", nextStep: "Rückruf Personalvermittlung", notes: "Über Personalvermittlung, Kunde ist noch anonym.", history: ["Telefonat: Remote-Anteil 3 Tage, Workation muss mit dem Kunden geklärt werden."] },
+      { role: "Senior Product Designer", workation: "60 Tage weltweit", salary: "75–85 k €", nextStep: "Case präsentieren", notes: "Top-Favorit. Starkes Design-Team, 100 % remote.", history: ["Case erhalten: Onboarding-Flow für neue Nutzer überarbeiten.", "Case gut angekommen, Einladung zur Präsentation."] },
+      { role: "UX Researcher", workation: null, salary: "60–65 k €", nextStep: "Gespräch mit Teamlead", notes: null, history: [] },
+      { role: "Product Designer", workation: "90 Tage EU", salary: "72 k € + Bonus", nextStep: "Angebot prüfen, Antwort bis Freitag", notes: "Angebot liegt vor. Vergleichen mit Wolkenfabrik.", history: ["Mündliches Angebot: 72 k € + 10 % Bonus, Start in 6 Wochen."] },
+      { role: "Product Designer", workation: "60 Tage EU", salary: "70 k €", nextStep: null, notes: "Zugesagt.", history: ["Vertrag unterschrieben."] },
+      { role: "Interaction Designer", workation: null, salary: null, nextStep: null, notes: null, history: ["Absage: andere Kandidatin mit mehr Branchenerfahrung."] },
+      { role: "UX/UI Designer", workation: null, salary: "50–55 k €", nextStep: null, notes: null, history: ["Selbst zurückgezogen: kein Remote möglich."] },
+    ],
+  },
   theme: {
     toLight: "Zu hell wechseln",
     toDark: "Zu dunkel wechseln",

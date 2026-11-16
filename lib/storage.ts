@@ -8,9 +8,17 @@ import type {
 } from "./types";
 
 // Browser storage layer. All reads and writes of app data go through here.
+// Real data and demo data live under separate keys and never mix; the
+// active mode decides which one is read and written.
 
-const STORAGE_KEY = "bewerbungstracker:data";
+const KEYS = {
+  real: "bewerbungstracker:data",
+  demo: "bewerbungstracker:demo",
+  mode: "bewerbungstracker:mode",
+} as const;
 export const SCHEMA_VERSION = 1;
+
+export type AppMode = "real" | "demo";
 
 export type AppData = {
   schemaVersion: number;
@@ -24,30 +32,52 @@ const EMPTY: AppData = {
   events: [],
 };
 
-// Cached snapshot: useSyncExternalStore requires the same object
-// reference as long as the data has not changed.
-let cache: AppData | null = null;
+// Cached snapshots: useSyncExternalStore requires the same object
+// reference as long as nothing has changed.
+let modeCache: AppMode | null = null;
+let dataCache: AppData | null = null;
 const listeners = new Set<() => void>();
 
+function notify() {
+  listeners.forEach((listener) => listener());
+}
+
+function readMode(): AppMode {
+  if (!modeCache) {
+    modeCache =
+      window.localStorage.getItem(KEYS.mode) === "demo" ? "demo" : "real";
+  }
+  return modeCache;
+}
+
 function read(): AppData {
-  if (cache) return cache;
-  const raw = window.localStorage.getItem(STORAGE_KEY);
-  cache = raw ? (JSON.parse(raw) as AppData) : EMPTY;
-  return cache;
+  if (dataCache) return dataCache;
+  const raw = window.localStorage.getItem(KEYS[readMode()]);
+  dataCache = raw ? (JSON.parse(raw) as AppData) : EMPTY;
+  return dataCache;
 }
 
 function write(data: AppData) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  cache = data;
-  listeners.forEach((listener) => listener());
+  window.localStorage.setItem(KEYS[readMode()], JSON.stringify(data));
+  dataCache = data;
+  notify();
+}
+
+function setMode(mode: AppMode) {
+  window.localStorage.setItem(KEYS.mode, mode);
+  modeCache = mode;
+  dataCache = null;
+  notify();
 }
 
 function subscribe(listener: () => void) {
   listeners.add(listener);
   // Keep other open tabs in sync.
+  const keys: (string | null)[] = Object.values(KEYS);
   const onStorage = (e: StorageEvent) => {
-    if (e.key !== STORAGE_KEY) return;
-    cache = null;
+    if (!keys.includes(e.key)) return;
+    modeCache = null;
+    dataCache = null;
     listener();
   };
   window.addEventListener("storage", onStorage);
@@ -57,10 +87,36 @@ function subscribe(listener: () => void) {
   };
 }
 
-// React hook: returns the current data and re-renders on every change.
+// React hook: returns the active data and re-renders on every change.
 // During the static build (no window) it returns the empty state.
 export function useAppData(): AppData {
   return useSyncExternalStore(subscribe, read, () => EMPTY);
+}
+
+// React hook: the active mode ("real" during the static build).
+export function useAppMode(): AppMode {
+  return useSyncExternalStore(subscribe, readMode, () => "real");
+}
+
+// Switches to demo mode. Existing demo data is kept; if there is none,
+// the given sample data is stored first.
+export function startDemo(createSample: () => AppData) {
+  if (!window.localStorage.getItem(KEYS.demo)) {
+    window.localStorage.setItem(KEYS.demo, JSON.stringify(createSample()));
+  }
+  setMode("demo");
+}
+
+// Replaces the demo data with fresh sample data.
+export function resetDemo(createSample: () => AppData) {
+  window.localStorage.setItem(KEYS.demo, JSON.stringify(createSample()));
+  dataCache = null;
+  notify();
+}
+
+// Back to the real data, which demo mode never touched.
+export function endDemo() {
+  setMode("real");
 }
 
 const noopSubscribe = () => () => {};
@@ -94,7 +150,7 @@ export function addApplication(input: NewApplication): Application {
 }
 
 // Which event type a status change is logged as.
-const STATUS_EVENT_TYPE: Record<Status, EventType> = {
+export const STATUS_EVENT_TYPE: Record<Status, EventType> = {
   discovered: "note",
   applied: "applied",
   first_interview: "interview",

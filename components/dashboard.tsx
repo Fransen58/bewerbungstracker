@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { NewApplicationDialog } from "@/components/application-dialog";
-import { EmptyState } from "@/components/empty-state";
+import { NoApplications } from "@/components/no-applications";
 import { StatusBadge, StatusDot } from "@/components/status-badge";
 import { formatDate, todayISO } from "@/lib/date";
 import {
@@ -25,9 +24,7 @@ export function Dashboard() {
 
   if (applications.length === 0) {
     return (
-      <EmptyState text={t.empty.applications}>
-        <NewApplicationDialog trigger="full" />
-      </EmptyState>
+      <NoApplications />
     );
   }
 

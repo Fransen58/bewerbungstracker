@@ -25,8 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { EmptyState } from "@/components/empty-state";
-import { NewApplicationDialog } from "@/components/application-dialog";
+import { NoApplications } from "@/components/no-applications";
 import { StatusBadge, StatusDot } from "@/components/status-badge";
 import { formatDate, isOverdue } from "@/lib/date";
 import { changeStatus, useAppData, useStorageReady } from "@/lib/storage";
@@ -53,9 +52,7 @@ export function Board() {
 
   if (applications.length === 0) {
     return (
-      <EmptyState text={t.empty.applications}>
-        <NewApplicationDialog trigger="full" />
-      </EmptyState>
+      <NoApplications />
     );
   }
 

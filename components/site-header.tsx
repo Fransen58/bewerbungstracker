@@ -13,6 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { NewApplicationDialog } from "@/components/application-dialog";
+import { DemoBanner } from "@/components/demo-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { t } from "@/messages";
 
@@ -61,6 +62,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 bg-gradient-to-b from-background from-60% to-background/0 backdrop-blur-sm">
+      <DemoBanner />
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-4 md:px-8">
         <Link
           href="/"

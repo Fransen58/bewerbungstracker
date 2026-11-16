@@ -13,8 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { NoApplications } from "@/components/no-applications";
 import { EmptyState } from "@/components/empty-state";
-import { NewApplicationDialog } from "@/components/application-dialog";
 import { StatusBadge } from "@/components/status-badge";
 import { formatDate, isOverdue } from "@/lib/date";
 import { useAppData, useStorageReady } from "@/lib/storage";
@@ -90,9 +90,7 @@ export function ApplicationTable() {
 
   if (applications.length === 0) {
     return (
-      <EmptyState text={t.empty.applications}>
-        <NewApplicationDialog trigger="full" />
-      </EmptyState>
+      <NoApplications />
     );
   }
 

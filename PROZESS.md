@@ -215,3 +215,29 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 **Learnings:**
 - Eine Datei von außen ist nie vertrauenswürdig. Die Prüfung schützt nicht nur vor kaputten Daten, sondern zum Beispiel auch vor manipulierten Links wie `javascript:…`.
 - Fehler als Codes statt als fertige Texte zu liefern, hält die Logik sprachunabhängig. Das passt zur Zweisprachigkeit der App.
+
+## Story 7: Demo-Modus
+
+**Ziel:** Besucher können die App mit einem Klick und Beispieldaten ausprobieren, ohne etwas einzugeben. Die echten Daten werden dabei weder überschrieben noch vermischt.
+
+**Vorgehen:**
+- Die Storage-Schicht kennt jetzt zwei Datenbestände unter getrennten Schlüsseln (`bewerbungstracker:data` und `bewerbungstracker:demo`) und einen Modus-Schlüssel. Alle Lese- und Schreibzugriffe gehen automatisch an den aktiven Bestand, die Komponenten mussten dafür nicht geändert werden.
+- Beispieldaten in `lib/demo-data.ts`: 12 erfundene Bewerbungen über alle 8 Status, mit Verlauf. Die Daten werden relativ zum heutigen Tag erzeugt, damit „Diese Woche fällig“ immer aktuell wirkt, mit einem überfälligen und einem heute fälligen Schritt.
+- Die Texte der Beispieldaten liegen zweisprachig in den Übersetzungsdateien (Variante A). Die Demo entsteht in der aktiven Sprache.
+- Banner in der Kopfzeile mit „Demo zurücksetzen“ (mit Rückfrage) und „Demo beenden“. Gestartet wird über „Demo ansehen“ im leeren Zustand und „Demo starten“ in der Fußzeile.
+- Die drei identischen leeren Zustände wurden zu einer Komponente `NoApplications` zusammengefasst.
+
+**Entscheidungen:**
+- Ein erneuter Start behält vorhandene Demo-Daten. Frische Beispieldaten gibt es über „Demo zurücksetzen“.
+- Der Demo-Modus bleibt nach dem Neuladen aktiv.
+- Links und E-Mails der Beispieldaten nutzen `example.com`, eine Domain, die für Beispiele reserviert ist. Firmen und Personen sind frei erfunden.
+- Das Backup arbeitet im Demo-Modus mit den Demo-Daten. Das Banner macht den Modus deutlich.
+
+**Probleme:**
+- Die Zuordnung Status → Event-Typ wurde auch für die Beispieldaten gebraucht. Statt sie zu kopieren, wird sie jetzt aus der Storage-Schicht exportiert.
+
+**Prüfung:** Lint, Typprüfung und Build fehlerfrei. In Node geprüft: Die Beispieldaten bestehen die Backup-Prüfung auf Deutsch und Englisch und decken alle Status sowie fällige und überfällige Schritte ab. Die echten Daten bleiben über Starten, Ändern, Zurücksetzen und Beenden hinweg unverändert. Manuell getestet und erfüllt: Start aus echten Daten und aus dem leeren Zustand, Verlauf der Beispiele, Ändern und Zurücksetzen, Beenden mit unveränderten echten Daten, Neuladen, Handy-Ansicht.
+
+**Learnings:**
+- Weil alle Datenzugriffe von Anfang an durch eine eigene Storage-Schicht laufen, war der Demo-Modus eine Änderung an einer einzigen Stelle.
+- Beispieldaten mit festen Daten veralten. Relative Daten halten eine Demo dauerhaft glaubwürdig.

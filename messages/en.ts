@@ -120,6 +120,31 @@ export const en: Messages = {
       duplicateId: "The file contains duplicate entries.",
     },
   },
+  demo: {
+    banner: "Demo mode – sample data",
+    start: "Try the demo",
+    startFooter: "Start demo",
+    reset: "Reset demo",
+    end: "End demo",
+    resetTitle: "Reset demo?",
+    resetText:
+      "All changes made in demo mode will be lost and the sample data will be recreated. Your real data is not affected.",
+    // Sample texts, one entry per demo application (order matters).
+    applications: [
+      { role: "Product Designer", workation: "unclear", salary: "€60–70k", nextStep: "Send application", notes: "Exciting data product, small team. Dashboard portfolio case is a good fit.", history: [] },
+      { role: "UX Designer", workation: null, salary: null, nextStep: "Research salary expectations", notes: null, history: [] },
+      { role: "Senior UX Designer", workation: "30 days EU", salary: "€65–75k", nextStep: "Follow up by email", notes: "Hybrid with 2 office days in Munich.", history: [] },
+      { role: "UI Designer", workation: null, salary: "€55k", nextStep: null, notes: "On-site, more of a plan B.", history: [] },
+      { role: "Product Designer (Health)", workation: "90 days EU", salary: "€70–80k", nextStep: "First interview 2 pm via video", notes: "Prepare questions: team size, design system, remote culture.", history: ["Application receipt confirmed, feedback in about 2 weeks.", "Booked slot via calendar link."] },
+      { role: "Design Lead", workation: "unclear", salary: "€80–90k", nextStep: "Call back recruiter", notes: "Via recruitment agency, client still anonymous.", history: ["Call: 3 remote days, workation must be clarified with the client."] },
+      { role: "Senior Product Designer", workation: "60 days worldwide", salary: "€75–85k", nextStep: "Present case study", notes: "Top favourite. Strong design team, 100% remote.", history: ["Case received: redesign the onboarding flow for new users.", "Case well received, invited to present."] },
+      { role: "UX Researcher", workation: null, salary: "€60–65k", nextStep: "Interview with team lead", notes: null, history: [] },
+      { role: "Product Designer", workation: "90 days EU", salary: "€72k + bonus", nextStep: "Review offer, reply by Friday", notes: "Offer received. Compare with Wolkenfabrik.", history: ["Verbal offer: €72k + 10% bonus, start in 6 weeks."] },
+      { role: "Product Designer", workation: "60 days EU", salary: "€70k", nextStep: null, notes: "Accepted.", history: ["Contract signed."] },
+      { role: "Interaction Designer", workation: null, salary: null, nextStep: null, notes: null, history: ["Rejected: another candidate with more industry experience."] },
+      { role: "UX/UI Designer", workation: null, salary: "€50–55k", nextStep: null, notes: null, history: ["Withdrawn myself: no remote option."] },
+    ],
+  },
   theme: {
     toLight: "Switch to light",
     toDark: "Switch to dark",
