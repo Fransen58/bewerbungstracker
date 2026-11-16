@@ -4,7 +4,7 @@ Alle Bewerbungen an einem Ort: Status, Gesprächstermine, offene Fragen und die 
 
 Das Projekt ist zugleich ein Portfolio-Nachweis: Es ist Schritt für Schritt mit KI (Claude Code) entstanden. Wie genau, steht in [PROZESS.md](PROZESS.md).
 
-**Live:** _Link folgt nach dem Deployment_ · Ohne Anmeldung ausprobierbar, mit einem Klick auf **„Demo ansehen“**.
+**Live:** <https://bewerbungstracker-bice.vercel.app> · Ohne Anmeldung ausprobierbar, mit einem Klick auf **„Demo ansehen“**.
 
 ![Übersicht mit Kennzahlen und fälligen Schritten](docs/screenshots/overview-light.png)
 
@@ -66,6 +66,8 @@ Danach läuft die App unter <http://localhost:3000>.
 ## English summary
 
 **Application Tracker** is a web app for keeping track of job applications in one place: status, interviews, open questions and the CV version used. It runs entirely in the browser (static Next.js export, data in `localStorage`, no server, no login) and can be tried instantly via **“Try the demo”**.
+
+**Live:** <https://bewerbungstracker-bice.vercel.app>
 
 Features: Kanban board with drag & drop, filterable and sortable list, detail page with editable fields and history, dashboard (response rate, average fit, due this week), JSON backup import/export with validation, demo mode with separate sample data, German/English UI and light/dark theme.
 

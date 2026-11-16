@@ -286,3 +286,67 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 - Texte von Anfang an zentral abzulegen hat sich ausgezahlt. Aus einem festen Import einen Hook zu machen, war vor allem mechanische Arbeit.
 - Fehler als Codes zu speichern (wie schon beim Backup) ist nicht nur sauberer, sondern hier auch sichtbar besser für die Nutzer.
 - Testpläne können selbst Fehler enthalten. Die Rückfrage hat das schnell aufgedeckt.
+
+## Story 9: Veröffentlichung und Dokumentation
+
+**Ziel:** Code öffentlich auf GitHub, App unter einem Live-Link erreichbar, README und PROZESS.md als Nachweis.
+
+**Vorgehen:**
+- Vor dem Hochladen alle Dateien und die komplette Git-Historie auf Secrets und persönliche Daten geprüft. Ergebnis: Es gibt keine. Ein früher versehentlich eingetragener Vorname war schon vor dem Commit entfernt worden.
+- README neu geschrieben: Beschreibung, Screenshots, Funktionen, Datenschutz-Hinweis, Tech-Stack, Startanleitung, englische Kurzfassung.
+- Screenshots automatisch mit Playwright: Der statische Build wird lokal ausgeliefert, die Demo per Klick gestartet, dann werden Übersicht, Board, Detailseite (hell), Liste (dunkel) und das Board auf dem Handy fotografiert.
+- GitHub: leeres öffentliches Repository im Browser angelegt, Push per HTTPS mit Personal Access Token.
+- Vercel: Repository importiert, Standardeinstellungen, Deploy. Jeder weitere Push wird automatisch veröffentlicht.
+- Den Live-Stand geprüft: alle Seiten mit Status 200, unbekannte Adressen mit 404.
+
+**Probleme:**
+- Weder GitHub-CLI noch Homebrew oder SSH-Schlüssel waren vorhanden. Deshalb Push per Token im eigenen Terminal-Fenster, weil Git dort interaktiv nach Benutzername und Token fragen kann.
+- Das fein granulierte Token hatte zunächst keine Schreibrechte (Fehler 403). In der neuen GitHub-Oberfläche muss die Berechtigung „Contents: Read and write“ hinzugefügt werden, bevor man speichert, sonst wird auch die Repository-Auswahl verworfen.
+- Missverständnis: „hat funktioniert“ bezog sich auf das Token, nicht auf den Push. Aufgefallen ist das, weil der Erfolg über die GitHub-Schnittstelle geprüft statt angenommen wurde.
+- Der zweite Push mit den Screenshots brach mit „HTTP 400“ ab. Ein größerer Git-Puffer (`http.postBuffer`) hat das behoben.
+- Der Browser-Download für Playwright hing über Stunden. Lösung: Playwright steuert das bereits installierte Chrome (`channel: "chrome"`), ganz ohne Download.
+- Beim Ansehen der Screenshots fiel auf, dass Datumsangaben mal mit, mal ohne führende Null erschienen. In der Mono-Schrift standen die Spalten dadurch schief. Jetzt sind sie durchgehend zweistellig.
+
+**Prüfung:** Kriterien erfüllt: öffentliches Repository (github.com/Fransen58/bewerbungstracker), Live-Link (bewerbungstracker-bice.vercel.app), README mit allen geforderten Teilen, PROZESS.md nach jeder Story fortgeschrieben.
+
+**Learnings:**
+- Den Erfolg prüfen statt annehmen: Ein Blick über die GitHub-Schnittstelle hat ein Missverständnis sofort sichtbar gemacht.
+- Screenshots sind auch ein Test. Auf einem ruhigen Gesamtbild fallen Kleinigkeiten auf, die beim Klicken untergehen.
+- Wenn ein Werkzeug hängt, lohnt sich die Frage nach einem anderen Weg zum selben Ziel, statt weiter zu warten.
+
+## Ausgewählte Prompts
+
+So sahen meine Eingaben an Claude Code typischerweise aus. Die Zitate sind wörtlich, nur Tippfehler sind korrigiert. Die meisten Prompts waren kurz. Die eigentliche Steuerung lag in SPEC.md, CLAUDE.md und den Entscheidungen zwischen den Optionen, die Claude vorgeschlagen hat.
+
+**Starten und steuern**
+- „Node.js ist installiert, können wir mit dem Tracker weitermachen?“ → Claude las SPEC.md und CLAUDE.md, erkannte, dass noch nichts gebaut war, und schlug einen Plan für Story 0 vor.
+- „Plan passt so. Ich habe eine CLAUDE.md noch aus dem Internet geladen. Führe beide zusammen.“
+- „Nein, gerne der Reihe nach. GO“ (auf die Frage, ob eine spätere Story vorgezogen werden soll)
+
+**Entscheiden statt ausformulieren.** Claude legte offene Punkte als Optionen mit Empfehlung vor, die Antwort war oft ein Buchstabe:
+- „1. Ja, eine Spalte pro Status. 2. Perfekt so. 3. Ja, machen wir so. 4. Perfekt. […] Variante B ist die beste.“
+- „Passt so. Variante A passt.“
+
+**Richtung ändern**
+- „Bevor ich die Frage beantworte: Wie gehen wir UI an? Die Seite ist ja sehr funktional jetzt. Machen wir das am Ende, wenn alles steht, oder sollten wir uns vorher ein Designkonzept überlegen?“ → führte zum Designschritt und zu DESIGN.md.
+- „Ich habe eine coole Website gefunden, auf deren Basis ich gerne eine DESIGN.md erstellen lassen möchte.“ (mit Link)
+- „Können wir nicht in der App die Möglichkeit einbauen, das Theme zu ändern?“ → Hell/Dunkel wurde aus Story 8 vorgezogen.
+
+**Rückmeldung aus dem Test**
+- „Es gibt keine Möglichkeit, einzelne Filter zurückzusetzen. Die Filter könnten als Chips mit einem X gesetzt werden. Oder wir packen in die Auswahl eine Auswahl ein, die ‚Alle‘ heißt. Und einen Button ‚Filter zurücksetzen‘, der sofort sichtbar ist.“
+- „Die Balken sehen aus wie Skeleton Loader in grau. Ich weiß nicht, was die da machen.“ → Balken entfernt.
+- „Ich würde den Sprachswitch aber auch in der Handyansicht in das Burgermenü packen, bei Theme.“
+- „Base UI: A component is changing the default value state of an uncontrolled Select after being initialized. […] Habe ich als Issue beim Ändern erhalten.“ → Fehlermeldung einfach hineinkopiert, Ursache gefunden und behoben.
+
+**Verstehen wollen**
+- „Was ist genau mit Events gemeint?“
+- „Was genau macht die Antwortquote? […] Quote war 75 %. Ist das korrekt so?“
+- „Kann ich für Schritt 3 einfach ein neues Fenster hier öffnen? Oder muss ich dich schließen dafür?“
+
+## Fazit
+
+- **Die Dokumente waren wichtiger als die einzelnen Prompts.** SPEC.md, CLAUDE.md und DESIGN.md haben dafür gesorgt, dass kurze Prompts genügten und das Ergebnis trotzdem konsistent blieb.
+- **„Plan zuerst, dann OK“ hat sich bewährt.** Unklarheiten kamen vor dem Code auf den Tisch, zum Beispiel die Definition der Antwortquote, der Umgang mit Statuswechseln im Verlauf oder die Sprache der Demo-Daten. Spec-Änderungen wurden bewusst entschieden und vermerkt.
+- **Arbeitsteilung beim Testen:** Was ohne Browser prüfbar ist (Logik, Typen, Build), hat Claude selbst getestet. Ich habe die Oberfläche getestet. Fast jede Story hatte nach meinem Test noch eine Verbesserung, die keiner der automatischen Tests gefunden hätte.
+- **Der statische Export hat die Architektur geprägt:** Speicherung im Browser, ID als Parameter in der Adresse, Warten auf die Browserdaten, Sprachwechsel auf dem Client. Das war mehr Arbeit als erwartet, macht die App aber kostenlos und ohne Server betreibbar.
+- **KI ersetzt keine Entscheidungen.** Die interessantesten Momente waren die, in denen ich etwas nicht verstanden oder anders gewollt habe.
