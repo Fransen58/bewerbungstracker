@@ -4,10 +4,11 @@
 Bewerbungs-Tracker, siehe SPEC.md. SPEC.md ist die Quelle der Wahrheit für Umfang und Akzeptanzkriterien.
 
 ## Stack
-- Next.js (App Router) mit TypeScript, als statischer Export (`output: 'export'`)
+- Next.js (App Router) mit TypeScript; Seiten werden statisch vorgebaut, Server-Code nur als Route Handler (seit Story 11, für den KI-Import)
 - Tailwind CSS und shadcn/ui für die Oberfläche
-- Speicherung im Browser (`localStorage`) über eine eigene Storage-Schicht, kein Server, kein Login
-- Deployment auf Vercel (statisch, GitHub Pages wäre ebenfalls möglich)
+- Speicherung im Browser (`localStorage`) über eine eigene Storage-Schicht, keine Datenbank, kein Login
+- KI über die Claude API (`@anthropic-ai/sdk`), nur serverseitig; der Schlüssel liegt in `.env.local` bzw. in den Vercel-Umgebungsvariablen
+- Deployment auf Vercel
 
 ## Arbeitsweise
 - Arbeite immer an genau einer User Story aus SPEC.md.

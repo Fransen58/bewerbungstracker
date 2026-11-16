@@ -16,7 +16,7 @@ const KEYS = {
   demo: "bewerbungstracker:demo",
   mode: "bewerbungstracker:mode",
 } as const;
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 export type AppMode = "real" | "demo";
 
@@ -50,10 +50,28 @@ function readMode(): AppMode {
   return modeCache;
 }
 
+// Brings data from an older schema version up to the current one.
+// Version 2 added `requirements`; older applications get it as empty.
+// The result is stored on the next write.
+export function migrate<T extends { schemaVersion: number; applications: unknown[] }>(
+  data: T
+): T {
+  if (data.schemaVersion >= SCHEMA_VERSION) return data;
+  return {
+    ...data,
+    schemaVersion: SCHEMA_VERSION,
+    applications: data.applications.map((a) =>
+      typeof a === "object" && a !== null && !("requirements" in a)
+        ? { ...a, requirements: null }
+        : a
+    ),
+  };
+}
+
 function read(): AppData {
   if (dataCache) return dataCache;
   const raw = window.localStorage.getItem(KEYS[readMode()]);
-  dataCache = raw ? (JSON.parse(raw) as AppData) : EMPTY;
+  dataCache = raw ? migrate(JSON.parse(raw) as AppData) : EMPTY;
   return dataCache;
 }
 

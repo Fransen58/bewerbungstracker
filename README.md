@@ -10,6 +10,7 @@ Das Projekt ist zugleich ein Portfolio-Nachweis: Es ist Schritt für Schritt mit
 
 ## Funktionen
 
+- **Stellenanzeige per KI auslesen:** Link oder Text einer Anzeige einfügen, die KI füllt Firma, Rolle, Arbeitsmodell, Workation, Gehalt und Pflichtanforderungen vor. Fehlende Angaben bleiben leer statt geraten, gespeichert wird erst nach eigener Prüfung.
 - **Board:** Kanban-Ansicht nach Status, Karten per Drag & Drop verschieben (Maus, Touch, Tastatur). Auf dem Handy ändert man den Status alternativ über ein Auswahlfeld. Überfällige nächste Schritte sind markiert.
 - **Liste:** Tabelle mit Filtern (Status, Arbeitsmodell, Quelle), Suche nach Firma oder Rolle und Sortierung nach Datum, Passung und nächstem Schritt.
 - **Detailseite:** alle Angaben auf einen Blick und bearbeitbar, dazu ein Verlauf mit automatisch protokollierten Statuswechseln und eigenen Einträgen (Gespräch, Case, Notiz …).
@@ -28,11 +29,12 @@ Das Projekt ist zugleich ein Portfolio-Nachweis: Es ist Schritt für Schritt mit
 
 ## Datenschutz und Speicherung
 
-Es gibt keinen Server, keine Datenbank und kein Konto. Alle Daten liegen im `localStorage` des eigenen Browsers, jeder Besucher sieht nur seine eigenen Daten. Werden die Browserdaten gelöscht, sind auch die Bewerbungen weg. Davor schützt nur der Export, die App weist auf der Seite „Backup“ darauf hin.
+Es gibt keine Datenbank und kein Konto. Alle Daten liegen im `localStorage` des eigenen Browsers, jeder Besucher sieht nur seine eigenen Daten. Einzige Ausnahme ist der KI-Import: Nur wenn man ihn ausdrücklich startet, gehen der eingefügte Text bzw. der Inhalt der verlinkten Seite über eine Server-Funktion an die Claude-API von Anthropic. Gespeicherte Bewerbungen werden dabei nie übertragen. Werden die Browserdaten gelöscht, sind auch die Bewerbungen weg. Davor schützt nur der Export, die App weist auf der Seite „Backup“ darauf hin.
 
 ## Tech-Stack
 
-- [Next.js](https://nextjs.org) 16 (App Router) mit TypeScript, als **statischer Export**: reines HTML, CSS und JS
+- [Next.js](https://nextjs.org) 16 (App Router) mit TypeScript; alle Seiten werden vorab statisch gebaut, dazu eine einzelne Server-Funktion für den KI-Import
+- [Claude API](https://docs.claude.com) (Modell Claude Haiku 5.5) mit festem Ausgabeformat (Structured Outputs) für das Auslesen von Stellenanzeigen
 - [Tailwind CSS](https://tailwindcss.com) 4 und [shadcn/ui](https://ui.shadcn.com) (auf Basis von Base UI)
 - [dnd-kit](https://dndkit.com) für Drag & Drop
 - Eigene kleine Storage-Schicht mit Schema-Version, auf Basis von `useSyncExternalStore`
@@ -52,7 +54,13 @@ npm run dev
 
 Danach läuft die App unter <http://localhost:3000>.
 
-`npm run build` erzeugt den statischen Export im Ordner `out/`, den jeder einfache Webserver ausliefern kann.
+Für den KI-Import wird ein eigener API-Schlüssel von Anthropic gebraucht. Er gehört in eine Datei `.env.local` im Projektordner (wird nicht eingecheckt):
+
+```bash
+ANTHROPIC_API_KEY=sk-ant-…
+```
+
+Ohne Schlüssel funktioniert alles andere wie gewohnt, der Import meldet dann nur, dass er nicht eingerichtet ist.
 
 ## Projektdokumente
 
@@ -65,11 +73,11 @@ Danach läuft die App unter <http://localhost:3000>.
 
 ## English summary
 
-**Application Tracker** is a web app for keeping track of job applications in one place: status, interviews, open questions and the CV version used. It runs entirely in the browser (static Next.js export, data in `localStorage`, no server, no login) and can be tried instantly via **“Try the demo”**.
+**Application Tracker** is a web app for keeping track of job applications in one place: status, interviews, open questions and the CV version used. Data stays in the browser (`localStorage`, no database, no login); the only server part is an optional AI import that reads a job ad (link or pasted text) with Claude and pre-fills the form for review and can be tried instantly via **“Try the demo”**.
 
 **Live:** <https://bewerbungstracker-bice.vercel.app>
 
-Features: Kanban board with drag & drop, filterable and sortable list, detail page with editable fields and history, dashboard (response rate, average fit, due this week), JSON backup import/export with validation, demo mode with separate sample data, German/English UI and light/dark theme.
+Features: AI job ad import, Kanban board with drag & drop, filterable and sortable list, detail page with editable fields and history, dashboard (response rate, average fit, due this week), JSON backup import/export with validation, demo mode with separate sample data, German/English UI and light/dark theme.
 
 The project was built step by step with Claude Code as a portfolio piece. The process (approach, decisions, prompts, problems and learnings) is documented in [PROZESS.md](PROZESS.md) (German).
 

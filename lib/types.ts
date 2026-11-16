@@ -52,6 +52,8 @@ export type Application = {
   contact_name: string | null;
   contact_email: string | null;
   cv_version: string | null;
+  // Must-have requirements from the job ad, one per line (schema v2).
+  requirements: string | null;
   notes: string | null;
   applied_at: string | null;
   next_step: string | null;

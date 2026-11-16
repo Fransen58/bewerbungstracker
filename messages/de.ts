@@ -73,6 +73,7 @@ export const de = {
       application: "Bewerbung",
       contact: "Kontakt",
       nextStep: "Nächster Schritt",
+      requirements: "Anforderungen",
       notes: "Notizen",
       history: "Verlauf",
     },
@@ -165,6 +166,27 @@ export const de = {
     save: "Speichern",
     cancel: "Abbrechen",
     choose: "Bitte wählen",
+    import: {
+      label: "Stellenanzeige automatisch auslesen",
+      placeholder: "Link zur Anzeige oder den Text der Anzeige einfügen",
+      button: "Felder ausfüllen",
+      hint: "Einfügen, dann auf „Felder ausfüllen“ klicken.",
+      loading: "Liest Anzeige …",
+      success:
+        "KI-Vorschlag eingetragen. Bitte prüfen und korrigieren. Leere Felder standen nicht in der Anzeige.",
+      errors: {
+        badRequest: "Bitte einen Link oder den Text einer Anzeige einfügen.",
+        invalidUrl: "Bitte einen öffentlichen Link eingeben, der mit http:// oder https:// beginnt.",
+        fetchFailed:
+          "Die Seite ließ sich nicht abrufen. Kopiere stattdessen den Text der Anzeige hier hinein.",
+        unreadable:
+          "Die Seite lässt sich nicht automatisch lesen (z. B. Login nötig). Kopiere stattdessen den Text der Anzeige hier hinein.",
+        noJobAd: "Darin wurde keine Stellenanzeige gefunden.",
+        tooLong: "Der Text ist zu lang. Bitte nur die Anzeige selbst einfügen.",
+        notConfigured: "Der KI-Import ist auf diesem Server nicht eingerichtet.",
+        aiFailed: "Das Auslesen hat nicht geklappt. Bitte später erneut versuchen oder die Felder selbst ausfüllen.",
+      },
+    },
     fields: {
       company: "Firma",
       role: "Rolle",
@@ -178,6 +200,7 @@ export const de = {
       contact_name: "Ansprechpartner",
       contact_email: "E-Mail Ansprechpartner",
       cv_version: "CV-Version",
+      requirements: "Pflichtanforderungen",
       notes: "Notizen",
       applied_at: "Beworben am",
       next_step: "Nächster Schritt",
@@ -188,6 +211,7 @@ export const de = {
       workation: "z. B. 90 Tage EU, unklar",
       salary_range: "z. B. 60–70 k €",
       cv_version: "z. B. DE Builder",
+      requirements: "Eine Anforderung pro Zeile",
     },
     errors: {
       required: "Bitte ausfüllen.",

@@ -37,6 +37,7 @@ Mehrere Nutzer, Login, Cloud-Sync, Team-Funktionen, E-Mail-Integration, Mobile A
 - fit_score (Zahl 0–100)
 - contact_name, contact_email (optional)
 - cv_version (Text, z. B. „DE Builder", „EN Element")
+- requirements (Langtext, Pflichtanforderungen der Stelle, eine pro Zeile; ab Schema-Version 2)
 - notes (Langtext)
 - applied_at (Datum)
 - next_step (Text) und next_step_date (Datum)
@@ -126,11 +127,14 @@ Als Bewerber möchte ich das Projekt öffentlich zeigen, damit es als Nachweis m
 
 ## Ausbaustufe 2 (nach dem MVP)
 
+_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann 13, dann 10._
+
 ### 10. Cloud-Sync und Login
 - Optionale Speicherung in Supabase mit Login per Magic Link und Row Level Security, damit die Daten geräteübergreifend und sicher verfügbar sind.
 
 ### 11. Stellenanzeige per KI importieren
-Als Bewerber möchte ich den Text einer Stellenanzeige einfügen, damit die Felder automatisch vorausgefüllt werden.
+Als Bewerber möchte ich den Link oder den Text einer Stellenanzeige einfügen, damit die Felder automatisch vorausgefüllt werden.
+- Ich kann einen öffentlichen Link einfügen; lässt sich die Seite nicht lesen (z. B. Login nötig), sagt die App das verständlich und bietet das Einfügen des Textes als Rückfallweg an.
 - KI extrahiert Firma, Rolle, Arbeitsmodell, Workation, Gehalt und Pflichtanforderungen.
 - Ich prüfe und korrigiere die Vorschläge vor dem Speichern; nichts wird ungefragt gespeichert.
 - Felder, die die Anzeige nicht hergibt, bleiben leer statt geraten.
@@ -140,6 +144,40 @@ Als Bewerber möchte ich eine erste Einschätzung, wie gut eine Stelle zu meinem
 - Mein Profil ist einmalig hinterlegt.
 - Ausgabe: Passung in Prozent, größte Lücke, ein Satz Begründung.
 - Die Einschätzung ist als KI-Vorschlag gekennzeichnet und überschreibbar.
+
+### 13. Stelle vom Handy teilen
+Als Bewerber möchte ich eine Stellenanzeige auf dem Handy über „Teilen“ direkt an den Tracker schicken, damit ich Stellen unterwegs in Sekunden erfasse.
+- Die App lässt sich auf dem Handy installieren (Progressive Web App) und erscheint danach im Teilen-Menü.
+- Ein geteilter Link oder Text startet den Import aus Story 11 mit denselben Regeln (prüfen vor dem Speichern, nichts raten).
+
+---
+
+## Ideen-Speicher (noch nicht eingeplant)
+
+Gesammelt am 16.11.2026 nach einem ruhigen Durchgang durch das Tool. Nichts davon ist beschlossen; eine Idee wird erst durch eine eigene Story mit Akzeptanzkriterien zum Umfang.
+
+**Vom Nutzer**
+- Board und Liste zu einer Seite zusammenführen, mit Ansichts-Umschalter.
+- Wow-Faktor finden: Was hebt das Tool von Notion-Vorlagen oder Jobstep ab?
+- E-Mail-Konto verknüpfen: Antworten von Firmen automatisch erkennen, Mailverlauf an der Bewerbung hinterlegen.
+- Tipps zur jeweiligen Bewerbung erzeugen.
+- Bewerbung im Tool durchführen: Lebenslauf und Anschreiben auf die Stelle anpassen, als PDF erzeugen, dann zur Originalanzeige springen.
+- Stellen vom Handy teilen (bereits als Story 13 eingeplant).
+- Alternative Version mit Gamification: Jobsuche als Spiel, mit Belohnungen, Erfahrungspunkten und Leveln, aber professionell und organisiert.
+- Wissensbereich mit aktuellen Tipps: Online-Bewerbung, Gespräche, Formulare, Dokumente, Unterschiede nach Land und Branche.
+- Bewerbungsgespräch für ein bestimmtes Unternehmen üben.
+- Werkzeuge, um die eigenen Skills realistisch einzuschätzen.
+- Dokumente je Bewerbung jederzeit abrufbar.
+- Master-Dokumente (Lebenslauf, Anschreiben) ansehen und anpassen.
+- Konstruktives, professionelles Feedback auf Dokumente und Bewerbungen, angepasst an Markt, Branche und Arbeitgeber.
+
+**Von Claude ergänzt**
+- CV-Versionen vergleichen: Welche CV-Version bekommt die meisten Antworten? Die Daten (cv_version, Verlauf) sind schon da.
+- Nachfass-Assistent: Wenn eine Bewerbung nach X Tagen ohne Antwort ist, erinnern und einen höflichen Nachfass-Entwurf vorschlagen.
+- Gesprächsvorbereitung je Stelle aus Anforderungen und eigenem Profil: wahrscheinliche Fragen, eigene passende Beispiele, Rückfragen an die Firma.
+- Arbeitszeugnis-Übersetzer (DACH-typisch): Zeugnisformulierungen in Klartext übersetzen.
+- Absagen auswerten: Muster über viele Bewerbungen erkennen (Branche, Rolle, Anforderungslücken), ohne zu verurteilen.
+- Wochenrückblick: Was lief diese Woche, was steht an, eine konkrete nächste Aktion.
 
 ---
 

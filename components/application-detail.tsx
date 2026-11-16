@@ -174,17 +174,24 @@ function Facts({ app }: { app: Application }) {
         </Fact>
       </Section>
 
+      <Section title={t.detail.sections.requirements}>
+        <LongText text={app.requirements} />
+      </Section>
+
       <Section title={t.detail.sections.notes}>
-        <p
-          className={cn(
-            "py-3 whitespace-pre-wrap",
-            !app.notes && "text-muted-foreground"
-          )}
-        >
-          {app.notes ?? "–"}
-        </p>
+        <LongText text={app.notes} />
       </Section>
     </div>
+  );
+}
+
+function LongText({ text }: { text: string | null }) {
+  return (
+    <p
+      className={cn("py-3 whitespace-pre-wrap", !text && "text-muted-foreground")}
+    >
+      {text ?? "–"}
+    </p>
   );
 }
 

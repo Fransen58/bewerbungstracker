@@ -314,6 +314,50 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 - Screenshots sind auch ein Test. Auf einem ruhigen Gesamtbild fallen Kleinigkeiten auf, die beim Klicken untergehen.
 - Wenn ein Werkzeug hängt, lohnt sich die Frage nach einem anderen Weg zum selben Ziel, statt weiter zu warten.
 
+## Ausbaustufe 2: Planung nach dem MVP
+
+**Entscheidungen:**
+- Reihenfolge: Story 11 (KI-Import) vor Story 10 (Cloud-Sync). Der Import spart bei jeder Bewerbung Arbeit und ist der stärkere Nachweis. Cloud-Sync ist der größte und riskanteste Brocken und kommt mit mehr Erfahrung später.
+- Story 11 wurde um den Link-Import erweitert, mit Text-Einfügen als Rückfallweg. Neu ist Story 13 „Stelle vom Handy teilen“.
+- Die Kosten wurden vor dem Bau aufgeschlüsselt: Preis pro Import je Modell, ein Ausgabenlimit in der Anthropic-Konsole als harter Deckel gegen Missbrauch der öffentlichen App.
+
+## Story 11: Stellenanzeige per KI importieren
+
+**Ziel:** Link oder Text einer Stellenanzeige einfügen, die KI füllt die Felder vor. Ich prüfe vor dem Speichern, und was die Anzeige nicht hergibt, bleibt leer.
+
+**Vorgehen in Schritten, jeder einzeln lauffähig:**
+1. Neues Feld `requirements` (Pflichtanforderungen) mit Schema-Version 2. Alte Browserdaten und alte Backups werden beim Lesen automatisch migriert, getestet mit einem Backup der Version 1.
+2. Den statischen Export abgeschaltet. Alle Seiten werden weiterhin vorab gebaut, neu ist nur eine Server-Funktion (`/api/import`).
+3. Server-Funktion: Sie ruft den Link selbst ab, wandelt HTML in Text um (strukturierte Stellendaten nach schema.org bleiben erhalten) und lässt Claude Haiku 5.5 die Felder in einem festen Ausgabeformat auslesen (Structured Outputs).
+4. Oberfläche: ein Import-Feld oben im Dialog „Neue Bewerbung“. Vorschläge landen im Formular, selbst Getipptes bleibt stehen, gespeichert wird erst beim Klick auf „Speichern“.
+
+**Entscheidungen:**
+- Anforderungen als eigenes Feld statt in den Notizen, weil Story 12 (Passung) genau diese Liste braucht.
+- Haiku statt Opus: Das Auslesen ist eine einfache Aufgabe, Haiku kostet etwa ein Dreißigstel. Gestartet wird mit Haiku, verglichen wird später.
+- Den Link ruft unser Server ab, nicht Claudes Web-Fetch-Werkzeug. Das Werkzeug ist für Haiku nicht als unterstützt dokumentiert. So ist es außerdem nur ein KI-Aufruf pro Import und unabhängig vom Modell.
+- Schutz: Nur öffentliche http(s)-Adressen werden abgerufen, interne Adressen abgelehnt. Die Textlänge ist begrenzt, das begrenzt auch die Kosten. Der Anzeigentext gilt im Prompt als Daten, nicht als Anweisung.
+- Der API-Schlüssel liegt nur in `.env.local` (lokal) bzw. in den Vercel-Einstellungen, nie im Code und nie im Chat. Er wurde direkt aus der Zwischenablage in die Datei geschrieben.
+
+**Probleme:**
+- Die Next.js-Version ist neuer als Claudes Trainingswissen. Deshalb wurde die mitgelieferte Doku zu Route Handlern gelesen, bevor gebaut wurde.
+- Ein Formatierungswerkzeug hat ungefragt Stellen außerhalb der Änderung umformatiert. Zurückgesetzt, damit jede geänderte Zeile zur Aufgabe gehört.
+- Im ersten Nutzertest wurde der Knopf „Felder ausfüllen“ übersehen, der Text wurde ohne Import gespeichert. Das Server-Log zeigte eindeutig: Es kam gar keine Anfrage an. Lösung: Der Knopf ist jetzt der auffällige Hauptknopf, mit Hinweis daneben.
+
+**Prüfung:**
+- Vier erfundene Anzeigen: vollständig, ohne Gehalt, englisch, Login-Seite. Alles erkannt bzw. korrekt leer gelassen, „Schön wäre“-Punkte nicht als Pflicht übernommen.
+- Dazu echte Links von StepStone, JOIN und LinkedIn sowie ein eingefügter Text.
+- Gemessene Kosten: rund 0,02 Cent pro Import, 1–5 Sekunden Dauer.
+
+**Learnings:**
+- Logs sind der schnellste Weg von „funktioniert nicht“ zur Ursache.
+- „Nichts raten“ muss man der KI ausdrücklich sagen und am Ergebnis prüfen. Mit klaren Regeln hält sich auch ein kleines Modell daran.
+- Kosten vorher aufschlüsseln und danach messen schafft Vertrauen. Die Schätzung lag deutlich über dem echten Wert.
+
+## Offene Punkte aus dem Nutzertest (16.11.2026)
+
+- Das Prozentzeichen springt beim Sprachwechsel. Vermutete Ursache: „80 %“ (Deutsch, mit Leerzeichen) und „80%“ (Englisch) sind unterschiedlich breit. Noch zu prüfen.
+- Aufklappende Fenster wie der Kalender der Datumsfelder sehen anders aus als die Knöpfe und Felder, die sie öffnen. Ursache: Das ist die eingebaute Datumsauswahl des Browsers, die sich kaum gestalten lässt. Abhilfe wäre eine eigene Kalender-Komponente.
+
 ## Ausgewählte Prompts
 
 So sahen meine Eingaben an Claude Code typischerweise aus. Die Zitate sind wörtlich, nur Tippfehler sind korrigiert. Die meisten Prompts waren kurz. Die eigentliche Steuerung lag in SPEC.md, CLAUDE.md und den Entscheidungen zwischen den Optionen, die Claude vorgeschlagen hat.

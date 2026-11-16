@@ -75,6 +75,7 @@ export const en: Messages = {
       application: "Application",
       contact: "Contact",
       nextStep: "Next step",
+      requirements: "Requirements",
       notes: "Notes",
       history: "History",
     },
@@ -167,6 +168,27 @@ export const en: Messages = {
     save: "Save",
     cancel: "Cancel",
     choose: "Please choose",
+    import: {
+      label: "Read job ad automatically",
+      placeholder: "Paste a link to the ad or the text of the ad",
+      button: "Fill in fields",
+      hint: "Paste, then click “Fill in fields”.",
+      loading: "Reading ad …",
+      success:
+        "AI suggestion filled in. Please review and correct it. Empty fields were not in the ad.",
+      errors: {
+        badRequest: "Please paste a link or the text of a job ad.",
+        invalidUrl: "Please enter a public link starting with http:// or https://.",
+        fetchFailed:
+          "The page could not be loaded. Paste the text of the ad here instead.",
+        unreadable:
+          "The page cannot be read automatically (e.g. login required). Paste the text of the ad here instead.",
+        noJobAd: "No job ad was found in it.",
+        tooLong: "The text is too long. Please paste only the ad itself.",
+        notConfigured: "The AI import is not set up on this server.",
+        aiFailed: "Reading the ad did not work. Please try again later or fill in the fields yourself.",
+      },
+    },
     fields: {
       company: "Company",
       role: "Role",
@@ -180,6 +202,7 @@ export const en: Messages = {
       contact_name: "Contact person",
       contact_email: "Contact email",
       cv_version: "CV version",
+      requirements: "Must-have requirements",
       notes: "Notes",
       applied_at: "Applied on",
       next_step: "Next step",
@@ -190,6 +213,7 @@ export const en: Messages = {
       workation: "e.g. 90 days EU, unclear",
       salary_range: "e.g. €60–70k",
       cv_version: "e.g. EN Builder",
+      requirements: "One requirement per line",
     },
     errors: {
       required: "Please fill in.",

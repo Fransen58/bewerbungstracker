@@ -1,7 +1,12 @@
 "use client";
 
-import { useState, type ReactElement, type ReactNode } from "react";
-import { PencilIcon, PlusIcon } from "lucide-react";
+import { useRef, useState, type ReactElement, type ReactNode } from "react";
+import {
+  LoaderCircleIcon,
+  PencilIcon,
+  PlusIcon,
+  SparklesIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +43,7 @@ import {
   type WorkModel,
 } from "@/lib/types";
 import { useT } from "@/lib/i18n";
+import type { JobDraft } from "@/lib/job-import";
 import type { Messages } from "@/messages";
 
 type FieldName = keyof Messages["form"]["fields"];
@@ -45,6 +51,9 @@ type FieldName = keyof Messages["form"]["fields"];
 // language switch also updates visible errors.
 type ErrorKind = keyof Messages["form"]["errors"];
 type Errors = Partial<Record<FieldName, ErrorKind>>;
+// Values the form starts with: an application when editing, an imported
+// draft when creating.
+type FormValues = Partial<Record<FieldName, string | number | null>>;
 
 function isValidUrl(value: string) {
   try {
@@ -100,6 +109,7 @@ function parseForm(
       contact_name: text("contact_name"),
       contact_email: text("contact_email"),
       cv_version: text("cv_version"),
+      requirements: text("requirements"),
       notes: text("notes"),
       applied_at: text("applied_at"),
       next_step: text("next_step"),
@@ -226,7 +236,10 @@ function ApplicationDialog({
   // Snapshot of the values when the dialog opened. Saving updates the
   // application while the close animation still runs; the form must keep
   // its initial values until it is gone.
-  const [initial, setInitial] = useState(application);
+  const [initial, setInitial] = useState<FormValues | undefined>(application);
+  // Changing the key re-creates the fields with new start values.
+  const [formKey, setFormKey] = useState(0);
+  const formRef = useRef<HTMLFormElement>(null);
   const title = application ? t.form.editApplication : t.form.newApplication;
 
   function handleOpenChange(next: boolean) {
@@ -235,6 +248,19 @@ function ApplicationDialog({
       setErrors({});
       setInitial(application);
     }
+  }
+
+  // Fills in the imported fields; whatever the user typed elsewhere stays.
+  function applyDraft(draft: JobDraft, url: string | null) {
+    const typed = [...new FormData(formRef.current!).entries()].filter(
+      ([, v]) => v !== ""
+    );
+    const found = Object.entries({ ...draft, job_url: url }).filter(
+      ([, v]) => v !== null
+    );
+    setInitial(Object.fromEntries([...typed, ...found]) as FormValues);
+    setErrors({});
+    setFormKey((k) => k + 1);
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -273,96 +299,115 @@ function ApplicationDialog({
         </DialogHeader>
 
         <form
+          ref={formRef}
           noValidate
           onSubmit={handleSubmit}
           className="flex min-h-0 flex-1 flex-col gap-4"
         >
-          <div className="-mx-5 grid min-h-0 gap-4 overflow-y-auto px-5 py-1 sm:grid-cols-2">
-            <Field name="company" required error={errors.company}>
-              <Input {...input("company")} autoFocus />
-            </Field>
-            <Field name="role" required error={errors.role}>
-              <Input {...input("role")} />
-            </Field>
-            <Field name="status" required error={errors.status}>
-              <ChoiceSelect
-                name="status"
-                keys={STATUSES}
-                labels={t.options.status}
-                defaultValue={initial?.status ?? "discovered"}
-                invalid={!!errors.status}
-              />
-            </Field>
-            <Field name="applied_at">
-              <Input {...input("applied_at")} type="date" />
-            </Field>
-            <Field name="job_url" error={errors.job_url} className="sm:col-span-2">
-              <Input
-                {...input("job_url")}
-                type="url"
-                inputMode="url"
-                placeholder={t.form.placeholders.job_url}
-              />
-            </Field>
-            <Field name="source">
-              <ChoiceSelect
-                name="source"
-                keys={SOURCES}
-                labels={t.options.source}
-                defaultValue={initial?.source}
-              />
-            </Field>
-            <Field name="work_model">
-              <ChoiceSelect
-                name="work_model"
-                keys={WORK_MODELS}
-                labels={t.options.work_model}
-                defaultValue={initial?.work_model}
-              />
-            </Field>
-            <Field name="workation">
-              <Input
-                {...input("workation")}
-                placeholder={t.form.placeholders.workation}
-              />
-            </Field>
-            <Field name="salary_range">
-              <Input
-                {...input("salary_range")}
-                placeholder={t.form.placeholders.salary_range}
-              />
-            </Field>
-            <Field name="fit_score" error={errors.fit_score}>
-              <Input
-                {...input("fit_score")}
-                type="number"
-                inputMode="numeric"
-                min={0}
-                max={100}
-                step={1}
-              />
-            </Field>
-            <Field name="cv_version">
-              <Input
-                {...input("cv_version")}
-                placeholder={t.form.placeholders.cv_version}
-              />
-            </Field>
-            <Field name="contact_name">
-              <Input {...input("contact_name")} />
-            </Field>
-            <Field name="contact_email">
-              <Input {...input("contact_email")} type="email" />
-            </Field>
-            <Field name="next_step">
-              <Input {...input("next_step")} />
-            </Field>
-            <Field name="next_step_date">
-              <Input {...input("next_step_date")} type="date" />
-            </Field>
-            <Field name="notes" className="sm:col-span-2">
-              <Textarea {...input("notes")} rows={3} />
-            </Field>
+          <div className="-mx-5 min-h-0 space-y-6 overflow-y-auto px-5 py-1">
+            {!application && <ImportBox onDraft={applyDraft} />}
+            <div key={formKey} className="grid gap-4 sm:grid-cols-2">
+              <Field name="company" required error={errors.company}>
+                <Input {...input("company")} autoFocus />
+              </Field>
+              <Field name="role" required error={errors.role}>
+                <Input {...input("role")} />
+              </Field>
+              <Field name="status" required error={errors.status}>
+                <ChoiceSelect
+                  name="status"
+                  keys={STATUSES}
+                  labels={t.options.status}
+                  defaultValue={
+                    (initial?.status as Status | undefined) ?? "discovered"
+                  }
+                  invalid={!!errors.status}
+                />
+              </Field>
+              <Field name="applied_at">
+                <Input {...input("applied_at")} type="date" />
+              </Field>
+              <Field
+                name="job_url"
+                error={errors.job_url}
+                className="sm:col-span-2"
+              >
+                <Input
+                  {...input("job_url")}
+                  type="url"
+                  inputMode="url"
+                  placeholder={t.form.placeholders.job_url}
+                />
+              </Field>
+              <Field name="source">
+                <ChoiceSelect
+                  name="source"
+                  keys={SOURCES}
+                  labels={t.options.source}
+                  defaultValue={initial?.source as Source | null | undefined}
+                />
+              </Field>
+              <Field name="work_model">
+                <ChoiceSelect
+                  name="work_model"
+                  keys={WORK_MODELS}
+                  labels={t.options.work_model}
+                  defaultValue={
+                    initial?.work_model as WorkModel | null | undefined
+                  }
+                />
+              </Field>
+              <Field name="workation">
+                <Input
+                  {...input("workation")}
+                  placeholder={t.form.placeholders.workation}
+                />
+              </Field>
+              <Field name="salary_range">
+                <Input
+                  {...input("salary_range")}
+                  placeholder={t.form.placeholders.salary_range}
+                />
+              </Field>
+              <Field name="fit_score" error={errors.fit_score}>
+                <Input
+                  {...input("fit_score")}
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  max={100}
+                  step={1}
+                />
+              </Field>
+              <Field name="cv_version">
+                <Input
+                  {...input("cv_version")}
+                  placeholder={t.form.placeholders.cv_version}
+                />
+              </Field>
+              <Field name="contact_name">
+                <Input {...input("contact_name")} />
+              </Field>
+              <Field name="contact_email">
+                <Input {...input("contact_email")} type="email" />
+              </Field>
+              <Field name="next_step">
+                <Input {...input("next_step")} />
+              </Field>
+              <Field name="next_step_date">
+                <Input {...input("next_step_date")} type="date" />
+              </Field>
+              <Field name="requirements" className="sm:col-span-2">
+                <Textarea
+                  {...input("requirements")}
+                  rows={3}
+                  placeholder={t.form.placeholders.requirements}
+                />
+              </Field>
+              <Field name="notes" className="sm:col-span-2">
+                <Textarea {...input("notes")} rows={3} />
+              </Field>
+            </div>
           </div>
 
           <DialogFooter>
@@ -378,5 +423,89 @@ function ApplicationDialog({
         </form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+type ImportState =
+  | { kind: "idle" | "loading" | "success" }
+  | { kind: "error"; code: keyof Messages["form"]["import"]["errors"] };
+
+// Story 11: reads a job ad (link or pasted text) on the server and hands the
+// suggested fields to the form. Nothing is saved until the user clicks Save.
+function ImportBox({
+  onDraft,
+}: {
+  onDraft: (draft: JobDraft, url: string | null) => void;
+}) {
+  const t = useT();
+  const m = t.form.import;
+  const [value, setValue] = useState("");
+  const [state, setState] = useState<ImportState>({ kind: "idle" });
+
+  async function handleImport() {
+    const input = value.trim();
+    const isUrl = /^https?:\/\/\S+$/i.test(input);
+    setState({ kind: "loading" });
+    try {
+      const response = await fetch("/api/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(isUrl ? { url: input } : { text: input }),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.draft) {
+        const code = data.error in m.errors ? data.error : "aiFailed";
+        setState({ kind: "error", code });
+        return;
+      }
+      onDraft(data.draft, isUrl ? input : null);
+      setState({ kind: "success" });
+    } catch {
+      setState({ kind: "error", code: "aiFailed" });
+    }
+  }
+
+  const loading = state.kind === "loading";
+  return (
+    <div className="grid gap-3 rounded-2xl bg-muted/60 p-4">
+      <Label htmlFor="job-import" className="flex items-center gap-2">
+        <SparklesIcon className="size-4" />
+        {m.label}
+      </Label>
+      <Textarea
+        id="job-import"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder={m.placeholder}
+        rows={2}
+        className="bg-background"
+      />
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          type="button"
+          size="sm"
+          disabled={loading || value.trim() === ""}
+          onClick={handleImport}
+        >
+          {loading ? (
+            <LoaderCircleIcon className="animate-spin" />
+          ) : (
+            <SparklesIcon />
+          )}
+          {loading ? m.loading : m.button}
+        </Button>
+        <p className="text-sm text-muted-foreground">{m.hint}</p>
+      </div>
+      {state.kind === "success" && (
+        <p role="status" className="text-sm text-muted-foreground">
+          {m.success}
+        </p>
+      )}
+      {state.kind === "error" && (
+        <p role="alert" className="text-sm text-destructive">
+          {m.errors[state.code]}
+        </p>
+      )}
+    </div>
   );
 }

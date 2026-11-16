@@ -1,4 +1,4 @@
-import { SCHEMA_VERSION, type AppData } from "./storage";
+import { SCHEMA_VERSION, migrate, type AppData } from "./storage";
 import {
   EVENT_TYPES,
   SOURCES,
@@ -89,6 +89,7 @@ const APPLICATION_FIELDS: Record<keyof Application, (v: unknown) => boolean> = {
   contact_name: isOptText,
   contact_email: isOptText,
   cv_version: isOptText,
+  requirements: isOptText,
   notes: isOptText,
   applied_at: isOptDay,
   next_step: isOptText,
@@ -139,9 +140,15 @@ export function parseBackup(text: string): ParseResult {
   if (raw.schemaVersion > SCHEMA_VERSION) {
     return { ok: false, error: { code: "newerVersion" } };
   }
+  // Backups from older versions are upgraded before they are checked.
+  const { applications } = migrate({
+    schemaVersion: raw.schemaVersion,
+    applications: raw.applications,
+  });
+  const events = raw.events;
 
   const ids = new Set<string>();
-  for (const [index, app] of raw.applications.entries()) {
+  for (const [index, app] of applications.entries()) {
     const field = firstInvalidField(app, APPLICATION_FIELDS);
     if (field) {
       return { ok: false, error: { code: "invalidApplication", index, field } };
@@ -152,7 +159,7 @@ export function parseBackup(text: string): ParseResult {
   }
 
   const eventIds = new Set<string>();
-  for (const [index, event] of raw.events.entries()) {
+  for (const [index, event] of events.entries()) {
     const field = firstInvalidField(event, EVENT_FIELDS);
     if (field) return { ok: false, error: { code: "invalidEvent", index, field } };
     const e = event as ApplicationEvent;
@@ -176,10 +183,10 @@ export function parseBackup(text: string): ParseResult {
     ok: true,
     data: {
       schemaVersion: SCHEMA_VERSION,
-      applications: raw.applications.map((a) =>
+      applications: applications.map((a) =>
         pick<Application>(a, APPLICATION_FIELDS)
       ),
-      events: raw.events.map((e) => pick<ApplicationEvent>(e, EVENT_FIELDS)),
+      events: events.map((e) => pick<ApplicationEvent>(e, EVENT_FIELDS)),
     },
   };
 }
