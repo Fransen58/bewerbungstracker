@@ -1,5 +1,11 @@
 import { useSyncExternalStore } from "react";
-import type { Application, ApplicationEvent } from "./types";
+import { todayISO } from "./date";
+import type {
+  Application,
+  ApplicationEvent,
+  EventType,
+  Status,
+} from "./types";
 
 // Browser storage layer. All reads and writes of app data go through here.
 
@@ -73,4 +79,42 @@ export function addApplication(input: NewApplication): Application {
   const data = read();
   write({ ...data, applications: [...data.applications, application] });
   return application;
+}
+
+// Which event type a status change is logged as.
+const STATUS_EVENT_TYPE: Record<Status, EventType> = {
+  discovered: "note",
+  applied: "applied",
+  first_interview: "interview",
+  further_round: "interview",
+  offer: "offer",
+  accepted: "note",
+  rejected: "rejection",
+  withdrawn: "note",
+};
+
+// Moves an application to a new status and logs the change as an event.
+export function changeStatus(applicationId: string, status: Status) {
+  const data = read();
+  const current = data.applications.find((a) => a.id === applicationId);
+  if (!current || current.status === status) return;
+
+  const event: ApplicationEvent = {
+    id: crypto.randomUUID(),
+    application_id: applicationId,
+    type: STATUS_EVENT_TYPE[status],
+    date: todayISO(),
+    note: null,
+    from_status: current.status,
+    to_status: status,
+  };
+  write({
+    ...data,
+    applications: data.applications.map((a) =>
+      a.id === applicationId
+        ? { ...a, status, updated_at: new Date().toISOString() }
+        : a
+    ),
+    events: [...data.events, event],
+  });
 }

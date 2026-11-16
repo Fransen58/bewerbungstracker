@@ -1,4 +1,4 @@
-import { ApplicationSimpleList } from "@/components/application-simple-list";
+import { Board } from "@/components/board";
 import { t } from "@/messages";
 
 export default function BoardPage() {
@@ -7,7 +7,7 @@ export default function BoardPage() {
       <h1 className="text-2xl font-semibold tracking-tight">
         {t.pages.board.title}
       </h1>
-      <ApplicationSimpleList />
+      <Board />
     </div>
   );
 }

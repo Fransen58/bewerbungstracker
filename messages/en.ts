@@ -2,6 +2,7 @@ import type { Messages } from "./de";
 
 // English UI texts. Typed against the German file so no key can be missing.
 export const en: Messages = {
+  locale: "en-GB",
   app: {
     name: "Application Tracker",
     description: "All your job applications in one place.",
@@ -19,6 +20,18 @@ export const en: Messages = {
     },
     board: {
       title: "Board",
+      overdue: "Overdue",
+      changeStatus: "Change status",
+      dragInstructions:
+        "Press space to pick up the card. Move it with the arrow keys, press space to drop it or escape to cancel.",
+      announce: {
+        start: (company: string) => `Picked up ${company}.`,
+        over: (company: string, column: string) =>
+          `${company} is over column ${column}.`,
+        end: (company: string, column: string) =>
+          `${company} dropped in column ${column}.`,
+        cancel: (company: string) => `Moving ${company} was cancelled.`,
+      },
     },
     list: {
       title: "List",

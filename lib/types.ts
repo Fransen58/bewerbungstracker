@@ -66,4 +66,7 @@ export type ApplicationEvent = {
   type: EventType;
   date: string;
   note: string | null;
+  // Set only for events logged by a status change.
+  from_status: Status | null;
+  to_status: Status | null;
 };

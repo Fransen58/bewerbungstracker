@@ -1,5 +1,6 @@
 // German UI texts (default language).
 export const de = {
+  locale: "de-DE",
   app: {
     name: "Bewerbungs-Tracker",
     description: "Alle Bewerbungen an einem Ort.",
@@ -17,6 +18,18 @@ export const de = {
     },
     board: {
       title: "Board",
+      overdue: "Überfällig",
+      changeStatus: "Status ändern",
+      dragInstructions:
+        "Leertaste drücken, um die Karte aufzunehmen. Mit den Pfeiltasten verschieben, mit Leertaste ablegen, mit Escape abbrechen.",
+      announce: {
+        start: (company: string) => `${company} aufgenommen.`,
+        over: (company: string, column: string) =>
+          `${company} über Spalte ${column}.`,
+        end: (company: string, column: string) =>
+          `${company} in Spalte ${column} abgelegt.`,
+        cancel: (company: string) => `Verschieben von ${company} abgebrochen.`,
+      },
     },
     list: {
       title: "Liste",

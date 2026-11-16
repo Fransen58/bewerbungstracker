@@ -57,3 +57,29 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 **Learnings:**
 - Wenn mehrere unabhängige Komponenten (Kopfzeile mit Formular, Listenseite) dieselben Browserdaten brauchen, reicht ein kleiner Speicher mit `useSyncExternalStore`. Eine zusätzliche State-Bibliothek ist dafür nicht nötig.
 - Akzeptanzkriterien können von späteren Stories abhängen. Das früh anzusprechen erspart Diskussionen am Ende.
+
+## Story 2: Board-Ansicht
+
+**Ziel:** Alle Bewerbungen als Kanban-Board nach Status zeigen. Karten lassen sich per Drag & Drop verschieben, auf dem Handy auch ohne Drag & Drop. Überfällige nächste Schritte sind sichtbar markiert.
+
+**Vorgehen:**
+- Eine Spalte pro Status in der Reihenfolge aus SPEC.md. Das Board scrollt auf allen Bildschirmgrößen horizontal.
+- Karten zeigen Firma, Rolle, Arbeitsmodell und den nächsten Schritt mit Datum.
+- Drag & Drop mit `@dnd-kit/core`: Maus ab 5 px Bewegung, Touch nach kurzem Halten (damit Scrollen weiter geht) und Tastatur. Die Screenreader-Ansagen stehen übersetzt in `messages/`.
+- Zusätzlich hat jede Karte ein Status-Auswahlfeld als Alternative zum Ziehen.
+- `changeStatus()` in der Storage-Schicht speichert den neuen Status, aktualisiert `updated_at` und legt ein Event an.
+
+**Entscheidungen:**
+- Event bei Statuswechsel (Variante B): Der Status wird auf den passenden Event-Typ abgebildet (Erstgespräch und Weitere Runde → Gespräch, Absage → Absage, Angebot → Angebot, Beworben → Beworben, sonst Notiz). Dazu speichert das Event die neuen Felder `from_status` und `to_status` als feste Schlüssel, damit der Verlauf in jeder Sprache lesbar bleibt. SPEC.md wurde ergänzt.
+- Die Schema-Version bleibt 1, weil die Felder nur dazukommen und es noch keine gespeicherten Events gab.
+- „Überfällig“ heißt: Das Datum des nächsten Schritts liegt vor heute. Das gilt für alle Karten, auch für abgeschlossene Status.
+- Daten werden als lokaler Kalendertag (`YYYY-MM-DD`) gespeichert. So lässt sich „überfällig“ per einfachem Textvergleich prüfen, ohne Probleme mit Zeitzonen.
+
+**Probleme:**
+- Das Status-Auswahlfeld liegt innerhalb der ziehbaren Karte. Ohne Gegenmaßnahme würde ein Klick darauf ein Ziehen starten. Gelöst, indem Maus-, Touch- und Tastatur-Ereignisse am Auswahlfeld nicht an die Karte weitergereicht werden.
+
+**Prüfung:** Lint, Typprüfung und Build fehlerfrei. Manuell getestet und erfüllt: Ziehen zwischen Spalten inklusive Neuladen, Statuswechsel über das Auswahlfeld, Markierung „Überfällig“, horizontales Scrollen und Auswahlfeld in der Handy-Ansicht, Events mit `from_status`/`to_status` im Local Storage.
+
+**Learnings:**
+- Eine Bibliothek wie dnd-kit nimmt viel Arbeit ab: Touch, Tastatur und Barrierefreiheit kommen gleich mit.
+- Wenn das Datenmodell eine Anforderung nicht abbildet, hier den Statuswechsel im Verlauf, lohnt sich eine kleine, bewusste Erweiterung mit Eintrag in der Spec. Ein Workaround wäre auf Dauer teurer.

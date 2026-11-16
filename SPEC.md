@@ -47,6 +47,7 @@ Mehrere Nutzer, Login, Cloud-Sync, Team-Funktionen, E-Mail-Integration, Mobile A
 - type (Auswahl: Beworben, Gespräch, Case, Absage, Angebot, Notiz)
 - date
 - note
+- from_status, to_status (optional, nur bei Events aus einem Statuswechsel; feste Status-Schlüssel, damit der Verlauf in jeder Sprache lesbar bleibt)
 
 **Status-Werte (in dieser Reihenfolge):**
 Entdeckt → Beworben → Erstgespräch → Weitere Runde → Angebot → Zusage | Absage | Zurückgezogen
