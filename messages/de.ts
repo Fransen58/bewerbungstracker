@@ -33,6 +33,15 @@ export const de = {
     },
     list: {
       title: "Liste",
+      search: "Firma oder Rolle suchen",
+      all: "Alle",
+      companyRole: "Firma / Rolle",
+      noResults: "Keine Treffer für diese Filter.",
+      resetFilters: "Filter zurücksetzen",
+      count: (shown: number, total: number) =>
+        shown === total
+          ? `${total} ${total === 1 ? "Bewerbung" : "Bewerbungen"}`
+          : `${shown} von ${total} Bewerbungen`,
     },
   },
   theme: {

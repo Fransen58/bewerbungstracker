@@ -113,3 +113,30 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 - Ein Designkonzept früh festzulegen kostet einen Zwischenschritt, erspart aber das Angleichen am Ende.
 - Kontrast nachrechnen statt schätzen: Eine Farbe, die auf Weiß gut lesbar ist, kann auf einer grauen Fläche durchfallen.
 - Kleine Teile späterer Stories vorzuziehen ist in Ordnung, wenn es das Testen erleichtert. Es muss nur dokumentiert werden, damit es in der späteren Story nicht doppelt gebaut wird.
+
+## Story 3: Listen-Ansicht mit Filter
+
+**Ziel:** Alle Bewerbungen als Tabelle anzeigen, filtern nach Status, Arbeitsmodell und Quelle, suchen nach Firma oder Rolle und sortieren nach Datum, Passung und nächstem Schritt.
+
+**Vorgehen:**
+- Tabelle nach DESIGN.md: Kopf im Label-Stil, Haarlinien, Daten und Zahlen in Mono-Schrift, Status als Badge mit Punkt, überfällige Schritte rot. Auf dem Handy scrollt sie horizontal.
+- Filter als Auswahlfelder mit „Alle“ als oberstem Eintrag, dazu ein Suchfeld, ein Zähler („2 von 5 Bewerbungen“) und eigene leere Zustände für „keine Bewerbungen“ und „keine Treffer“.
+- Sortierung über klickbare Spaltenköpfe mit Pfeil und `aria-sort` für Screenreader.
+- Die Filter- und Sortierlogik wurde vor dem Browsertest mit Beispieldaten in Node geprüft.
+- Die vorläufige Aufzählung aus Story 1 wurde gelöscht.
+
+**Entscheidungen:**
+- „Sortierung nach Datum“ bedeutet „Beworben am“ (Variante A). Standard ist die neueste Bewerbung zuerst.
+- Jede Sortierspalte startet in einer sinnvollen Richtung: Passung die beste zuerst, nächster Schritt der früheste zuerst. Leere Werte stehen immer am Ende.
+- Filter und Sortierung werden nicht gespeichert, pro Filter wird ein Wert gewählt.
+- Nach Rückmeldung aus dem Test: Ein Knopf „Filter zurücksetzen“ erscheint, sobald ein Filter aktiv ist, nicht erst bei „keine Treffer“. Chips mit × wurden besprochen und verworfen, weil die Auswahlfelder den Wert schon zeigen.
+
+**Probleme:**
+- TypeScript leitete den Wertetyp des Base-UI-Selects aus dem Eintrag „all“ ab. Gelöst mit einem ausdrücklichen Typargument (`<Select<K | "all">>`).
+- Der Eintrag „Alle“ im Auswahlfeld wurde beim Test übersehen. Ein sichtbarer Knopf zum Zurücksetzen ist leichter zu finden.
+
+**Prüfung:** Lint, Typprüfung und Build fehlerfrei. Manuell getestet und erfüllt: Filter, Suche, keine Treffer mit Zurücksetzen, Sortierung in beide Richtungen, Handy-Ansicht.
+
+**Learnings:**
+- Was technisch vorhanden ist, ist noch nicht auffindbar. Nutzertests decken solche Lücken schnell auf.
+- Reine Logik, also Filtern und Sortieren, lässt sich ohne Browser in Sekunden prüfen, wenn sie von der Oberfläche getrennt ist.

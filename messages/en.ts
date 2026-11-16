@@ -35,6 +35,15 @@ export const en: Messages = {
     },
     list: {
       title: "List",
+      search: "Search company or role",
+      all: "All",
+      companyRole: "Company / Role",
+      noResults: "No matches for these filters.",
+      resetFilters: "Reset filters",
+      count: (shown: number, total: number) =>
+        shown === total
+          ? `${total} ${total === 1 ? "application" : "applications"}`
+          : `${shown} of ${total} applications`,
     },
   },
   theme: {
