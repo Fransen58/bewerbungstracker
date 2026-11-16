@@ -1,13 +1,12 @@
 import { ApplicationSimpleList } from "@/components/application-simple-list";
+import { PageHeader } from "@/components/page-header";
 import { t } from "@/messages";
 
 export default function ListPage() {
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-semibold tracking-tight">
-        {t.pages.list.title}
-      </h1>
+    <>
+      <PageHeader title={t.pages.list.title} />
       <ApplicationSimpleList />
-    </div>
+    </>
   );
 }

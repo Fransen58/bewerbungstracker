@@ -13,6 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { NewApplicationDialog } from "@/components/new-application-dialog";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { t } from "@/messages";
 
 const navItems = [
@@ -30,7 +31,7 @@ function NavLinks({
 }) {
   const pathname = usePathname();
   return (
-    <nav className={cn("flex gap-1", vertical && "flex-col")}>
+    <nav className={cn("flex gap-1.5", vertical && "flex-col")}>
       {navItems.map((item) => {
         const active = pathname === item.href;
         return (
@@ -40,10 +41,11 @@ function NavLinks({
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              "inline-flex h-9 items-center rounded-full px-4 text-sm font-medium transition-colors duration-200 ease-soft",
               active
-                ? "bg-muted text-foreground"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted/70 text-foreground hover:bg-muted",
+              vertical && "h-11 text-base"
             )}
           >
             {item.label}
@@ -58,9 +60,12 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4">
-        <Link href="/" className="font-semibold tracking-tight">
+    <header className="sticky top-0 z-40 bg-gradient-to-b from-background from-60% to-background/0 backdrop-blur-sm">
+      <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-4 md:px-8">
+        <Link
+          href="/"
+          className="text-base font-medium tracking-[-0.03em]"
+        >
           {t.app.name}
         </Link>
 
@@ -70,6 +75,7 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <NewApplicationDialog />
 
           {/* Mobile navigation: slide-in sheet */}
@@ -86,8 +92,10 @@ export function SiteHeader() {
             >
               <MenuIcon />
             </SheetTrigger>
-            <SheetContent side="right" className="p-4">
-              <SheetTitle>{t.app.name}</SheetTitle>
+            <SheetContent side="right" className="gap-6 p-5">
+              <SheetTitle className="text-base tracking-[-0.03em]">
+                {t.app.name}
+              </SheetTitle>
               <NavLinks vertical onNavigate={() => setOpen(false)} />
             </SheetContent>
           </Sheet>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
+import { themeInitScript } from "@/lib/theme-script";
 import { t } from "@/messages";
 
 const geistSans = Geist({
@@ -24,10 +25,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="de"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        {/* Apply the theme before first paint, so there is no light flash. */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <SiteHeader />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">
+        <main className="mx-auto w-full max-w-[1200px] flex-1 px-4 pt-6 pb-16 md:px-8">
           {children}
         </main>
       </body>

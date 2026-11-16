@@ -1,3 +1,5 @@
+import { PageHeader } from "@/components/page-header";
+
 // Temporary page body until the real views are built in later stories.
 export function PagePlaceholder({
   title,
@@ -7,9 +9,9 @@ export function PagePlaceholder({
   text: string;
 }) {
   return (
-    <div className="space-y-2">
-      <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+    <>
+      <PageHeader title={title} />
       <p className="text-muted-foreground">{text}</p>
-    </div>
+    </>
   );
 }

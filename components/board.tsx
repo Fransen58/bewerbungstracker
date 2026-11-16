@@ -24,6 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { EmptyState } from "@/components/empty-state";
+import { NewApplicationDialog } from "@/components/new-application-dialog";
+import { StatusBadge, StatusDot } from "@/components/status-badge";
 import { formatDate, isOverdue } from "@/lib/date";
 import { changeStatus, useAppData } from "@/lib/storage";
 import { STATUSES, type Application, type Status } from "@/lib/types";
@@ -45,9 +48,9 @@ export function Board() {
 
   if (applications.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed p-8 text-center text-muted-foreground">
-        {t.empty.applications}
-      </div>
+      <EmptyState text={t.empty.applications}>
+        <NewApplicationDialog trigger="full" />
+      </EmptyState>
     );
   }
 
@@ -88,7 +91,7 @@ export function Board() {
       }}
     >
       {/* Horizontal scroll on all screen sizes; one column per status. */}
-      <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-4">
+      <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-4 md:-mx-8 md:px-8">
         {STATUSES.map((status) => (
           <Column
             key={status}
@@ -98,7 +101,12 @@ export function Board() {
         ))}
       </div>
       <DragOverlay>
-        {active && <CardBody application={active} className="shadow-lg" />}
+        {active && (
+          <CardBody
+            application={active}
+            className="rotate-[1.5deg] shadow-elevated motion-reduce:rotate-0"
+          />
+        )}
       </DragOverlay>
     </DndContext>
   );
@@ -118,13 +126,16 @@ function Column({
       ref={setNodeRef}
       aria-label={t.options.status[status]}
       className={cn(
-        "flex w-72 shrink-0 flex-col gap-2 rounded-xl bg-muted/50 p-2 transition-colors",
-        isOver && "bg-muted ring-2 ring-ring/40"
+        "flex w-72 shrink-0 flex-col gap-2 rounded-2xl bg-muted/60 p-2 transition-colors duration-200 ease-soft",
+        isOver && "bg-muted ring-2 ring-ring/20"
       )}
     >
-      <h2 className="flex items-center justify-between px-1 pt-1 text-sm font-medium">
-        {t.options.status[status]}
-        <span className="text-xs text-muted-foreground">
+      <h2 className="flex items-center justify-between px-2 pt-1.5 pb-1">
+        <span className="label-caps flex items-center gap-2 text-foreground">
+          <StatusDot status={status} />
+          {t.options.status[status]}
+        </span>
+        <span className="font-mono text-xs text-muted-foreground tabular-nums">
           {applications.length}
         </span>
       </h2>
@@ -151,7 +162,7 @@ function DraggableCard({ application }: { application: Application }) {
       {...attributes}
       {...listeners}
       className={cn(
-        "rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+        "rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40",
         isDragging && "opacity-40"
       )}
     >
@@ -178,29 +189,33 @@ function CardBody({
   return (
     <article
       className={cn(
-        "flex cursor-grab flex-col gap-2 rounded-lg border bg-card p-3 text-card-foreground",
+        "flex cursor-grab flex-col gap-2.5 rounded-xl border bg-card p-3.5 text-card-foreground",
         overdue && "border-destructive",
         className
       )}
     >
       <div>
-        <p className="font-medium leading-snug">{app.company}</p>
-        <p className="text-sm text-muted-foreground">{app.role}</p>
+        <p className="leading-snug font-medium tracking-[-0.02em]">
+          {app.company}
+        </p>
+        <p className="text-[13px] leading-[18px] text-muted-foreground">
+          {app.role}
+        </p>
       </div>
 
       {app.work_model && (
-        <span className="w-fit rounded-md bg-muted px-2 py-0.5 text-xs">
+        <span className="w-fit rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium">
           {t.options.work_model[app.work_model]}
         </span>
       )}
 
       {(app.next_step || app.next_step_date) && (
-        <div className="text-sm">
+        <div className="border-t pt-2.5 text-[13px] leading-[18px]">
           {app.next_step && <p>{app.next_step}</p>}
           {app.next_step_date && (
             <p
               className={cn(
-                "flex items-center gap-1 text-xs text-muted-foreground",
+                "mt-1 flex items-center gap-1 font-mono text-xs text-muted-foreground tabular-nums",
                 overdue && "font-medium text-destructive"
               )}
             >
@@ -231,12 +246,14 @@ function StatusSelect({ application }: { application: Application }) {
         className="w-full"
         aria-label={t.pages.board.changeStatus}
       >
-        <SelectValue />
+        <SelectValue>
+          {(value: Status) => <StatusBadge status={value} className="text-xs" />}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         {STATUSES.map((status) => (
           <SelectItem key={status} value={status}>
-            {t.options.status[status]}
+            <StatusBadge status={status} />
           </SelectItem>
         ))}
       </SelectContent>

@@ -157,7 +157,12 @@ function ChoiceSelect<K extends string>({
   );
 }
 
-export function NewApplicationDialog() {
+// "compact" (header): icon only on small screens. "full": always labeled.
+export function NewApplicationDialog({
+  trigger = "compact",
+}: {
+  trigger?: "compact" | "full";
+}) {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
 
@@ -188,14 +193,18 @@ export function NewApplicationDialog() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger
-        render={<Button size="sm" aria-label={t.form.newApplication} />}
+        render={<Button aria-label={t.form.newApplication} />}
       >
         <PlusIcon />
-        <span className="hidden sm:inline">{t.form.newApplication}</span>
+        <span className={cn(trigger === "compact" && "hidden sm:inline")}>
+          {t.form.newApplication}
+        </span>
       </DialogTrigger>
       <DialogContent className="flex max-h-[90dvh] flex-col sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{t.form.newApplication}</DialogTitle>
+          <DialogTitle className="text-xl font-medium tracking-[-0.03em]">
+            {t.form.newApplication}
+          </DialogTitle>
           <DialogDescription>{t.form.description}</DialogDescription>
         </DialogHeader>
 
@@ -204,7 +213,7 @@ export function NewApplicationDialog() {
           onSubmit={handleSubmit}
           className="flex min-h-0 flex-1 flex-col gap-4"
         >
-          <div className="-mx-4 grid min-h-0 gap-4 overflow-y-auto px-4 py-1 sm:grid-cols-2">
+          <div className="-mx-5 grid min-h-0 gap-4 overflow-y-auto px-5 py-1 sm:grid-cols-2">
             <Field name="company" required error={errors.company}>
               <Input {...input("company")} autoFocus />
             </Field>

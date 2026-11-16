@@ -37,6 +37,10 @@ export const en: Messages = {
       title: "List",
     },
   },
+  theme: {
+    toLight: "Switch to light",
+    toDark: "Switch to dark",
+  },
   empty: {
     applications: "No applications yet – add your first one.",
   },

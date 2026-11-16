@@ -35,6 +35,10 @@ export const de = {
       title: "Liste",
     },
   },
+  theme: {
+    toLight: "Zu hell wechseln",
+    toDark: "Zu dunkel wechseln",
+  },
   empty: {
     applications: "Noch keine Bewerbung – leg die erste an.",
   },

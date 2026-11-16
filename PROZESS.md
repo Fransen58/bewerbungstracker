@@ -83,3 +83,33 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 **Learnings:**
 - Eine Bibliothek wie dnd-kit nimmt viel Arbeit ab: Touch, Tastatur und Barrierefreiheit kommen gleich mit.
 - Wenn das Datenmodell eine Anforderung nicht abbildet, hier den Statuswechsel im Verlauf, lohnt sich eine kleine, bewusste Erweiterung mit Eintrag in der Spec. Ein Workaround wäre auf Dauer teurer.
+
+## Zwischenschritt: Designkonzept und Hell/Dunkel-Umschalter
+
+**Ziel:** Vor den weiteren Ansichten ein einheitliches Design-System festlegen, damit Liste, Detailseite und Dashboard nicht jeweils anders aussehen. SPEC.md verlangt ein „konsistentes Design-System“.
+
+**Vorgehen:**
+- Als Vorbild diente eine Portfolio-Website. Das Abrufwerkzeug lieferte nur den Text, deshalb wurden HTML und Stylesheets direkt geladen und die echten Werte ausgelesen: Farben, Schriften, Radien, Schatten, Bewegungskurven.
+- Daraus entstand `DESIGN.md` als verbindliches Regelwerk. Übernommen wurden Prinzipien und Wirkung (warmer Papierton, Tinte, Haarlinien, Pillen, Labels in Großbuchstaben), keine Inhalte oder Markenelemente.
+- Die Tokens stehen in `app/globals.css`, hell und dunkel, dazu Statusfarben und die Hilfsklasse `label-caps`. Die shadcn-Bausteine (Button, Input, Select, Dialog) wurden angepasst.
+- Neue gemeinsame Bausteine: `StatusBadge`/`StatusDot`, `PageHeader` und `EmptyState`. Board, Liste und Formular nutzen sie.
+- Der Hell/Dunkel-Umschalter aus Story 8 wurde vorgezogen, damit sich das Design in beiden Modi prüfen lässt. Standard ist die Systemeinstellung, eine Wahl per Klick wird gespeichert.
+
+**Entscheidungen:**
+- Status als farbiger Punkt plus Text statt bunter Flächen, damit das Board ruhig bleibt und der Status nicht nur über die Farbe erkennbar ist.
+- Schrift bleibt Geist, weil sie schon eingebunden ist. Die Schrift des Vorbilds (General Sans) ist als Alternative in DESIGN.md notiert.
+- Ein einfacher Knopf hell ↔ dunkel (Variante A) statt eines Umschalters mit drei Stufen. Nach dem ersten Klick folgt die App nicht mehr automatisch dem System.
+- Die Intro-Animationen des Vorbilds wurden bewusst nicht übernommen, weil sie nicht zu einem Arbeitswerkzeug passen.
+
+**Probleme:**
+- Ein Grauton lag nachgerechnet unter dem Mindestkontrast von 4.5:1 auf grauen Flächen und wurde abgedunkelt.
+- Die shadcn-Vorlage enthielt `--font-sans: var(--font-sans)`, also einen Verweis auf sich selbst. Dadurch wurde Geist nie verwendet. Korrigiert auf `--font-geist-sans`.
+- Das Layout ist eine Server-Komponente und durfte das Theme-Modul mit React-Hook nicht importieren. Das Startskript liegt deshalb getrennt in `lib/theme-script.ts`.
+- Missverständnis beim Test: Das „N“ unten links ist das Entwickler-Werkzeug von Next.js. Seine Theme-Einstellung betrifft nur dieses Werkzeug, nicht die App.
+
+**Prüfung:** Lint, Typprüfung und Build fehlerfrei, die Tokens sind im fertigen CSS geprüft. Manuell getestet: helle und dunkle Ansicht, Umschalter und Speicherung, schwebende Karte beim Ziehen, leerer Zustand im privaten Fenster.
+
+**Learnings:**
+- Ein Designkonzept früh festzulegen kostet einen Zwischenschritt, erspart aber das Angleichen am Ende.
+- Kontrast nachrechnen statt schätzen: Eine Farbe, die auf Weiß gut lesbar ist, kann auf einer grauen Fläche durchfallen.
+- Kleine Teile späterer Stories vorzuziehen ist in Ordnung, wenn es das Testen erleichtert. Es muss nur dokumentiert werden, damit es in der späteren Story nicht doppelt gebaut wird.
