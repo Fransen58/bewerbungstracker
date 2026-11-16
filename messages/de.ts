@@ -10,6 +10,7 @@ export const de = {
     board: "Board",
     list: "Liste",
     openMenu: "Menü öffnen",
+    backup: "Backup",
   },
   pages: {
     overview: {
@@ -82,6 +83,39 @@ export const de = {
       date: "Datum",
       note: "Notiz",
       notePlaceholder: "z. B. Gehalt angesprochen, Rückmeldung bis Freitag",
+    },
+  },
+  backup: {
+    title: "Backup",
+    hintTitle: "Deine Daten liegen nur in diesem Browser",
+    hint: "Es gibt keinen Server und kein Konto. Löschst du die Browserdaten oder wechselst du Browser oder Gerät, sind die Bewerbungen weg. Exportiere deshalb regelmäßig ein Backup.",
+    exportTitle: "Exportieren",
+    exportText: (apps: number, events: number) =>
+      `Lädt ${apps} ${apps === 1 ? "Bewerbung" : "Bewerbungen"} und ${events} ${events === 1 ? "Verlaufseintrag" : "Verlaufseinträge"} als JSON-Datei herunter.`,
+    exportButton: "Backup herunterladen",
+    importTitle: "Importieren",
+    importText:
+      "Liest eine Backup-Datei ein und ersetzt damit die aktuellen Daten. Vorher wirst du gefragt.",
+    importButton: "Datei auswählen",
+    confirmTitle: "Aktuelle Daten ersetzen?",
+    confirmText: (current: number, incoming: number) =>
+      `Deine ${current} ${current === 1 ? "Bewerbung wird" : "Bewerbungen werden"} durch ${incoming} aus der Datei ersetzt. Das lässt sich nicht rückgängig machen.`,
+    confirmButton: "Ersetzen",
+    success: (count: number) =>
+      `Import erfolgreich: ${count} ${count === 1 ? "Bewerbung" : "Bewerbungen"} geladen.`,
+    errorTitle: "Import abgelehnt, deine Daten bleiben unverändert.",
+    errors: {
+      invalidJson: "Die Datei ist keine gültige JSON-Datei.",
+      notBackup: "Die Datei ist kein Backup des Bewerbungs-Trackers.",
+      newerVersion:
+        "Das Backup stammt aus einer neueren Version der App und kann hier nicht gelesen werden.",
+      invalidApplication: (n: number, field: string) =>
+        `Bewerbung ${n}: Das Feld „${field}“ fehlt oder ist ungültig.`,
+      invalidEvent: (n: number, field: string) =>
+        `Verlaufseintrag ${n}: Das Feld „${field}“ fehlt oder ist ungültig.`,
+      orphanEvent: (n: number) =>
+        `Verlaufseintrag ${n} gehört zu keiner Bewerbung in der Datei.`,
+      duplicateId: "Die Datei enthält doppelte Einträge.",
     },
   },
   theme: {

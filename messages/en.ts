@@ -12,6 +12,7 @@ export const en: Messages = {
     board: "Board",
     list: "List",
     openMenu: "Open menu",
+    backup: "Backup",
   },
   pages: {
     overview: {
@@ -84,6 +85,39 @@ export const en: Messages = {
       date: "Date",
       note: "Note",
       notePlaceholder: "e.g. discussed salary, feedback by Friday",
+    },
+  },
+  backup: {
+    title: "Backup",
+    hintTitle: "Your data lives only in this browser",
+    hint: "There is no server and no account. If you clear your browser data or switch browser or device, your applications are gone. Export a backup regularly.",
+    exportTitle: "Export",
+    exportText: (apps: number, events: number) =>
+      `Downloads ${apps} ${apps === 1 ? "application" : "applications"} and ${events} history ${events === 1 ? "entry" : "entries"} as a JSON file.`,
+    exportButton: "Download backup",
+    importTitle: "Import",
+    importText:
+      "Reads a backup file and replaces your current data with it. You will be asked first.",
+    importButton: "Choose file",
+    confirmTitle: "Replace current data?",
+    confirmText: (current: number, incoming: number) =>
+      `Your ${current} ${current === 1 ? "application" : "applications"} will be replaced by ${incoming} from the file. This cannot be undone.`,
+    confirmButton: "Replace",
+    success: (count: number) =>
+      `Import successful: ${count} ${count === 1 ? "application" : "applications"} loaded.`,
+    errorTitle: "Import rejected, your data is unchanged.",
+    errors: {
+      invalidJson: "The file is not a valid JSON file.",
+      notBackup: "The file is not an Application Tracker backup.",
+      newerVersion:
+        "The backup comes from a newer version of the app and cannot be read here.",
+      invalidApplication: (n: number, field: string) =>
+        `Application ${n}: the field “${field}” is missing or invalid.`,
+      invalidEvent: (n: number, field: string) =>
+        `History entry ${n}: the field “${field}” is missing or invalid.`,
+      orphanEvent: (n: number) =>
+        `History entry ${n} does not belong to any application in the file.`,
+      duplicateId: "The file contains duplicate entries.",
     },
   },
   theme: {

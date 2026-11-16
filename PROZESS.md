@@ -191,3 +191,27 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 **Learnings:**
 - Kennzahlen brauchen eine klare Definition. „Antwortquote“ klingt eindeutig, die Abgrenzung (Zählt eine Absage? Was ist mit zurückgezogenen Bewerbungen?) musste aber festgelegt werden.
 - Eine kleine Zeile mit der Rechnung unter der Zahl („3 von 4 beworbenen“) macht eine Kennzahl nachvollziehbar.
+
+## Story 6: Backup – Export und Import
+
+**Ziel:** Alle Daten als JSON-Datei sichern und wiederherstellen. Ungültige Dateien werden abgelehnt, ohne vorhandene Daten zu verändern. Ein Hinweis erklärt, dass die Daten nur im Browser liegen.
+
+**Vorgehen:**
+- Eigene Seite „Backup“, erreichbar über eine neue Fußzeile und das Handy-Menü. Die Navigation bleibt bei den drei Punkten aus SPEC.md.
+- `lib/backup.ts`: Das Backup-Format enthält App-Kennung, Schema-Version, Exportdatum, Bewerbungen und Events. Die Prüfung arbeitet Feld für Feld nach dem Datenmodell: Pflichtfelder, Auswahlwerte, Datumsformate, URL nur mit http(s), Passung 0–100, Events nur zu vorhandenen Bewerbungen, keine doppelten IDs. Eine zu neue Schema-Version wird abgelehnt.
+- Fehler werden als Codes zurückgegeben und erst in der Oberfläche übersetzt. Die Meldungen nennen die Bewerbung und das betroffene Feld.
+- Vor dem Ersetzen fragt ein Dialog nach und nennt die Zahlen vorher und nachher.
+- Die Prüflogik wurde in Node mit 15 Fällen getestet, gültigen wie kaputten. Für den Browsertest gab es drei vorbereitete kaputte Dateien.
+
+**Entscheidungen:**
+- Import heißt ersetzen. Zusammenführen steht nicht in SPEC.md.
+- Unbekannte zusätzliche Felder in einer Datei werden verworfen statt übernommen.
+- Seite statt Knopf in der Kopfzeile (Variante A), damit die Kopfzeile für den Sprachumschalter in Story 8 frei bleibt.
+
+**Probleme:** Keine nennenswerten. Die strikte Trennung von Prüflogik und Oberfläche machte das Testen einfach.
+
+**Prüfung:** Lint, Typprüfung und Build fehlerfrei. Manuell getestet und erfüllt: Export, Import mit Abbrechen und Ersetzen (Stand inklusive Verlauf wiederhergestellt), drei ungültige Dateien mit passender Meldung und unveränderten Daten, Backup-Link im Handy-Menü.
+
+**Learnings:**
+- Eine Datei von außen ist nie vertrauenswürdig. Die Prüfung schützt nicht nur vor kaputten Daten, sondern zum Beispiel auch vor manipulierten Links wie `javascript:…`.
+- Fehler als Codes statt als fertige Texte zu liefern, hält die Logik sprachunabhängig. Das passt zur Zweisprachigkeit der App.

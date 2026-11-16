@@ -158,6 +158,11 @@ export function deleteApplication(applicationId: string) {
   });
 }
 
+// Replaces all data at once (for import). Input must be validated before.
+export function replaceAppData(data: AppData) {
+  write(data);
+}
+
 export type NewEvent = Pick<
   ApplicationEvent,
   "application_id" | "type" | "date" | "note"

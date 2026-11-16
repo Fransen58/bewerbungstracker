@@ -97,6 +97,13 @@ export function SiteHeader() {
                 {t.app.name}
               </SheetTitle>
               <NavLinks vertical onNavigate={() => setOpen(false)} />
+              <Link
+                href="/backup"
+                onClick={() => setOpen(false)}
+                className="border-t pt-4 text-sm text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground"
+              >
+                {t.nav.backup}
+              </Link>
             </SheetContent>
           </Sheet>
         </div>
