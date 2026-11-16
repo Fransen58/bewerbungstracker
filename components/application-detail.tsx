@@ -43,9 +43,10 @@ import {
   type ApplicationEvent,
   type EventType,
 } from "@/lib/types";
-import { t } from "@/messages";
+import { useT } from "@/lib/i18n";
 
 export function ApplicationDetail() {
+  const t = useT();
   const id = useSearchParams().get("id");
   const { applications, events } = useAppData();
   const ready = useStorageReady();
@@ -99,6 +100,7 @@ export function ApplicationDetail() {
 // ---------- Facts ----------
 
 function Facts({ app }: { app: Application }) {
+  const t = useT();
   const f = t.form.fields;
   const date = (d: string | null) =>
     d ? (
@@ -216,6 +218,7 @@ function History({
   applicationId: string;
   events: ApplicationEvent[];
 }) {
+  const t = useT();
   return (
     <section>
       <h2 className="label-caps border-b pb-2">
@@ -240,6 +243,7 @@ function History({
 }
 
 function EventItem({ event: e }: { event: ApplicationEvent }) {
+  const t = useT();
   return (
     <li className="relative">
       <span
@@ -277,6 +281,7 @@ function EventItem({ event: e }: { event: ApplicationEvent }) {
 }
 
 function AddEventForm({ applicationId }: { applicationId: string }) {
+  const t = useT();
   const [type, setType] = useState<EventType>("note");
   const [date, setDate] = useState(todayISO);
   const [note, setNote] = useState("");
@@ -360,6 +365,7 @@ function AddEventForm({ applicationId }: { applicationId: string }) {
 // ---------- Delete ----------
 
 function DeleteButton({ application }: { application: Application }) {
+  const t = useT();
   const router = useRouter();
 
   function handleDelete() {

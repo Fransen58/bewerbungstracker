@@ -241,3 +241,30 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 **Learnings:**
 - Weil alle Datenzugriffe von Anfang an durch eine eigene Storage-Schicht laufen, war der Demo-Modus eine Änderung an einer einzigen Stelle.
 - Beispieldaten mit festen Daten veralten. Relative Daten halten eine Demo dauerhaft glaubwürdig.
+
+## Story 8: Sprache und Design-Modus
+
+**Ziel:** Sprache (Deutsch/Englisch) und Hell/Dunkel selbst wählen. Beide Einstellungen bleiben nach dem Neuladen erhalten. Der Hell/Dunkel-Teil war bereits im Designschritt vorgezogen worden.
+
+**Vorgehen:**
+- Sprach-Speicher in `lib/i18n.ts` nach demselben Muster wie Theme und Daten (`useSyncExternalStore`, `localStorage`). Standard ist Deutsch.
+- Alle Komponenten holen ihre Texte jetzt über den Hook `useT()` statt über einen festen Import. Die Umstellung lief per Skript, das in jede Komponente mit Textzugriff `const t = useT()` einsetzte. Die Typprüfung zeigte danach die übrigen Stellen: Hilfsfunktionen außerhalb von Komponenten, Navigation, Demo-Erzeugung.
+- Seiten und Fußzeile wurden dafür zu Client-Komponenten. `<html lang>` und der Tab-Titel wechseln mit.
+- Umschalter „DE | EN“ als Pille mit gleitendem Hintergrund, wie in DESIGN.md beschrieben.
+- Die Suche nach festen Texten fand noch ein „Close“ in den shadcn-Vorlagen, das jetzt ebenfalls übersetzt ist.
+- In Node geprüft: Beide Sprachdateien haben dieselben 211 Texte, gleiche Listenlängen und Parameter.
+
+**Entscheidungen:**
+- Angezeigte Fehlermeldungen (Formular, Import) speichern nur noch die Fehlerart und werden erst beim Anzeigen übersetzt. So wechseln sie mit der Sprache.
+- Auf dem Handy liegen Sprache und Hell/Dunkel im Menü, auf dem Desktop in der Kopfzeile. Das war ein Wunsch nach dem Test, SPEC.md wurde angepasst.
+
+**Probleme:**
+- Bekannte Grenze: Beim Neuladen mit Englisch blitzt kurz der deutsche Text auf, weil das vorgefertigte HTML deutsch ist. Beim Theme ließ sich das per Skript verhindern, bei ganzen Texten geht das ohne Server nicht.
+- Ein Testschritt war nicht durchführbar: Bei geöffnetem modalem Dialog lässt sich die Sprache nicht umschalten. Er wurde durch einen Test auf der Backup-Seite ersetzt.
+
+**Prüfung:** Lint, Typprüfung und Build fehlerfrei. Manuell getestet und erfüllt: Sprachwechsel auf allen Seiten inklusive Datumsformaten, mitwechselnde Fehlermeldung beim Import, Speicherung nach dem Neuladen, Demo auf Englisch, Kopfzeile und Menü in der Handy-Ansicht.
+
+**Learnings:**
+- Texte von Anfang an zentral abzulegen hat sich ausgezahlt. Aus einem festen Import einen Hook zu machen, war vor allem mechanische Arbeit.
+- Fehler als Codes zu speichern (wie schon beim Backup) ist nicht nur sauberer, sondern hier auch sichtbar besser für die Nutzer.
+- Testpläne können selbst Fehler enthalten. Die Rückfrage hat das schnell aufgedeckt.

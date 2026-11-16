@@ -26,10 +26,11 @@ import {
   useStorageReady,
   type AppData,
 } from "@/lib/storage";
-import { t } from "@/messages";
+import { useT } from "@/lib/i18n";
+import type { Messages } from "@/messages";
 
 // Field names in error messages use the form labels where they exist.
-function fieldLabel(field: string): string {
+function fieldLabel(t: Messages, field: string): string {
   const labels: Record<string, string> = {
     ...t.form.fields,
     type: t.detail.history.type,
@@ -39,23 +40,27 @@ function fieldLabel(field: string): string {
   return labels[field] ?? field;
 }
 
-function errorMessage(error: BackupError): string {
+function errorMessage(t: Messages, error: BackupError): string {
   const e = t.backup.errors;
   switch (error.code) {
     case "invalidApplication":
-      return e.invalidApplication(error.index + 1, fieldLabel(error.field));
+      return e.invalidApplication(error.index + 1, fieldLabel(t, error.field));
     case "invalidEvent":
       return error.field === "application_id"
         ? e.orphanEvent(error.index + 1)
-        : e.invalidEvent(error.index + 1, fieldLabel(error.field));
+        : e.invalidEvent(error.index + 1, fieldLabel(t, error.field));
     default:
       return e[error.code];
   }
 }
 
-type Message = { kind: "success" | "error"; text: string };
+// Stores the data of a message, not its text, so it follows language switches.
+type Message =
+  | { kind: "success"; count: number }
+  | { kind: "error"; error: BackupError };
 
 export function BackupPanel() {
+  const t = useT();
   const data = useAppData();
   const ready = useStorageReady();
   const fileInput = useRef<HTMLInputElement>(null);
@@ -82,7 +87,7 @@ export function BackupPanel() {
 
     const result = parseBackup(await file.text());
     if (!result.ok) {
-      setMessage({ kind: "error", text: errorMessage(result.error) });
+      setMessage({ kind: "error", error: result.error });
       return;
     }
     setMessage(null);
@@ -92,10 +97,7 @@ export function BackupPanel() {
   function confirmImport() {
     if (!pending) return;
     replaceAppData(pending);
-    setMessage({
-      kind: "success",
-      text: b.success(pending.applications.length),
-    });
+    setMessage({ kind: "success", count: pending.applications.length });
     setPending(null);
   }
 
@@ -153,7 +155,11 @@ export function BackupPanel() {
               {message.kind === "error" && (
                 <p className="font-medium">{b.errorTitle}</p>
               )}
-              <p>{message.text}</p>
+              <p>
+                {message.kind === "error"
+                  ? errorMessage(t, message.error)
+                  : b.success(message.count)}
+              </p>
             </div>
           </div>
         )}

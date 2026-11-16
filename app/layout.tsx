@@ -4,7 +4,11 @@ import "./globals.css";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { themeInitScript } from "@/lib/theme-script";
-import { t } from "@/messages";
+import { DocumentLang } from "@/components/document-lang";
+import { messages, DEFAULT_LANG } from "@/messages";
+
+// Prerendered HTML uses the default language; the client switches if needed.
+const t = messages[DEFAULT_LANG];
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <DocumentLang />
         <SiteHeader />
         <main className="mx-auto w-full max-w-[1200px] flex-1 px-4 pt-6 pb-16 md:px-8">
           {children}

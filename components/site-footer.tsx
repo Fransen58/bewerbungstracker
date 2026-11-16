@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { FooterDemoLink } from "@/components/demo-controls";
-import { t } from "@/messages";
+import { useT } from "@/lib/i18n";
 
 export function SiteFooter() {
+  const t = useT();
   return (
     <footer className="border-t">
       <div className="mx-auto flex h-14 max-w-[1200px] items-center justify-between gap-4 px-4 text-[13px] text-muted-foreground md:px-8">

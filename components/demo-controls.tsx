@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+// Sample data is always created in the currently active UI language.
 import { createDemoData } from "@/lib/demo-data";
 import {
   endDemo,
@@ -20,21 +21,20 @@ import {
   useAppMode,
   useStorageReady,
 } from "@/lib/storage";
-import { t } from "@/messages";
+import { useT } from "@/lib/i18n";
 
-// Sample data is created in the currently active UI language.
-const createSample = () => createDemoData(t.demo);
 
 export function StartDemoButton({
   variant = "secondary",
 }: {
   variant?: "secondary" | "link";
 }) {
+  const t = useT();
   if (variant === "link") {
     return (
       <button
         type="button"
-        onClick={() => startDemo(createSample)}
+        onClick={() => startDemo(() => createDemoData(t.demo))}
         className="underline decoration-border underline-offset-4 transition-colors duration-200 ease-soft hover:text-foreground hover:decoration-foreground"
       >
         {t.demo.startFooter}
@@ -42,7 +42,7 @@ export function StartDemoButton({
     );
   }
   return (
-    <Button variant="secondary" onClick={() => startDemo(createSample)}>
+    <Button variant="secondary" onClick={() => startDemo(() => createDemoData(t.demo))}>
       <PlayIcon />
       {t.demo.start}
     </Button>
@@ -59,6 +59,7 @@ export function FooterDemoLink() {
 
 // Clearly visible bar above the header while demo mode is active.
 export function DemoBanner() {
+  const t = useT();
   const mode = useAppMode();
   if (mode !== "demo") return null;
 
@@ -89,6 +90,7 @@ export function DemoBanner() {
 }
 
 function ResetDemoButton() {
+  const t = useT();
   return (
     <Dialog>
       <DialogTrigger
@@ -115,7 +117,7 @@ function ResetDemoButton() {
           </DialogClose>
           <DialogClose
             render={<Button />}
-            onClick={() => resetDemo(createSample)}
+            onClick={() => resetDemo(() => createDemoData(t.demo))}
           >
             {t.demo.reset}
           </DialogClose>

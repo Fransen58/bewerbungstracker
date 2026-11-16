@@ -1,5 +1,9 @@
-import { de } from "./de";
+import { de, type Messages } from "./de";
+import { en } from "./en";
 
-// Single access point for UI texts. Language switching follows in story 8;
-// until then German is the fixed default.
-export const t = de;
+export type { Messages };
+export type Lang = "de" | "en";
+
+export const LANGS: readonly Lang[] = ["de", "en"];
+export const DEFAULT_LANG: Lang = "de";
+export const messages: Record<Lang, Messages> = { de, en };

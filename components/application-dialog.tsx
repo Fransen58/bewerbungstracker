@@ -37,10 +37,14 @@ import {
   type Status,
   type WorkModel,
 } from "@/lib/types";
-import { t } from "@/messages";
+import { useT } from "@/lib/i18n";
+import type { Messages } from "@/messages";
 
-type FieldName = keyof typeof t.form.fields;
-type Errors = Partial<Record<FieldName, string>>;
+type FieldName = keyof Messages["form"]["fields"];
+// Errors store the kind only; the text is translated when rendered, so a
+// language switch also updates visible errors.
+type ErrorKind = keyof Messages["form"]["errors"];
+type Errors = Partial<Record<FieldName, ErrorKind>>;
 
 function isValidUrl(value: string) {
   try {
@@ -67,17 +71,17 @@ function parseForm(
   const jobUrl = text("job_url");
   const fitRaw = text("fit_score");
 
-  if (!company) errors.company = t.form.errors.required;
-  if (!role) errors.role = t.form.errors.required;
-  if (!status) errors.status = t.form.errors.required;
-  if (jobUrl && !isValidUrl(jobUrl)) errors.job_url = t.form.errors.url;
+  if (!company) errors.company = "required";
+  if (!role) errors.role = "required";
+  if (!status) errors.status = "required";
+  if (jobUrl && !isValidUrl(jobUrl)) errors.job_url = "url";
 
   const fitScore = fitRaw === null ? null : Number(fitRaw);
   if (
     fitScore !== null &&
     !(Number.isInteger(fitScore) && fitScore >= 0 && fitScore <= 100)
   ) {
-    errors.fit_score = t.form.errors.fitScore;
+    errors.fit_score = "fitScore";
   }
 
   if (Object.keys(errors).length > 0) return { errors };
@@ -112,11 +116,12 @@ function Field({
   children,
 }: {
   name: FieldName;
-  error?: string;
+  error?: ErrorKind;
   required?: boolean;
   className?: string;
   children: ReactNode;
 }) {
+  const t = useT();
   return (
     <div className={cn("grid gap-1.5", className)}>
       <Label htmlFor={name}>
@@ -126,7 +131,7 @@ function Field({
       {children}
       {error && (
         <p id={`${name}-error`} className="text-sm text-destructive">
-          {error}
+          {t.form.errors[error]}
         </p>
       )}
     </div>
@@ -146,6 +151,7 @@ function ChoiceSelect<K extends string>({
   defaultValue?: K | null;
   invalid?: boolean;
 }) {
+  const t = useT();
   return (
     <Select name={name} items={labels} defaultValue={defaultValue}>
       <SelectTrigger id={name} className="w-full" aria-invalid={invalid}>
@@ -168,6 +174,7 @@ export function NewApplicationDialog({
 }: {
   trigger?: "compact" | "full";
 }) {
+  const t = useT();
   return (
     <ApplicationDialog
       triggerButton={<Button aria-label={t.form.newApplication} />}
@@ -188,6 +195,7 @@ export function EditApplicationDialog({
 }: {
   application: Application;
 }) {
+  const t = useT();
   return (
     <ApplicationDialog
       application={application}
@@ -212,6 +220,7 @@ function ApplicationDialog({
   triggerButton: ReactElement;
   triggerContent: ReactNode;
 }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   // Snapshot of the values when the dialog opened. Saving updates the

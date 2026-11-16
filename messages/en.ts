@@ -145,9 +145,17 @@ export const en: Messages = {
       { role: "UX/UI Designer", workation: null, salary: "€50–55k", nextStep: null, notes: null, history: ["Withdrawn myself: no remote option."] },
     ],
   },
+  common: {
+    close: "Close",
+  },
+  language: {
+    label: "Language",
+    names: { de: "German", en: "English" },
+  },
   theme: {
     toLight: "Switch to light",
     toDark: "Switch to dark",
+    label: "Appearance",
   },
   empty: {
     applications: "No applications yet – add your first one.",

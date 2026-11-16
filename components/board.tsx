@@ -30,9 +30,10 @@ import { StatusBadge, StatusDot } from "@/components/status-badge";
 import { formatDate, isOverdue } from "@/lib/date";
 import { changeStatus, useAppData, useStorageReady } from "@/lib/storage";
 import { STATUSES, type Application, type Status } from "@/lib/types";
-import { t } from "@/messages";
+import { useT } from "@/lib/i18n";
 
 export function Board() {
+  const t = useT();
   const { applications } = useAppData();
   const ready = useStorageReady();
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -121,6 +122,7 @@ function Column({
   status: Status;
   applications: Application[];
 }) {
+  const t = useT();
   const { setNodeRef, isOver } = useDroppable({ id: status });
 
   return (
@@ -191,6 +193,7 @@ function CardBody({
   className?: string;
   children?: React.ReactNode;
 }) {
+  const t = useT();
   const overdue = isOverdue(app.next_step_date);
 
   return (
@@ -246,6 +249,7 @@ function CardBody({
 }
 
 function StatusSelect({ application }: { application: Application }) {
+  const t = useT();
   return (
     <Select
       items={t.options.status}

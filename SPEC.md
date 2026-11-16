@@ -111,7 +111,7 @@ Als Besucher meines Portfolios möchte ich die App mit Beispieldaten ausprobiere
 
 ### 8. Sprache und Design-Modus
 Als Nutzer möchte ich Sprache und Hell/Dunkel-Modus selbst wählen.
-- Umschalter Deutsch/Englisch ist jederzeit gut sichtbar in der Navigation; alle Oberflächentexte werden übersetzt.
+- Umschalter Deutsch/Englisch ist jederzeit gut sichtbar in der Navigation; alle Oberflächentexte werden übersetzt. *(Angepasst: auf dem Desktop in der Kopfzeile, auf dem Handy im Menü neben Hell/Dunkel.)*
 - Umschalter Hell/Dunkel (Standard: Systemeinstellung). *(Vorgezogen im Designschritt nach Story 2: Knopf in der Kopfzeile, Wahl wird gespeichert.)*
 - Beide Einstellungen bleiben nach dem Neuladen erhalten.
 

@@ -143,9 +143,17 @@ export const de = {
       { role: "UX/UI Designer", workation: null, salary: "50–55 k €", nextStep: null, notes: null, history: ["Selbst zurückgezogen: kein Remote möglich."] },
     ],
   },
+  common: {
+    close: "Schließen",
+  },
+  language: {
+    label: "Sprache",
+    names: { de: "Deutsch", en: "Englisch" },
+  },
   theme: {
     toLight: "Zu hell wechseln",
     toDark: "Zu dunkel wechseln",
+    label: "Darstellung",
   },
   empty: {
     applications: "Noch keine Bewerbung – leg die erste an.",

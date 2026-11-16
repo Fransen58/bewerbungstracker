@@ -1,6 +1,8 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import type { Status } from "@/lib/types";
-import { t } from "@/messages";
+import { useT } from "@/lib/i18n";
 
 // Colored dot for a status. The color comes from the --status-* tokens.
 export function StatusDot({ status }: { status: Status }) {
@@ -26,6 +28,7 @@ export function StatusBadge({
   pill?: boolean;
   className?: string;
 }) {
+  const t = useT();
   return (
     <span
       className={cn(

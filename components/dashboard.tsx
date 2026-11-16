@@ -13,9 +13,10 @@ import {
 } from "@/lib/metrics";
 import { useAppData, useStorageReady } from "@/lib/storage";
 import { STATUSES } from "@/lib/types";
-import { t } from "@/messages";
+import { useT } from "@/lib/i18n";
 
 export function Dashboard() {
+  const t = useT();
   const { applications, events } = useAppData();
   const ready = useStorageReady();
 
@@ -83,6 +84,7 @@ function Kpi({
 }
 
 function StatusCounts() {
+  const t = useT();
   const { applications } = useAppData();
   const counts = countByStatus(applications);
 
@@ -115,6 +117,7 @@ function StatusCounts() {
 }
 
 function DueList() {
+  const t = useT();
   const { applications } = useAppData();
   const today = todayISO();
   const due = dueThisWeek(applications, today);

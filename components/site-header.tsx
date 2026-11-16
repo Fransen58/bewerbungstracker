@@ -14,14 +14,10 @@ import {
 } from "@/components/ui/sheet";
 import { NewApplicationDialog } from "@/components/application-dialog";
 import { DemoBanner } from "@/components/demo-controls";
+import { LanguageSwitch } from "@/components/language-switch";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { t } from "@/messages";
+import { useT } from "@/lib/i18n";
 
-const navItems = [
-  { href: "/", label: t.nav.overview },
-  { href: "/board", label: t.nav.board },
-  { href: "/list", label: t.nav.list },
-];
 
 function NavLinks({
   vertical,
@@ -30,6 +26,12 @@ function NavLinks({
   vertical?: boolean;
   onNavigate?: () => void;
 }) {
+  const t = useT();
+  const navItems = [
+    { href: "/", label: t.nav.overview },
+    { href: "/board", label: t.nav.board },
+    { href: "/list", label: t.nav.list },
+  ];
   const pathname = usePathname();
   return (
     <nav className={cn("flex gap-1.5", vertical && "flex-col")}>
@@ -58,6 +60,7 @@ function NavLinks({
 }
 
 export function SiteHeader() {
+  const t = useT();
   const [open, setOpen] = useState(false);
 
   return (
@@ -76,8 +79,12 @@ export function SiteHeader() {
           <NavLinks />
         </div>
 
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* On small screens language and theme live in the menu. */}
+          <div className="hidden items-center gap-2 md:flex">
+            <LanguageSwitch />
+            <ThemeToggle />
+          </div>
           <NewApplicationDialog />
 
           {/* Mobile navigation: slide-in sheet */}
@@ -99,10 +106,22 @@ export function SiteHeader() {
                 {t.app.name}
               </SheetTitle>
               <NavLinks vertical onNavigate={() => setOpen(false)} />
+              <div className="space-y-3 border-t pt-4 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">
+                    {t.language.label}
+                  </span>
+                  <LanguageSwitch />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">{t.theme.label}</span>
+                  <ThemeToggle />
+                </div>
+              </div>
               <Link
                 href="/backup"
                 onClick={() => setOpen(false)}
-                className="border-t pt-4 text-sm text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground"
+                className="text-sm text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground"
               >
                 {t.nav.backup}
               </Link>

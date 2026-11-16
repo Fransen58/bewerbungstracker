@@ -27,7 +27,7 @@ import {
   type Status,
   type WorkModel,
 } from "@/lib/types";
-import { t } from "@/messages";
+import { useT } from "@/lib/i18n";
 
 type SortKey = "applied_at" | "fit_score" | "next_step_date";
 type SortDir = "asc" | "desc";
@@ -77,6 +77,7 @@ function compare(a: Application, b: Application, key: SortKey, dir: SortDir) {
 }
 
 export function ApplicationTable() {
+  const t = useT();
   const { applications } = useAppData();
   const ready = useStorageReady();
   const [filters, setFilters] = useState<Filters>(NO_FILTERS);
@@ -212,6 +213,7 @@ export function ApplicationTable() {
 }
 
 function Row({ app }: { app: Application }) {
+  const t = useT();
   const overdue = isOverdue(app.next_step_date);
   const muted = <span className="text-muted-foreground">–</span>;
 
@@ -334,6 +336,7 @@ function FilterSelect<K extends string>({
   value: K | "all";
   onChange: (value: K | "all") => void;
 }) {
+  const t = useT();
   const items: Record<K | "all", string> = {
     ...labels,
     all: `${label}: ${t.pages.list.all}`,
