@@ -1,6 +1,24 @@
 # Entstehungsprozess mit Claude Code
 
-Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Claude Code entstanden ist.
+Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Claude Code entstanden ist. Es soll nachvollziehbar machen, wie man mit einem KI-Agenten ein echtes, veröffentlichtes Produkt baut, inklusive der Stellen, an denen etwas schiefging.
+
+## Werkzeuge und Arbeitsweise
+
+**Werkzeuge:** [Claude Code](https://claude.com/claude-code) im Terminal (macOS), Node.js, Git, Chrome zum Testen, später GitHub und Vercel.
+
+**Drei Dokumente steuern die Arbeit:**
+- **SPEC.md** ist die Quelle der Wahrheit: Problem, Datenmodell, User Stories mit Akzeptanzkriterien. Wurde eine Anforderung im Lauf des Projekts angepasst, steht das dort als Vermerk.
+- **CLAUDE.md** enthält die Spielregeln für den Agenten: immer genau eine Story; vor dem Code ein Plan, der auf mein OK wartet; kleine lauffähige Schritte; nach jeder Story die Akzeptanzkriterien einzeln prüfen, PROZESS.md fortschreiben und committen; keine erfundenen Features; neue Konzepte kurz erklären. Dazu Konventionen wie zweisprachige Texte aus zentralen Dateien, feste englische Schlüssel für Auswahlwerte und eine Schema-Version für gespeicherte Daten.
+- **DESIGN.md** ist das Designkonzept (entstanden nach Story 2): Tokens, Typografie, Formen, Komponenten-Muster.
+
+**Rollen:** Ich bin Product Owner und Tester. Ich entscheide offene Fragen, teste im Browser und gebe Rückmeldung. Claude Code plant, implementiert und prüft alles, was sich ohne Browser prüfen lässt.
+
+**Ablauf jeder Story:**
+1. Claude schlägt einen Plan vor. Offene Punkte kommen als Optionen (A/B) mit Empfehlung und Begründung.
+2. Ich entscheide, Claude setzt in kleinen Schritten um.
+3. Automatische Prüfung: Typprüfung, Lint, Build. Reine Logik (Filter, Kennzahlen, Backup-Prüfung, Speicher-Trennung) wird zusätzlich mit Beispieldaten in Node getestet.
+4. Claude schreibt einen konkreten Testplan für den Browser, ich teste und melde zurück.
+5. Rückmeldungen werden eingearbeitet, dann kommen Dokumentation hier und ein Commit.
 
 ## Story 0: Projekt-Setup
 
