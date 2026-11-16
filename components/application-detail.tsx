@@ -30,7 +30,7 @@ import { EditApplicationDialog } from "@/components/application-dialog";
 import { EmptyState } from "@/components/empty-state";
 import { PageHeader } from "@/components/page-header";
 import { StatusBadge, StatusDot } from "@/components/status-badge";
-import { formatDate, isOverdue, todayISO } from "@/lib/date";
+import { formatDate, formatTimestamp, isOverdue, todayISO } from "@/lib/date";
 import {
   addEvent,
   deleteApplication,
@@ -84,7 +84,7 @@ export function ApplicationDetail() {
         <StatusBadge status={app.status} pill />
         <p className="font-mono text-xs text-muted-foreground tabular-nums">
           {t.detail.created(
-            new Date(app.created_at).toLocaleDateString(t.locale)
+            formatTimestamp(app.created_at, t.locale)
           )}
         </p>
       </div>

@@ -11,9 +11,21 @@ export function isOverdue(date: string | null): boolean {
   return date !== null && date < todayISO();
 }
 
+// Two-digit day and month keep dates aligned in tables (mono font).
+const DATE_FORMAT: Intl.DateTimeFormatOptions = {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+};
+
 export function formatDate(date: string, locale: string): string {
   const [y, m, d] = date.split("-").map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString(locale);
+  return new Date(y, m - 1, d).toLocaleDateString(locale, DATE_FORMAT);
+}
+
+// Same format for full timestamps (e.g. created_at), in local time.
+export function formatTimestamp(timestamp: string, locale: string): string {
+  return new Date(timestamp).toLocaleDateString(locale, DATE_FORMAT);
 }
 
 // Adds days to an ISO day string (YYYY-MM-DD), in local time.
