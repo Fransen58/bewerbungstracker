@@ -16,7 +16,19 @@ export const en: Messages = {
   pages: {
     overview: {
       title: "Overview",
-      placeholder: "The dashboard with your key figures will live here.",
+      responseRate: "Response rate",
+      responseDetail: (responded: number, applied: number) =>
+        applied === 0 ? "Nothing applied yet" : `${responded} of ${applied} applied`,
+      avgFit: "Avg. fit",
+      avgFitDetail: (count: number) =>
+        count === 0
+          ? "No values yet"
+          : `from ${count} ${count === 1 ? "application" : "applications"} with a value`,
+      total: "Total applications",
+      byStatus: "By status",
+      due: "Due this week",
+      dueEmpty: "Nothing due this week.",
+      today: "Today",
     },
     board: {
       title: "Board",

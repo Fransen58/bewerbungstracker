@@ -92,7 +92,7 @@ Als Bewerber möchte ich zu jeder Bewerbung alle Infos und den Verlauf sehen, da
 ### 5. Übersicht (Dashboard)
 Als Bewerber möchte ich Kennzahlen zu meiner Suche sehen, damit ich merke, was funktioniert.
 - Anzahl je Status, Antwortquote (Bewerbungen mit Rückmeldung / alle beworbenen), durchschnittliche Passung.
-- Liste „Diese Woche fällig" mit allen nächsten Schritten der kommenden 7 Tage.
+- Liste „Diese Woche fällig" mit allen nächsten Schritten der kommenden 7 Tage. *(Ergänzt: Überfällige Schritte stehen rot markiert oben in der Liste.)*
 
 ### 6. Backup: Export und Import
 Als Bewerber möchte ich meine Daten sichern und wiederherstellen, damit sie nicht verloren gehen.

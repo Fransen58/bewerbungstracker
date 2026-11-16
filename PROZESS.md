@@ -168,3 +168,26 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 **Learnings:**
 - Ein statischer Export verändert die Architektur: Alles, was von Browserdaten abhängt, muss wissen, ob diese Daten schon geladen sind.
 - Konsolenwarnungen lohnen sich. Hier zeigte die Warnung auf ein echtes Timing-Problem zwischen Speichern und Schließ-Animation.
+
+## Story 5: Übersicht (Dashboard)
+
+**Ziel:** Kennzahlen zur Suche zeigen (Anzahl je Status, Antwortquote, durchschnittliche Passung) und eine Liste „Diese Woche fällig“.
+
+**Vorgehen:**
+- Die Berechnungen liegen als reine Funktionen in `lib/metrics.ts`, getrennt von der Oberfläche. Vor dem Browsertest wurden sie mit Beispieldaten in Node geprüft, inklusive Grenzfällen: heute + 7 Tage, Monats- und Jahreswechsel, leere Daten.
+- Oben drei große Kennzahlen im Stil von DESIGN.md: Antwortquote, Ø Passung, gesamt. Darunter die Anzahl je Status und die fälligen Schritte, die per Klick zur Detailseite führen.
+- Der Platzhalter aus Story 0 wurde gelöscht.
+
+**Entscheidungen:**
+- Antwortquote: „Beworben“ heißt, die Bewerbung steht nicht mehr auf „Entdeckt“. „Rückmeldung“ heißt, sie war irgendwann in Erstgespräch, Weiterer Runde, Angebot, Zusage oder Absage. Der Verlauf zählt mit, eine nach einem Gespräch zurückgezogene Bewerbung gilt also als beantwortet.
+- Überfällige Schritte stehen rot oben in „Diese Woche fällig“ (Variante A). Das geht über SPEC.md hinaus und ist dort vermerkt.
+- Statusbalken entfernt (Variante A nach Rückmeldung). Die graue Spur wirkte bei leeren Status wie ein Skeleton Loader, und bei wenigen Bewerbungen reichen die Zahlen.
+
+**Probleme:**
+- Die Balken waren als Anteilsdiagramm gedacht, aber im Test nicht verständlich. Eine Visualisierung, die man erklären muss, erfüllt ihren Zweck nicht.
+
+**Prüfung:** Lint, Typprüfung und Build fehlerfrei. Manuell getestet und erfüllt: Antwortquote (3 von 4 = 75 % nachvollzogen), Ø Passung, Anzahl je Status, Reihenfolge und Markierung in „Diese Woche fällig“, Klick zur Detailseite, Handy-Ansicht.
+
+**Learnings:**
+- Kennzahlen brauchen eine klare Definition. „Antwortquote“ klingt eindeutig, die Abgrenzung (Zählt eine Absage? Was ist mit zurückgezogenen Bewerbungen?) musste aber festgelegt werden.
+- Eine kleine Zeile mit der Rechnung unter der Zahl („3 von 4 beworbenen“) macht eine Kennzahl nachvollziehbar.

@@ -14,7 +14,19 @@ export const de = {
   pages: {
     overview: {
       title: "Übersicht",
-      placeholder: "Hier entsteht das Dashboard mit deinen Kennzahlen.",
+      responseRate: "Antwortquote",
+      responseDetail: (responded: number, applied: number) =>
+        applied === 0 ? "Noch nichts beworben" : `${responded} von ${applied} beworbenen`,
+      avgFit: "Ø Passung",
+      avgFitDetail: (count: number) =>
+        count === 0
+          ? "Noch keine Werte"
+          : `aus ${count} ${count === 1 ? "Bewerbung" : "Bewerbungen"} mit Wert`,
+      total: "Bewerbungen gesamt",
+      byStatus: "Nach Status",
+      due: "Diese Woche fällig",
+      dueEmpty: "Diese Woche ist nichts fällig.",
+      today: "Heute",
     },
     board: {
       title: "Board",
