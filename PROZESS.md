@@ -29,3 +29,31 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 **Learnings:**
 - Werkzeuge entwickeln sich schnell. Templates bringen neue Standardoptionen mit, die nicht zu jedem Einsatzzweck passen, hier zum statischen Export. Ein früher Build-Test fängt so etwas sofort ab.
 - Next.js legt eine `AGENTS.md` mit dem Hinweis an, dass sich seine APIs geändert haben. Die mitgelieferte Doku in `node_modules/next/dist/docs/` ist deshalb verlässlicher als Wissen aus dem Gedächtnis.
+
+## Story 1: Bewerbung anlegen
+
+**Ziel:** Eine neue Bewerbung schnell anlegen. Pflicht sind Firma, Rolle und Status, eine ungültige URL wird abgelehnt, und die Daten überstehen ein Neuladen.
+
+**Vorgehen:**
+- Datentypen (`lib/types.ts`) genau nach dem Datenmodell in SPEC.md. Auswahlwerte sind feste englische Schlüssel (`first_interview`, `remote` …), ihre Übersetzungen stehen in `messages/`.
+- Storage-Schicht (`lib/storage.ts`): ein einziger `localStorage`-Eintrag `{ schemaVersion: 1, applications, events }`. Die Komponenten lesen ihn über den Hook `useAppData()`, der auf `useSyncExternalStore` aufbaut.
+- Formular als Dialog hinter dem Knopf „Neue Bewerbung“ in der Kopfzeile, mit allen Feldern des Datenmodells. Die Prüfung läuft beim Speichern, und Fehler erscheinen direkt am jeweiligen Feld.
+- Board und Liste zeigen vorerst eine einfache Aufzählung (Variante A). Sie wird in Story 2 und 3 durch die richtigen Ansichten ersetzt.
+
+**Entscheidungen:**
+- Das Akzeptanzkriterium „erscheint in Board und Liste“ setzt Ansichten voraus, die es noch nicht gibt. Gemeinsam entschieden: vorläufig eine einfache Aufzählung.
+- Status „Entdeckt“ ist vorausgewählt, damit das Anlegen schnell geht.
+- Beim Anlegen entsteht kein Verlaufs-Event, weil SPEC.md Events erst beim Statuswechsel verlangt.
+- Leere optionale Felder werden als `null` gespeichert, nicht als leerer Text.
+- Die Passung wird auf eine ganze Zahl von 0 bis 100 geprüft, wie im Datenmodell vorgegeben.
+
+**Probleme:**
+- shadcn/ui setzt jetzt auf Base UI statt Radix. Die API ist anders: zum Beispiel `render`-Prop statt `asChild`, und Selects bekommen ihre Beschriftungen über `items`. Nachgeschlagen in den Typdefinitionen unter `node_modules/@base-ui/react`.
+
+**Prüfung:** Lint, Typprüfung und Build fehlerfrei. Die Testschritte (Pflichtfelder, ungültige URL, Anzeige in Board und Liste, Neuladen, Handy-Ansicht) manuell im Browser durchgeführt, alle erfüllt.
+
+**Rückmeldung aus dem Test:** Die Übersicht zeigt noch nichts an, und Einträge lassen sich nicht bearbeiten. Beides ist geplant: Das Dashboard kommt in Story 5, das Bearbeiten in Story 4.
+
+**Learnings:**
+- Wenn mehrere unabhängige Komponenten (Kopfzeile mit Formular, Listenseite) dieselben Browserdaten brauchen, reicht ein kleiner Speicher mit `useSyncExternalStore`. Eine zusätzliche State-Bibliothek ist dafür nicht nötig.
+- Akzeptanzkriterien können von späteren Stories abhängen. Das früh anzusprechen erspart Diskussionen am Ende.

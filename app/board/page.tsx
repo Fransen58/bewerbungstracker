@@ -1,11 +1,13 @@
-import { PagePlaceholder } from "@/components/page-placeholder";
+import { ApplicationSimpleList } from "@/components/application-simple-list";
 import { t } from "@/messages";
 
 export default function BoardPage() {
   return (
-    <PagePlaceholder
-      title={t.pages.board.title}
-      text={t.pages.board.placeholder}
-    />
+    <div className="space-y-4">
+      <h1 className="text-2xl font-semibold tracking-tight">
+        {t.pages.board.title}
+      </h1>
+      <ApplicationSimpleList />
+    </div>
   );
 }

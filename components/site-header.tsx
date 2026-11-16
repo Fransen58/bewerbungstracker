@@ -12,6 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { NewApplicationDialog } from "@/components/new-application-dialog";
 import { t } from "@/messages";
 
 const navItems = [
@@ -68,25 +69,29 @@ export function SiteHeader() {
           <NavLinks />
         </div>
 
-        {/* Mobile navigation: slide-in sheet */}
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                aria-label={t.nav.openMenu}
-              />
-            }
-          >
-            <MenuIcon />
-          </SheetTrigger>
-          <SheetContent side="right" className="p-4">
-            <SheetTitle>{t.app.name}</SheetTitle>
-            <NavLinks vertical onNavigate={() => setOpen(false)} />
-          </SheetContent>
-        </Sheet>
+        <div className="flex items-center gap-2">
+          <NewApplicationDialog />
+
+          {/* Mobile navigation: slide-in sheet */}
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden"
+                  aria-label={t.nav.openMenu}
+                />
+              }
+            >
+              <MenuIcon />
+            </SheetTrigger>
+            <SheetContent side="right" className="p-4">
+              <SheetTitle>{t.app.name}</SheetTitle>
+              <NavLinks vertical onNavigate={() => setOpen(false)} />
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );
