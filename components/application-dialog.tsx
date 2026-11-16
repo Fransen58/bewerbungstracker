@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { PlusIcon } from "lucide-react";
+import { useState, type ReactElement, type ReactNode } from "react";
+import { PencilIcon, PlusIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,11 +23,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { addApplication, type NewApplication } from "@/lib/storage";
+import {
+  addApplication,
+  updateApplication,
+  type NewApplication,
+} from "@/lib/storage";
 import {
   SOURCES,
   STATUSES,
   WORK_MODELS,
+  type Application,
   type Source,
   type Status,
   type WorkModel,
@@ -138,7 +143,7 @@ function ChoiceSelect<K extends string>({
   name: FieldName;
   keys: readonly K[];
   labels: Record<K, string>;
-  defaultValue?: K;
+  defaultValue?: K | null;
   invalid?: boolean;
 }) {
   return (
@@ -163,12 +168,64 @@ export function NewApplicationDialog({
 }: {
   trigger?: "compact" | "full";
 }) {
+  return (
+    <ApplicationDialog
+      triggerButton={<Button aria-label={t.form.newApplication} />}
+      triggerContent={
+        <>
+          <PlusIcon />
+          <span className={cn(trigger === "compact" && "hidden sm:inline")}>
+            {t.form.newApplication}
+          </span>
+        </>
+      }
+    />
+  );
+}
+
+export function EditApplicationDialog({
+  application,
+}: {
+  application: Application;
+}) {
+  return (
+    <ApplicationDialog
+      application={application}
+      triggerButton={<Button variant="secondary" />}
+      triggerContent={
+        <>
+          <PencilIcon />
+          {t.detail.edit}
+        </>
+      }
+    />
+  );
+}
+
+// Shared dialog for creating (no application) and editing an application.
+function ApplicationDialog({
+  application,
+  triggerButton,
+  triggerContent,
+}: {
+  application?: Application;
+  triggerButton: ReactElement;
+  triggerContent: ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
+  // Snapshot of the values when the dialog opened. Saving updates the
+  // application while the close animation still runs; the form must keep
+  // its initial values until it is gone.
+  const [initial, setInitial] = useState(application);
+  const title = application ? t.form.editApplication : t.form.newApplication;
 
   function handleOpenChange(next: boolean) {
     setOpen(next);
-    if (next) setErrors({});
+    if (next) {
+      setErrors({});
+      setInitial(application);
+    }
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -178,32 +235,30 @@ export function NewApplicationDialog({
       setErrors(result.errors);
       return;
     }
-    addApplication(result.value);
+    if (application) updateApplication(application.id, result.value);
+    else addApplication(result.value);
     setOpen(false);
   }
 
-  // Shared props for plain text inputs.
-  const input = (name: FieldName) => ({
-    id: name,
-    name,
-    "aria-invalid": errors[name] ? true : undefined,
-    "aria-describedby": errors[name] ? `${name}-error` : undefined,
-  });
+  // Shared props for plain text inputs, prefilled when editing.
+  const input = (name: FieldName) => {
+    const value = initial?.[name];
+    return {
+      id: name,
+      name,
+      defaultValue: value == null ? "" : String(value),
+      "aria-invalid": errors[name] ? true : undefined,
+      "aria-describedby": errors[name] ? `${name}-error` : undefined,
+    };
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger
-        render={<Button aria-label={t.form.newApplication} />}
-      >
-        <PlusIcon />
-        <span className={cn(trigger === "compact" && "hidden sm:inline")}>
-          {t.form.newApplication}
-        </span>
-      </DialogTrigger>
+      <DialogTrigger render={triggerButton}>{triggerContent}</DialogTrigger>
       <DialogContent className="flex max-h-[90dvh] flex-col sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-medium tracking-[-0.03em]">
-            {t.form.newApplication}
+            {title}
           </DialogTitle>
           <DialogDescription>{t.form.description}</DialogDescription>
         </DialogHeader>
@@ -225,7 +280,7 @@ export function NewApplicationDialog({
                 name="status"
                 keys={STATUSES}
                 labels={t.options.status}
-                defaultValue="discovered"
+                defaultValue={initial?.status ?? "discovered"}
                 invalid={!!errors.status}
               />
             </Field>
@@ -245,6 +300,7 @@ export function NewApplicationDialog({
                 name="source"
                 keys={SOURCES}
                 labels={t.options.source}
+                defaultValue={initial?.source}
               />
             </Field>
             <Field name="work_model">
@@ -252,6 +308,7 @@ export function NewApplicationDialog({
                 name="work_model"
                 keys={WORK_MODELS}
                 labels={t.options.work_model}
+                defaultValue={initial?.work_model}
               />
             </Field>
             <Field name="workation">

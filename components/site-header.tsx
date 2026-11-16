@@ -12,7 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { NewApplicationDialog } from "@/components/new-application-dialog";
+import { NewApplicationDialog } from "@/components/application-dialog";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { t } from "@/messages";
 

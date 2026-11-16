@@ -46,6 +46,34 @@ export const en: Messages = {
           : `${shown} of ${total} applications`,
     },
   },
+  detail: {
+    edit: "Edit",
+    delete: "Delete",
+    deleteTitle: "Delete application?",
+    deleteText: (company: string) =>
+      `${company} and its entire history will be deleted permanently.`,
+    deleteConfirm: "Delete permanently",
+    notFound: "This application does not exist (anymore).",
+    backToList: "Back to list",
+    openJob: "Open posting",
+    created: (date: string) => `Created on ${date}`,
+    sections: {
+      job: "Position",
+      application: "Application",
+      contact: "Contact",
+      nextStep: "Next step",
+      notes: "Notes",
+      history: "History",
+    },
+    history: {
+      empty: "No history entries yet.",
+      add: "Add entry",
+      type: "Type",
+      date: "Date",
+      note: "Note",
+      notePlaceholder: "e.g. discussed salary, feedback by Friday",
+    },
+  },
   theme: {
     toLight: "Switch to light",
     toDark: "Switch to dark",
@@ -55,6 +83,7 @@ export const en: Messages = {
   },
   form: {
     newApplication: "New application",
+    editApplication: "Edit application",
     description: "Only company, role and status are required.",
     save: "Save",
     cancel: "Cancel",
@@ -107,6 +136,14 @@ export const en: Messages = {
       career_site: "Career site",
       recruiter: "Recruitment agency",
       other: "Other",
+    },
+    event_type: {
+      applied: "Applied",
+      interview: "Interview",
+      case: "Case",
+      rejection: "Rejection",
+      offer: "Offer",
+      note: "Note",
     },
     work_model: {
       remote: "100% remote",

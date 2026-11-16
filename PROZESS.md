@@ -140,3 +140,31 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 **Learnings:**
 - Was technisch vorhanden ist, ist noch nicht auffindbar. Nutzertests decken solche Lücken schnell auf.
 - Reine Logik, also Filtern und Sortieren, lässt sich ohne Browser in Sekunden prüfen, wenn sie von der Oberfläche getrennt ist.
+
+## Story 4: Detailseite mit Verlauf
+
+**Ziel:** Zu jeder Bewerbung alle Infos und den Verlauf zeigen, alle Felder bearbeitbar machen, Events hinzufügen und eine Bewerbung nach Rückfrage löschen.
+
+**Vorgehen:**
+- Vorab geklärt, was ein Event ist: ein datierter Eintrag im Verlauf. Er entsteht automatisch bei Statuswechseln oder von Hand, zum Beispiel für Gesprächsnotizen.
+- Die Detailseite liegt unter `/application?id=…`. Board-Karten und Tabellenzeilen sind komplett klickbar, über einen gestreckten Link (`after:absolute inset-0`).
+- Leseansicht in Abschnitten (Stelle, Bewerbung, Kontakt, nächster Schritt, Notizen), daneben der Verlauf als Zeitleiste mit Formular für neue Einträge.
+- Das Formular wurde in eine gemeinsame Komponente gezogen (`application-dialog.tsx`), die Anlegen und Bearbeiten abdeckt.
+- Neu in der Storage-Schicht: `updateApplication()` (ein Statuswechsel erzeugt ein Event), `deleteApplication()` (löscht auch die zugehörigen Events) und `addEvent()`. Vor dem Browsertest mit nachgebildetem `localStorage` in Node geprüft.
+
+**Entscheidungen:**
+- Leseansicht mit „Bearbeiten“-Dialog (Variante A) statt einer Seite, die selbst ein Formular ist. Zum Vorbereiten auf ein Gespräch liest sich das ruhiger.
+- Der Verlauf ist chronologisch sortiert, das älteste Event zuerst. Events lassen sich laut SPEC nur hinzufügen, nicht bearbeiten oder löschen.
+- Nach dem Löschen geht es zurück zum Board.
+
+**Probleme:**
+- Beim statischen Export gibt es keine Seite pro ID, weil die IDs erst im Browser entstehen. Lösung: ID als Parameter in der Adresse, ausgelesen mit `useSearchParams` innerhalb einer `Suspense`-Grenze (laut Next.js-Doku nötig).
+- Das vorgefertigte HTML kennt keine Browserdaten, deshalb blitzte kurz „nicht gefunden“ bzw. „Noch keine Bewerbung“ auf. Gelöst mit dem Hook `useStorageReady()`, auch auf Board und Liste.
+- Base UI warnte, dass sich der Startwert eines Auswahlfelds nachträglich ändert. Ursache: Nach dem Speichern bekam der Dialog während der Schließ-Animation die aktualisierten Daten. Gelöst, indem der Dialog die Werte beim Öffnen übernimmt und bis zum Schließen behält.
+- Links in einer ziehbaren Karte: Das native Ziehen von Links im Browser hätte Drag & Drop gestört, deshalb `draggable={false}`. Das Auswahlfeld liegt mit `z-10` über dem gestreckten Link.
+
+**Prüfung:** Lint, Typprüfung und Build fehlerfrei. Manuell getestet und erfüllt: Öffnen von Board und Liste, Ziehen und Auswahlfeld weiterhin funktionsfähig, Bearbeiten inklusive Statuswechsel im Verlauf, manuelle Einträge chronologisch einsortiert, Löschen mit Abbrechen und Bestätigen, unbekannte ID, Handy-Ansicht. Die Warnung tritt nach dem Fix nicht mehr auf.
+
+**Learnings:**
+- Ein statischer Export verändert die Architektur: Alles, was von Browserdaten abhängt, muss wissen, ob diese Daten schon geladen sind.
+- Konsolenwarnungen lohnen sich. Hier zeigte die Warnung auf ein echtes Timing-Problem zwischen Speichern und Schließ-Animation.

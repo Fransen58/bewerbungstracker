@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ArrowDownIcon, ArrowUpIcon, SearchIcon, XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -13,10 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { EmptyState } from "@/components/empty-state";
-import { NewApplicationDialog } from "@/components/new-application-dialog";
+import { NewApplicationDialog } from "@/components/application-dialog";
 import { StatusBadge } from "@/components/status-badge";
 import { formatDate, isOverdue } from "@/lib/date";
-import { useAppData } from "@/lib/storage";
+import { useAppData, useStorageReady } from "@/lib/storage";
 import {
   SOURCES,
   STATUSES,
@@ -77,11 +78,15 @@ function compare(a: Application, b: Application, key: SortKey, dir: SortDir) {
 
 export function ApplicationTable() {
   const { applications } = useAppData();
+  const ready = useStorageReady();
   const [filters, setFilters] = useState<Filters>(NO_FILTERS);
   const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({
     key: "applied_at",
     dir: "desc",
   });
+
+  // Avoid flashing the empty state before browser data is available.
+  if (!ready) return null;
 
   if (applications.length === 0) {
     return (
@@ -213,9 +218,15 @@ function Row({ app }: { app: Application }) {
   const muted = <span className="text-muted-foreground">–</span>;
 
   return (
-    <tr className="border-b align-top transition-colors duration-200 ease-soft hover:bg-muted/50">
+    <tr className="relative border-b align-top transition-colors duration-200 ease-soft hover:bg-muted/50">
       <Td>
-        <p className="font-medium tracking-[-0.02em]">{app.company}</p>
+        {/* Stretched link: the whole row opens the detail page. */}
+        <Link
+          href={`/application?id=${app.id}`}
+          className="font-medium tracking-[-0.02em] outline-none after:absolute after:inset-0 focus-visible:after:ring-3 focus-visible:after:ring-ring/40"
+        >
+          {app.company}
+        </Link>
         <p className="text-[13px] leading-[18px] text-muted-foreground">
           {app.role}
         </p>

@@ -63,6 +63,18 @@ export function useAppData(): AppData {
   return useSyncExternalStore(subscribe, read, () => EMPTY);
 }
 
+const noopSubscribe = () => () => {};
+
+// False in the prerendered HTML and during hydration, true once browser
+// data is available. Lets views avoid flashing an empty or "not found" state.
+export function useStorageReady(): boolean {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false
+  );
+}
+
 export type NewApplication = Omit<
   Application,
   "id" | "created_at" | "updated_at"
@@ -93,28 +105,72 @@ const STATUS_EVENT_TYPE: Record<Status, EventType> = {
   withdrawn: "note",
 };
 
-// Moves an application to a new status and logs the change as an event.
-export function changeStatus(applicationId: string, status: Status) {
-  const data = read();
-  const current = data.applications.find((a) => a.id === applicationId);
-  if (!current || current.status === status) return;
-
-  const event: ApplicationEvent = {
+function statusEvent(
+  applicationId: string,
+  from: Status,
+  to: Status
+): ApplicationEvent {
+  return {
     id: crypto.randomUUID(),
     application_id: applicationId,
-    type: STATUS_EVENT_TYPE[status],
+    type: STATUS_EVENT_TYPE[to],
     date: todayISO(),
     note: null,
-    from_status: current.status,
-    to_status: status,
+    from_status: from,
+    to_status: to,
   };
+}
+
+// Moves an application to a new status and logs the change as an event.
+export function changeStatus(applicationId: string, status: Status) {
+  const current = read().applications.find((a) => a.id === applicationId);
+  if (!current || current.status === status) return;
+  updateApplication(applicationId, { ...current, status });
+}
+
+// Replaces all editable fields. A status change is logged as an event.
+export function updateApplication(applicationId: string, input: NewApplication) {
+  const data = read();
+  const current = data.applications.find((a) => a.id === applicationId);
+  if (!current) return;
+
+  const statusChanged = current.status !== input.status;
   write({
     ...data,
     applications: data.applications.map((a) =>
       a.id === applicationId
-        ? { ...a, status, updated_at: new Date().toISOString() }
+        ? { ...a, ...input, updated_at: new Date().toISOString() }
         : a
     ),
-    events: [...data.events, event],
+    events: statusChanged
+      ? [...data.events, statusEvent(applicationId, current.status, input.status)]
+      : data.events,
   });
+}
+
+// Removes an application together with all of its events.
+export function deleteApplication(applicationId: string) {
+  const data = read();
+  write({
+    ...data,
+    applications: data.applications.filter((a) => a.id !== applicationId),
+    events: data.events.filter((e) => e.application_id !== applicationId),
+  });
+}
+
+export type NewEvent = Pick<
+  ApplicationEvent,
+  "application_id" | "type" | "date" | "note"
+>;
+
+// Adds a manual event (not a status change).
+export function addEvent(input: NewEvent) {
+  const data = read();
+  const event: ApplicationEvent = {
+    ...input,
+    id: crypto.randomUUID(),
+    from_status: null,
+    to_status: null,
+  };
+  write({ ...data, events: [...data.events, event] });
 }

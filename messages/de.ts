@@ -44,6 +44,34 @@ export const de = {
           : `${shown} von ${total} Bewerbungen`,
     },
   },
+  detail: {
+    edit: "Bearbeiten",
+    delete: "Löschen",
+    deleteTitle: "Bewerbung löschen?",
+    deleteText: (company: string) =>
+      `${company} und der gesamte Verlauf werden endgültig gelöscht.`,
+    deleteConfirm: "Endgültig löschen",
+    notFound: "Diese Bewerbung gibt es nicht (mehr).",
+    backToList: "Zur Liste",
+    openJob: "Anzeige öffnen",
+    created: (date: string) => `Angelegt am ${date}`,
+    sections: {
+      job: "Stelle",
+      application: "Bewerbung",
+      contact: "Kontakt",
+      nextStep: "Nächster Schritt",
+      notes: "Notizen",
+      history: "Verlauf",
+    },
+    history: {
+      empty: "Noch keine Einträge im Verlauf.",
+      add: "Eintrag hinzufügen",
+      type: "Art",
+      date: "Datum",
+      note: "Notiz",
+      notePlaceholder: "z. B. Gehalt angesprochen, Rückmeldung bis Freitag",
+    },
+  },
   theme: {
     toLight: "Zu hell wechseln",
     toDark: "Zu dunkel wechseln",
@@ -53,6 +81,7 @@ export const de = {
   },
   form: {
     newApplication: "Neue Bewerbung",
+    editApplication: "Bewerbung bearbeiten",
     description: "Pflicht sind nur Firma, Rolle und Status.",
     save: "Speichern",
     cancel: "Abbrechen",
@@ -105,6 +134,14 @@ export const de = {
       career_site: "Karriereseite",
       recruiter: "Personalvermittlung",
       other: "Sonstiges",
+    },
+    event_type: {
+      applied: "Beworben",
+      interview: "Gespräch",
+      case: "Case",
+      rejection: "Absage",
+      offer: "Angebot",
+      note: "Notiz",
     },
     work_model: {
       remote: "100 % remote",

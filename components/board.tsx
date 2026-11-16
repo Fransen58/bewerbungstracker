@@ -15,6 +15,7 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
+import Link from "next/link";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -25,15 +26,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { EmptyState } from "@/components/empty-state";
-import { NewApplicationDialog } from "@/components/new-application-dialog";
+import { NewApplicationDialog } from "@/components/application-dialog";
 import { StatusBadge, StatusDot } from "@/components/status-badge";
 import { formatDate, isOverdue } from "@/lib/date";
-import { changeStatus, useAppData } from "@/lib/storage";
+import { changeStatus, useAppData, useStorageReady } from "@/lib/storage";
 import { STATUSES, type Application, type Status } from "@/lib/types";
 import { t } from "@/messages";
 
 export function Board() {
   const { applications } = useAppData();
+  const ready = useStorageReady();
   const [activeId, setActiveId] = useState<string | null>(null);
 
   // Mouse drags start after moving 5px, touch drags after a short press,
@@ -45,6 +47,9 @@ export function Board() {
     }),
     useSensor(KeyboardSensor)
   );
+
+  // Avoid flashing the empty state before browser data is available.
+  if (!ready) return null;
 
   if (applications.length === 0) {
     return (
@@ -167,7 +172,12 @@ function DraggableCard({ application }: { application: Application }) {
       )}
     >
       <CardBody application={application}>
-        <div onMouseDown={stop} onTouchStart={stop} onKeyDown={stop}>
+        <div
+          onMouseDown={stop}
+          onTouchStart={stop}
+          onKeyDown={stop}
+          className="relative z-10"
+        >
           <StatusSelect application={application} />
         </div>
       </CardBody>
@@ -189,15 +199,21 @@ function CardBody({
   return (
     <article
       className={cn(
-        "flex cursor-grab flex-col gap-2.5 rounded-xl border bg-card p-3.5 text-card-foreground",
+        "relative flex cursor-grab flex-col gap-2.5 rounded-xl border bg-card p-3.5 text-card-foreground transition-colors duration-200 ease-soft hover:border-foreground/30",
         overdue && "border-destructive",
         className
       )}
     >
       <div>
-        <p className="leading-snug font-medium tracking-[-0.02em]">
+        {/* Stretched link: the whole card opens the detail page. Native link
+            dragging is disabled so it does not interfere with drag & drop. */}
+        <Link
+          href={`/application?id=${app.id}`}
+          draggable={false}
+          className="leading-snug font-medium tracking-[-0.02em] outline-none after:absolute after:inset-0 after:rounded-xl focus-visible:after:ring-3 focus-visible:after:ring-ring/40"
+        >
           {app.company}
-        </p>
+        </Link>
         <p className="text-[13px] leading-[18px] text-muted-foreground">
           {app.role}
         </p>
