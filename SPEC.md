@@ -145,6 +145,7 @@ Als Bewerber möchte ich den Link oder den Text einer Stellenanzeige einfügen, 
 ### 12. Passung einschätzen
 Als Bewerber möchte ich eine erste Einschätzung, wie gut eine Stelle zu meinem Profil passt.
 - Mein Profil ist einmalig hinterlegt.
+- Ich kann meinen Lebenslauf als PDF hochladen; die KI macht daraus einen Profiltext ohne Kontaktdaten, den ich prüfe und speichere. Die Datei selbst wird nicht gespeichert. *(Ergänzt nach dem ersten Test von Story 12.)*
 - Ausgabe: Passung in Prozent, größte Lücke, ein Satz Begründung.
 - Die Einschätzung ist als KI-Vorschlag gekennzeichnet und überschreibbar.
 - Zusätzlich wird eine Konfidenz (niedrig/mittel/hoch) angezeigt, die davon abhängt, wie viele Angaben zu Stelle und Profil vorliegen.
@@ -174,7 +175,7 @@ Gesammelt am 16.11.2026 nach einem ruhigen Durchgang durch das Tool. Nichts davo
 - Bewerbungsgespräch für ein bestimmtes Unternehmen üben.
 - Werkzeuge, um die eigenen Skills realistisch einzuschätzen.
 - Dokumente je Bewerbung jederzeit abrufbar.
-- Master-Dokumente (Lebenslauf, Anschreiben) ansehen und anpassen.
+- Master-Dokumente (Lebenslauf, Anschreiben) ansehen und anpassen. Den Lebenslauf hochladen und auslesen lassen bleibt dabei ausdrücklich möglich (Grundlage: PDF-Upload aus Story 12).
 - Konstruktives, professionelles Feedback auf Dokumente und Bewerbungen, angepasst an Markt, Branche und Arbeitgeber.
 
 **Von Claude ergänzt**

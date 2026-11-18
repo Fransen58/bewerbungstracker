@@ -389,6 +389,12 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 - Ein Nutzer-Einwand („je mehr Infos, desto genauer“) hat das Feature besser gemacht als der ursprüngliche Plan.
 - Schwellenwerte erst mit echten Ergebnissen festzurren: Der Grenzfall „wenig bekannt“ fiel erst im Test auf.
 
+**Nachtrag: Lebenslauf als PDF einlesen.** Auf die Frage „Kann ich einen Lebenslauf hochladen?“ kam ein kleiner Knopf auf der Profilseite dazu. Die PDF geht an eine dritte Server-Funktion (`/api/cv`). Claude liest sie direkt, die API kann PDFs ohne Umweg über eine Texterkennung verarbeiten. Heraus kommt ein geordneter Profiltext, den der Nutzer prüft und selbst speichert.
+- Entscheidungen: Kontaktdaten, Geburtsdatum, Familienstand usw. lässt die KI weg, weil sie für die Passung egal sind. Datensparsamkeit gehört hier zum Feature. Die Datei wird nirgends gespeichert. Echte Dokumente kommen später mit den Master-Dokumenten, das steht so in der SPEC. Steht schon Text im Profil, fragt die App vor dem Ersetzen.
+- Schutz: Geprüft wird die Dateikennung `%PDF-`, nicht nur die Endung. Die Größengrenze von 4 MB wird schon im Browser geprüft, damit nichts umsonst hochgeladen wird. Vercel nimmt ohnehin nur rund 4,5 MB pro Anfrage an.
+- Prüfung: Ein erfundener Lebenslauf als PDF wurde vollständig übernommen, ohne Name, Adresse, Telefon, E-Mail und Geburtsdatum. Ein Rezept als PDF wurde als „kein Lebenslauf“ erkannt. Eine Nicht-PDF und eine zu große Datei werden mit klarer Meldung abgelehnt. Kosten: rund 2.600 Eingabe- und 430 Ausgabe-Token für eine Seite, etwa 0,05 Cent.
+- Learning: Die Testdateien (PDFs) hat das Browser-Testwerkzeug selbst erzeugt. So waren es von Anfang an erfundene Daten, und niemand musste echte Lebensläufe benutzen.
+
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
 - Das Prozentzeichen springt beim Sprachwechsel. Vermutete Ursache: „80 %“ (Deutsch, mit Leerzeichen) und „80%“ (Englisch) sind unterschiedlich breit. Noch zu prüfen.

@@ -11,7 +11,7 @@ Das Projekt ist zugleich ein Portfolio-Nachweis: Es ist Schritt für Schritt mit
 ## Funktionen
 
 - **Stellenanzeige per KI auslesen:** Link oder Text einer Anzeige einfügen, die KI füllt Firma, Rolle, Arbeitsmodell, Workation, Gehalt und Pflichtanforderungen vor. Fehlende Angaben bleiben leer statt geraten, gespeichert wird erst nach eigener Prüfung.
-- **Passung per KI einschätzen:** Einmal das eigene Profil hinterlegen, dann vergleicht die KI es mit einer Stelle: Passung in Prozent, Konfidenz (je mehr Angaben, desto höher), größte Lücke und ein Satz Begründung, gekennzeichnet als KI-Vorschlag und jederzeit überschreibbar. Direkt nach dem Import optional als „Türsteher“: Passt eine Stelle klar nicht, schlägt die App vor, sie gar nicht erst anzulegen.
+- **Passung per KI einschätzen:** Einmal das eigene Profil hinterlegen (eintippen oder Lebenslauf als PDF einlesen lassen, Kontaktdaten werden dabei weggelassen), dann vergleicht die KI es mit einer Stelle: Passung in Prozent, Konfidenz (je mehr Angaben, desto höher), größte Lücke und ein Satz Begründung, gekennzeichnet als KI-Vorschlag und jederzeit überschreibbar. Direkt nach dem Import optional als „Türsteher“: Passt eine Stelle klar nicht, schlägt die App vor, sie gar nicht erst anzulegen.
 - **Board:** Kanban-Ansicht nach Status, Karten per Drag & Drop verschieben (Maus, Touch, Tastatur). Auf dem Handy ändert man den Status alternativ über ein Auswahlfeld. Überfällige nächste Schritte sind markiert.
 - **Liste:** Tabelle mit Filtern (Status, Arbeitsmodell, Quelle), Suche nach Firma oder Rolle und Sortierung nach Datum, Passung und nächstem Schritt.
 - **Detailseite:** alle Angaben auf einen Blick und bearbeitbar, dazu ein Verlauf mit automatisch protokollierten Statuswechseln und eigenen Einträgen (Gespräch, Case, Notiz …).
@@ -30,12 +30,12 @@ Das Projekt ist zugleich ein Portfolio-Nachweis: Es ist Schritt für Schritt mit
 
 ## Datenschutz und Speicherung
 
-Es gibt keine Datenbank und kein Konto. Alle Daten liegen im `localStorage` des eigenen Browsers, jeder Besucher sieht nur seine eigenen Daten. Ausnahme sind die KI-Funktionen: Nur wenn man sie ausdrücklich startet, gehen über eine Server-Funktion Daten an die Claude-API von Anthropic. Beim Import ist das der eingefügte Text bzw. der Inhalt der verlinkten Seite. Bei der Passungs-Einschätzung sind es das eigene Profil und die Angaben zu dieser einen Stelle. Gespeichert wird auf dem Server nichts. Werden die Browserdaten gelöscht, sind auch die Bewerbungen weg. Davor schützt nur der Export, die App weist auf der Seite „Backup“ darauf hin.
+Es gibt keine Datenbank und kein Konto. Alle Daten liegen im `localStorage` des eigenen Browsers, jeder Besucher sieht nur seine eigenen Daten. Ausnahme sind die KI-Funktionen: Nur wenn man sie ausdrücklich startet, gehen über eine Server-Funktion Daten an die Claude-API von Anthropic. Beim Import ist das der eingefügte Text bzw. der Inhalt der verlinkten Seite. Bei der Passungs-Einschätzung sind es das eigene Profil und die Angaben zu dieser einen Stelle, beim Einlesen eines Lebenslaufs die PDF-Datei. Gespeichert wird auf dem Server nichts, auch nicht der Lebenslauf. Werden die Browserdaten gelöscht, sind auch die Bewerbungen weg. Davor schützt nur der Export, die App weist auf der Seite „Backup“ darauf hin.
 
 ## Tech-Stack
 
-- [Next.js](https://nextjs.org) 16 (App Router) mit TypeScript; alle Seiten werden vorab statisch gebaut, dazu zwei Server-Funktionen für die KI (Import und Passung)
-- [Claude API](https://docs.claude.com) (Modell Claude Haiku 5.5) mit festem Ausgabeformat (Structured Outputs) für das Auslesen von Stellenanzeigen und die Passungs-Einschätzung
+- [Next.js](https://nextjs.org) 16 (App Router) mit TypeScript; alle Seiten werden vorab statisch gebaut, dazu drei Server-Funktionen für die KI (Import, Passung, Lebenslauf)
+- [Claude API](https://docs.claude.com) (Modell Claude Haiku 5.5) mit festem Ausgabeformat (Structured Outputs) für das Auslesen von Stellenanzeigen und Lebensläufen (PDF) und die Passungs-Einschätzung
 - [Tailwind CSS](https://tailwindcss.com) 4 und [shadcn/ui](https://ui.shadcn.com) (auf Basis von Base UI)
 - [dnd-kit](https://dndkit.com) für Drag & Drop
 - Eigene kleine Storage-Schicht mit Schema-Version, auf Basis von `useSyncExternalStore`
