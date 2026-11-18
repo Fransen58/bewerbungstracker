@@ -38,12 +38,15 @@ import {
   STATUSES,
   WORK_MODELS,
   type Application,
+  type FitAssessment,
   type Source,
   type Status,
   type WorkModel,
 } from "@/lib/types";
 import { useT } from "@/lib/i18n";
 import type { JobDraft } from "@/lib/job-import";
+import { suggestsDiscard } from "@/lib/fit-client";
+import { AssessButton, FitSummary } from "@/components/fit-panel";
 import type { Messages } from "@/messages";
 
 type FieldName = keyof Messages["form"]["fields"];
@@ -65,8 +68,10 @@ function isValidUrl(value: string) {
 }
 
 // Reads the form, validates it and returns either errors or the new record.
+// The fit assessment is not a form field and is passed through.
 function parseForm(
-  form: FormData
+  form: FormData,
+  fitAssessment: FitAssessment | null
 ): { errors: Errors } | { value: NewApplication } {
   const text = (name: FieldName) => {
     const v = String(form.get(name) ?? "").trim();
@@ -110,6 +115,7 @@ function parseForm(
       contact_email: text("contact_email"),
       cv_version: text("cv_version"),
       requirements: text("requirements"),
+      fit_assessment: fitAssessment,
       notes: text("notes"),
       applied_at: text("applied_at"),
       next_step: text("next_step"),
@@ -240,6 +246,9 @@ function ApplicationDialog({
   // Changing the key re-creates the fields with new start values.
   const [formKey, setFormKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
+  // Story 12: the imported ad text and an optional fit check of it.
+  const [adText, setAdText] = useState<string | null>(null);
+  const [assessment, setAssessment] = useState<FitAssessment | null>(null);
   const title = application ? t.form.editApplication : t.form.newApplication;
 
   function handleOpenChange(next: boolean) {
@@ -247,25 +256,39 @@ function ApplicationDialog({
     if (next) {
       setErrors({});
       setInitial(application);
+      setAdText(null);
+      setAssessment(null);
     }
   }
 
-  // Fills in the imported fields; whatever the user typed elsewhere stays.
-  function applyDraft(draft: JobDraft, url: string | null) {
+  // Fills in the given fields; whatever the user typed elsewhere stays.
+  function fillForm(values: FormValues) {
     const typed = [...new FormData(formRef.current!).entries()].filter(
       ([, v]) => v !== ""
     );
-    const found = Object.entries({ ...draft, job_url: url }).filter(
-      ([, v]) => v !== null
-    );
+    const found = Object.entries(values).filter(([, v]) => v !== null);
     setInitial(Object.fromEntries([...typed, ...found]) as FormValues);
     setErrors({});
     setFormKey((k) => k + 1);
   }
 
+  function applyDraft(draft: JobDraft, url: string | null, text: string) {
+    fillForm({ ...draft, job_url: url });
+    setAdText(text);
+    setAssessment(null);
+  }
+
+  function applyAssessment(result: FitAssessment) {
+    fillForm({ fit_score: result.score });
+    setAssessment(result);
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const result = parseForm(new FormData(e.currentTarget));
+    const result = parseForm(
+      new FormData(e.currentTarget),
+      application ? application.fit_assessment : assessment
+    );
     if ("errors" in result) {
       setErrors(result.errors);
       return;
@@ -306,6 +329,14 @@ function ApplicationDialog({
         >
           <div className="-mx-5 min-h-0 space-y-6 overflow-y-auto px-5 py-1">
             {!application && <ImportBox onDraft={applyDraft} />}
+            {adText && (
+              <FitCheck
+                job={adText}
+                assessment={assessment}
+                onResult={applyAssessment}
+                onDiscard={() => setOpen(false)}
+              />
+            )}
             <div key={formKey} className="grid gap-4 sm:grid-cols-2">
               <Field name="company" required error={errors.company}>
                 <Input {...input("company")} autoFocus />
@@ -435,7 +466,7 @@ type ImportState =
 function ImportBox({
   onDraft,
 }: {
-  onDraft: (draft: JobDraft, url: string | null) => void;
+  onDraft: (draft: JobDraft, url: string | null, text: string) => void;
 }) {
   const t = useT();
   const m = t.form.import;
@@ -458,7 +489,7 @@ function ImportBox({
         setState({ kind: "error", code });
         return;
       }
-      onDraft(data.draft, isUrl ? input : null);
+      onDraft(data.draft, isUrl ? input : null, data.text);
       setState({ kind: "success" });
     } catch {
       setState({ kind: "error", code: "aiFailed" });
@@ -505,6 +536,51 @@ function ImportBox({
         <p role="alert" className="text-sm text-destructive">
           {m.errors[state.code]}
         </p>
+      )}
+    </div>
+  );
+}
+
+// Story 12: optional fit check of an imported ad before saving. Below 50 %
+// (with at least medium confidence) it suggests discarding the job; saving
+// stays possible, the user decides.
+function FitCheck({
+  job,
+  assessment,
+  onResult,
+  onDiscard,
+}: {
+  job: string;
+  assessment: FitAssessment | null;
+  onResult: (assessment: FitAssessment) => void;
+  onDiscard: () => void;
+}) {
+  const t = useT();
+  return (
+    <div className="grid gap-3 rounded-2xl bg-muted/60 p-4">
+      {assessment ? (
+        <FitSummary score={assessment.score} assessment={assessment} />
+      ) : (
+        <div className="flex flex-wrap items-center gap-3">
+          <AssessButton job={job} label={t.fit.check} onResult={onResult} />
+          <p className="text-sm text-muted-foreground">{t.fit.checkHint}</p>
+        </div>
+      )}
+      {assessment && suggestsDiscard(assessment) && (
+        <div
+          role="alert"
+          className="flex flex-wrap items-center gap-3 border-t pt-3"
+        >
+          <p className="text-sm font-medium">{t.fit.discardSuggestion}</p>
+          <Button
+            type="button"
+            size="sm"
+            variant="destructive"
+            onClick={onDiscard}
+          >
+            {t.fit.discard}
+          </Button>
+        </div>
       )}
     </div>
   );

@@ -31,6 +31,7 @@ function NavLinks({
     { href: "/", label: t.nav.overview },
     { href: "/board", label: t.nav.board },
     { href: "/list", label: t.nav.list },
+    { href: "/profile", label: t.nav.profile },
   ];
   const pathname = usePathname();
   return (

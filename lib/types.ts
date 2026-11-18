@@ -36,6 +36,20 @@ export const EVENT_TYPES = [
 ] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 
+export const CONFIDENCE_LEVELS = ["low", "medium", "high"] as const;
+export type Confidence = (typeof CONFIDENCE_LEVELS)[number];
+
+// The latest AI fit assessment (story 12). The score is also written to
+// fit_score; once the user changes fit_score, it is no longer the AI's value.
+export type FitAssessment = {
+  score: number;
+  confidence: Confidence;
+  // Biggest gap between profile and job, null if there is none.
+  gap: string | null;
+  reason: string;
+  created_at: string;
+};
+
 // Optional fields are null when empty. Dates are ISO strings (YYYY-MM-DD),
 // timestamps full ISO date-time strings.
 export type Application = {
@@ -54,6 +68,8 @@ export type Application = {
   cv_version: string | null;
   // Must-have requirements from the job ad, one per line (schema v2).
   requirements: string | null;
+  // Latest AI fit assessment (schema v3).
+  fit_assessment: FitAssessment | null;
   notes: string | null;
   applied_at: string | null;
   next_step: string | null;

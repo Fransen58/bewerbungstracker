@@ -164,7 +164,8 @@ export function createDemoData(texts: Messages["demo"]): AppData {
       contact_name: spec.contact?.name ?? null,
       contact_email: spec.contact?.email ?? null,
       cv_version: spec.cv,
-      requirements: null,
+      requirements: text.requirements,
+      fit_assessment: null,
       notes: text.notes,
       applied_at: spec.appliedDay === null ? null : day(spec.appliedDay),
       next_step: spec.nextDay === null ? null : text.nextStep,
@@ -174,5 +175,5 @@ export function createDemoData(texts: Messages["demo"]): AppData {
     });
   });
 
-  return { schemaVersion: SCHEMA_VERSION, applications, events };
+  return { schemaVersion: SCHEMA_VERSION, applications, events, profile: texts.profile };
 }

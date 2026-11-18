@@ -16,7 +16,7 @@ const KEYS = {
   demo: "bewerbungstracker:demo",
   mode: "bewerbungstracker:mode",
 } as const;
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 export type AppMode = "real" | "demo";
 
@@ -24,12 +24,15 @@ export type AppData = {
   schemaVersion: number;
   applications: Application[];
   events: ApplicationEvent[];
+  // The user's own profile for fit assessments (schema v3).
+  profile: string | null;
 };
 
 const EMPTY: AppData = {
   schemaVersion: SCHEMA_VERSION,
   applications: [],
   events: [],
+  profile: null,
 };
 
 // Cached snapshots: useSyncExternalStore requires the same object
@@ -51,18 +54,19 @@ function readMode(): AppMode {
 }
 
 // Brings data from an older schema version up to the current one.
-// Version 2 added `requirements`; older applications get it as empty.
-// The result is stored on the next write.
-export function migrate<T extends { schemaVersion: number; applications: unknown[] }>(
-  data: T
-): T {
+// Version 2 added `requirements`, version 3 `fit_assessment` and `profile`;
+// older data gets them as empty. The result is stored on the next write.
+export function migrate<
+  T extends { schemaVersion: number; applications: unknown[]; profile?: unknown }
+>(data: T): T {
   if (data.schemaVersion >= SCHEMA_VERSION) return data;
   return {
     ...data,
     schemaVersion: SCHEMA_VERSION,
+    profile: data.profile ?? null,
     applications: data.applications.map((a) =>
-      typeof a === "object" && a !== null && !("requirements" in a)
-        ? { ...a, requirements: null }
+      typeof a === "object" && a !== null
+        ? { requirements: null, fit_assessment: null, ...a }
         : a
     ),
   };
@@ -230,6 +234,12 @@ export function deleteApplication(applicationId: string) {
     applications: data.applications.filter((a) => a.id !== applicationId),
     events: data.events.filter((e) => e.application_id !== applicationId),
   });
+}
+
+// Stores the user's profile; empty text removes it.
+export function setProfile(profile: string) {
+  const text = profile.trim();
+  write({ ...read(), profile: text === "" ? null : text });
 }
 
 // Replaces all data at once (for import). Input must be validated before.

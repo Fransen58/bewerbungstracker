@@ -356,6 +356,39 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 **Nachtrag nach dem zweiten Nutzertest:** Beim LinkedIn-Link („Hamburg or Remote from Germany“) blieb das Arbeitsmodell leer. Die Regel „remote nur bei komplett remote“ war zu streng, denn die Anzeige sagt eindeutig, dass Remote möglich ist. Neue Regel: remote, sobald komplett remote möglich ist, auch als eine von mehreren Optionen; hybrid bei Büro plus Homeoffice oder mobilem Arbeiten; vor Ort nur, wenn die Anzeige das klar sagt; leer, wenn sie nichts dazu sagt (ein Ort allein heißt nicht „vor Ort“). Geprüft mit fünf neuen Testsätzen, den bisherigen Anzeigen und dem LinkedIn-Link, alle elf Fälle richtig. Dabei aufgefallen: LinkedIn blockt wiederholte Abrufe zeitweise (Fehler 429). Für Nutzer greift dann die bestehende Meldung mit dem Rückfallweg „Text einfügen“.
 Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss eindeutige Aussagen auch dann einordnen, wenn sie nicht wörtlich zur Kategorie passen.
 
+## Story 12: Passung einschätzen
+
+**Ziel:** Profil einmal hinterlegen, dann schätzt die KI ein, wie gut eine Stelle passt: Prozent, Konfidenz, größte Lücke, ein Satz Begründung. Als KI-Vorschlag gekennzeichnet und überschreibbar.
+
+**Vorgehen in Schritten, jeder einzeln lauffähig:**
+1. Datenmodell Version 3: Profil (`profile`) und letzte Einschätzung je Bewerbung (`fit_assessment`). Alte Daten und Backups der Versionen 1 und 2 werden migriert, getestet mit acht Fällen, darunter kaputte und zu neue Dateien.
+2. Neue Seite „Profil“ mit einem Textfeld und einem Hinweis, wann das Profil die App verlässt.
+3. Zweite Server-Funktion `/api/fit` mit Haiku 5.5 und festem Ausgabeformat, getestet mit erfundenen Fällen: passend, teilweise, unpassend, nur Jobtitel, sehr kurzes Profil.
+4. Bereich „Passung“ auf der Detailseite: Einschätzung aus den gespeicherten Feldern, Kennzeichnung „KI-Vorschlag“, nach eigener Zahl „Frühere KI-Einschätzung“.
+5. „Passung prüfen“ direkt nach dem Import, mit Verwerfen-Vorschlag.
+6. Demo: erfundenes Profil und Pflichtanforderungen für einige Beispielstellen.
+
+**Entscheidungen:**
+- Konfidenz kam aus dem Nutzertest des Plans: Je mehr über Stelle und Profil bekannt ist, desto belastbarer die Zahl. Die KI vergibt sie nach festen Regeln (konkrete Anforderungen? ausführliches Profil?), damit sie nachvollziehbar bleibt.
+- Gatekeeper: Die Idee kam vom Nutzer. Nach dem Import kennt die KI den ganzen Anzeigentext, dort ist die Einschätzung am genauesten. Sie läuft nur auf Klick, Import und Anlegen ohne Einschätzung bleiben wie bisher.
+- Verwerfen wird nur bei unter 50 % **und** mindestens mittlerer Konfidenz vorgeschlagen. Im Test bekam eine Stelle, von der nur der Titel bekannt war, 45 % bei niedriger Konfidenz. Wenig Wissen ist kein Grund zum Verwerfen, sondern einer zum Nachschauen.
+- „Überschreibbar“ ohne zusätzliches Feld: Die KI schreibt ihre Zahl in die normale Passung. Weicht die Passung später davon ab, hat der Nutzer sie geändert, und die Kennzeichnung verschwindet.
+- Lücke und Begründung schreibt die KI in der eingestellten Sprache. Beim späteren Umschalten bleiben sie, wie sie sind, denn sie sind Text und keine Auswahlwerte.
+
+**Probleme:**
+- Lücke und Begründung waren im ersten Test zu lang. Eine Wortgrenze im Prompt (8 bzw. 25 Wörter) hat das gelöst.
+- Der seit Tagen laufende Entwicklungsserver hatte eine geänderte Datei nicht neu geladen und lieferte einen Fehler, den es im Code nicht gab. Ein Neustart behob ihn. Das Server-Log zeigte die Stelle sofort.
+- Ein Browser-Test fand „KI-Vorschlag“ schon im Hinweistext des Imports und wartete deshalb nicht auf das Ergebnis. Der Fehler lag im Test, nicht in der App. Seitdem wartet der Test auf einen Text, den es nur im Ergebnis gibt.
+
+**Prüfung:**
+- Test-Staffelung: passend 88 %, teilweise 35 %, unpassend 5 %. Bei nur Jobtitel oder Ein-Satz-Profil Konfidenz „niedrig“.
+- Browser-Tests: ohne Profil Hinweis mit Link, Einschätzung speichern, eigene Zahl überschreibt, Gatekeeper mit Verwerfen (nichts gespeichert), Speichern mit Einschätzung, Import ohne Einschätzung, Englisch.
+- Kosten: rund 1.000 Eingabe- und 150–700 Ausgabe-Token pro Einschätzung, also Bruchteile eines Cents.
+
+**Learnings:**
+- Ein Nutzer-Einwand („je mehr Infos, desto genauer“) hat das Feature besser gemacht als der ursprüngliche Plan.
+- Schwellenwerte erst mit echten Ergebnissen festzurren: Der Grenzfall „wenig bekannt“ fiel erst im Test auf.
+
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
 - Das Prozentzeichen springt beim Sprachwechsel. Vermutete Ursache: „80 %“ (Deutsch, mit Leerzeichen) und „80%“ (Englisch) sind unterschiedlich breit. Noch zu prüfen.

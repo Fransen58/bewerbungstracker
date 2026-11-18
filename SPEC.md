@@ -38,10 +38,13 @@ Mehrere Nutzer, Login, Cloud-Sync, Team-Funktionen, E-Mail-Integration, Mobile A
 - contact_name, contact_email (optional)
 - cv_version (Text, z. B. „DE Builder", „EN Element")
 - requirements (Langtext, Pflichtanforderungen der Stelle, eine pro Zeile; ab Schema-Version 2)
+- fit_assessment (optional, letzte KI-Einschätzung der Passung: Prozent, Konfidenz niedrig/mittel/hoch, größte Lücke, Begründung, Zeitpunkt; ab Schema-Version 3)
 - notes (Langtext)
 - applied_at (Datum)
 - next_step (Text) und next_step_date (Datum)
 - created_at, updated_at
+
+**profile** (Langtext, optional, einmal pro Datenbestand: eigenes Profil für die Passungs-Einschätzung; ab Schema-Version 3)
 
 **event** (Verlauf pro Bewerbung)
 - id, application_id
@@ -144,6 +147,9 @@ Als Bewerber möchte ich eine erste Einschätzung, wie gut eine Stelle zu meinem
 - Mein Profil ist einmalig hinterlegt.
 - Ausgabe: Passung in Prozent, größte Lücke, ein Satz Begründung.
 - Die Einschätzung ist als KI-Vorschlag gekennzeichnet und überschreibbar.
+- Zusätzlich wird eine Konfidenz (niedrig/mittel/hoch) angezeigt, die davon abhängt, wie viele Angaben zu Stelle und Profil vorliegen.
+- Nach dem Import kann ich die Passung optional prüfen, bevor ich speichere. Bei geringer Passung (unter 50 %, bei mindestens mittlerer Konfidenz) schlägt die App vor, die Stelle zu verwerfen; die Entscheidung bleibt bei mir. *(Ergänzt im Test: Bei niedriger Konfidenz kommt stattdessen der Hinweis, Angaben zu ergänzen.)*
+- Ohne Klick auf „Passung prüfen“ läuft keine Einschätzung; Import und Anlegen funktionieren wie bisher.
 
 ### 13. Stelle vom Handy teilen
 Als Bewerber möchte ich eine Stellenanzeige auf dem Handy über „Teilen“ direkt an den Tracker schicken, damit ich Stellen unterwegs in Sekunden erfasse.

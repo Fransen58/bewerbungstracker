@@ -1,5 +1,6 @@
 import { SCHEMA_VERSION, migrate, type AppData } from "./storage";
 import {
+  CONFIDENCE_LEVELS,
   EVENT_TYPES,
   SOURCES,
   STATUSES,
@@ -19,6 +20,7 @@ export type BackupFile = {
   exportedAt: string;
   applications: Application[];
   events: ApplicationEvent[];
+  profile: string | null;
 };
 
 export function createBackup(data: AppData): BackupFile {
@@ -28,6 +30,7 @@ export function createBackup(data: AppData): BackupFile {
     exportedAt: new Date().toISOString(),
     applications: data.applications,
     events: data.events,
+    profile: data.profile,
   };
 }
 
@@ -73,6 +76,15 @@ const isOptUrl = (v: unknown) => {
 };
 const isOptFit = (v: unknown) =>
   v === null || (Number.isInteger(v) && (v as number) >= 0 && (v as number) <= 100);
+const isOptAssessment = (v: unknown) =>
+  v === null ||
+  (isObj(v) &&
+    isOptFit(v.score) &&
+    v.score !== null &&
+    isOneOf(CONFIDENCE_LEVELS)(v.confidence) &&
+    isOptText(v.gap) &&
+    isText(v.reason) &&
+    isTimestamp(v.created_at));
 
 // One check per field, following the data model.
 const APPLICATION_FIELDS: Record<keyof Application, (v: unknown) => boolean> = {
@@ -90,6 +102,7 @@ const APPLICATION_FIELDS: Record<keyof Application, (v: unknown) => boolean> = {
   contact_email: isOptText,
   cv_version: isOptText,
   requirements: isOptText,
+  fit_assessment: isOptAssessment,
   notes: isOptText,
   applied_at: isOptDay,
   next_step: isOptText,
@@ -141,11 +154,15 @@ export function parseBackup(text: string): ParseResult {
     return { ok: false, error: { code: "newerVersion" } };
   }
   // Backups from older versions are upgraded before they are checked.
-  const { applications } = migrate({
+  const { applications, profile } = migrate({
     schemaVersion: raw.schemaVersion,
     applications: raw.applications,
+    profile: raw.profile,
   });
   const events = raw.events;
+  if (!isOptText(profile)) {
+    return { ok: false, error: { code: "notBackup" } };
+  }
 
   const ids = new Set<string>();
   for (const [index, app] of applications.entries()) {
@@ -187,6 +204,7 @@ export function parseBackup(text: string): ParseResult {
         pick<Application>(a, APPLICATION_FIELDS)
       ),
       events: events.map((e) => pick<ApplicationEvent>(e, EVENT_FIELDS)),
+      profile: profile as string | null,
     },
   };
 }

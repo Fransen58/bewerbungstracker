@@ -28,6 +28,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { EditApplicationDialog } from "@/components/application-dialog";
 import { EmptyState } from "@/components/empty-state";
+import { FitSection } from "@/components/fit-panel";
 import { PageHeader } from "@/components/page-header";
 import { StatusBadge, StatusDot } from "@/components/status-badge";
 import { formatDate, formatTimestamp, isOverdue, todayISO } from "@/lib/date";
@@ -139,13 +140,6 @@ function Facts({ app }: { app: Application }) {
       <Section title={t.detail.sections.application}>
         <Fact label={f.applied_at}>{date(app.applied_at)}</Fact>
         <Fact label={f.cv_version}>{app.cv_version}</Fact>
-        <Fact label={f.fit_score}>
-          {app.fit_score !== null && (
-            <span className="font-mono text-[13px] tabular-nums">
-              {app.fit_score}
-            </span>
-          )}
-        </Fact>
       </Section>
 
       <Section title={t.detail.sections.contact}>
@@ -172,6 +166,10 @@ function Facts({ app }: { app: Application }) {
             </span>
           )}
         </Fact>
+      </Section>
+
+      <Section title={t.detail.sections.fit}>
+        <FitSection app={app} />
       </Section>
 
       <Section title={t.detail.sections.requirements}>

@@ -11,6 +11,7 @@ Das Projekt ist zugleich ein Portfolio-Nachweis: Es ist Schritt für Schritt mit
 ## Funktionen
 
 - **Stellenanzeige per KI auslesen:** Link oder Text einer Anzeige einfügen, die KI füllt Firma, Rolle, Arbeitsmodell, Workation, Gehalt und Pflichtanforderungen vor. Fehlende Angaben bleiben leer statt geraten, gespeichert wird erst nach eigener Prüfung.
+- **Passung per KI einschätzen:** Einmal das eigene Profil hinterlegen, dann vergleicht die KI es mit einer Stelle: Passung in Prozent, Konfidenz (je mehr Angaben, desto höher), größte Lücke und ein Satz Begründung, gekennzeichnet als KI-Vorschlag und jederzeit überschreibbar. Direkt nach dem Import optional als „Türsteher“: Passt eine Stelle klar nicht, schlägt die App vor, sie gar nicht erst anzulegen.
 - **Board:** Kanban-Ansicht nach Status, Karten per Drag & Drop verschieben (Maus, Touch, Tastatur). Auf dem Handy ändert man den Status alternativ über ein Auswahlfeld. Überfällige nächste Schritte sind markiert.
 - **Liste:** Tabelle mit Filtern (Status, Arbeitsmodell, Quelle), Suche nach Firma oder Rolle und Sortierung nach Datum, Passung und nächstem Schritt.
 - **Detailseite:** alle Angaben auf einen Blick und bearbeitbar, dazu ein Verlauf mit automatisch protokollierten Statuswechseln und eigenen Einträgen (Gespräch, Case, Notiz …).
@@ -29,12 +30,12 @@ Das Projekt ist zugleich ein Portfolio-Nachweis: Es ist Schritt für Schritt mit
 
 ## Datenschutz und Speicherung
 
-Es gibt keine Datenbank und kein Konto. Alle Daten liegen im `localStorage` des eigenen Browsers, jeder Besucher sieht nur seine eigenen Daten. Einzige Ausnahme ist der KI-Import: Nur wenn man ihn ausdrücklich startet, gehen der eingefügte Text bzw. der Inhalt der verlinkten Seite über eine Server-Funktion an die Claude-API von Anthropic. Gespeicherte Bewerbungen werden dabei nie übertragen. Werden die Browserdaten gelöscht, sind auch die Bewerbungen weg. Davor schützt nur der Export, die App weist auf der Seite „Backup“ darauf hin.
+Es gibt keine Datenbank und kein Konto. Alle Daten liegen im `localStorage` des eigenen Browsers, jeder Besucher sieht nur seine eigenen Daten. Ausnahme sind die KI-Funktionen: Nur wenn man sie ausdrücklich startet, gehen über eine Server-Funktion Daten an die Claude-API von Anthropic. Beim Import ist das der eingefügte Text bzw. der Inhalt der verlinkten Seite. Bei der Passungs-Einschätzung sind es das eigene Profil und die Angaben zu dieser einen Stelle. Gespeichert wird auf dem Server nichts. Werden die Browserdaten gelöscht, sind auch die Bewerbungen weg. Davor schützt nur der Export, die App weist auf der Seite „Backup“ darauf hin.
 
 ## Tech-Stack
 
-- [Next.js](https://nextjs.org) 16 (App Router) mit TypeScript; alle Seiten werden vorab statisch gebaut, dazu eine einzelne Server-Funktion für den KI-Import
-- [Claude API](https://docs.claude.com) (Modell Claude Haiku 5.5) mit festem Ausgabeformat (Structured Outputs) für das Auslesen von Stellenanzeigen
+- [Next.js](https://nextjs.org) 16 (App Router) mit TypeScript; alle Seiten werden vorab statisch gebaut, dazu zwei Server-Funktionen für die KI (Import und Passung)
+- [Claude API](https://docs.claude.com) (Modell Claude Haiku 5.5) mit festem Ausgabeformat (Structured Outputs) für das Auslesen von Stellenanzeigen und die Passungs-Einschätzung
 - [Tailwind CSS](https://tailwindcss.com) 4 und [shadcn/ui](https://ui.shadcn.com) (auf Basis von Base UI)
 - [dnd-kit](https://dndkit.com) für Drag & Drop
 - Eigene kleine Storage-Schicht mit Schema-Version, auf Basis von `useSyncExternalStore`
@@ -60,7 +61,7 @@ Für den KI-Import wird ein eigener API-Schlüssel von Anthropic gebraucht. Er g
 ANTHROPIC_API_KEY=sk-ant-…
 ```
 
-Ohne Schlüssel funktioniert alles andere wie gewohnt, der Import meldet dann nur, dass er nicht eingerichtet ist.
+Ohne Schlüssel funktioniert alles andere wie gewohnt, Import und Einschätzung melden dann nur, dass sie nicht eingerichtet sind.
 
 ## Projektdokumente
 
@@ -73,11 +74,11 @@ Ohne Schlüssel funktioniert alles andere wie gewohnt, der Import meldet dann nu
 
 ## English summary
 
-**Application Tracker** is a web app for keeping track of job applications in one place: status, interviews, open questions and the CV version used. Data stays in the browser (`localStorage`, no database, no login); the only server part is an optional AI import that reads a job ad (link or pasted text) with Claude and pre-fills the form for review and can be tried instantly via **“Try the demo”**.
+**Application Tracker** is a web app for keeping track of job applications in one place: status, interviews, open questions and the CV version used. Data stays in the browser (`localStorage`, no database, no login); the only server parts are two optional AI functions using Claude: an import that reads a job ad (link or pasted text) and pre-fills the form for review, and a fit assessment that compares the job with the user's profile (score, confidence, biggest gap, reason) and can act as a gatekeeper right after the import. The app can be tried instantly via **“Try the demo”**.
 
 **Live:** <https://bewerbungstracker-bice.vercel.app>
 
-Features: AI job ad import, Kanban board with drag & drop, filterable and sortable list, detail page with editable fields and history, dashboard (response rate, average fit, due this week), JSON backup import/export with validation, demo mode with separate sample data, German/English UI and light/dark theme.
+Features: AI job ad import, AI fit assessment, Kanban board with drag & drop, filterable and sortable list, detail page with editable fields and history, dashboard (response rate, average fit, due this week), JSON backup import/export with validation, demo mode with separate sample data, German/English UI and light/dark theme.
 
 The project was built step by step with Claude Code as a portfolio piece. The process (approach, decisions, prompts, problems and learnings) is documented in [PROZESS.md](PROZESS.md) (German).
 
