@@ -127,7 +127,7 @@ Als Bewerber möchte ich das Projekt öffentlich zeigen, damit es als Nachweis m
 
 ## Ausbaustufe 2 (nach dem MVP)
 
-_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann 13, dann 10._
+_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann Board und Liste zusammenführen, dann Gesprächsvorbereitung und CV-Vergleich (Stories noch zu schreiben), dann 13, dann 10. Dokumente und E-Mail erst nach dem Cloud-Sync._
 
 ### 10. Cloud-Sync und Login
 - Optionale Speicherung in Supabase mit Login per Magic Link und Row Level Security, damit die Daten geräteübergreifend und sicher verfügbar sind.
@@ -157,13 +157,13 @@ Als Bewerber möchte ich eine Stellenanzeige auf dem Handy über „Teilen“ di
 Gesammelt am 16.11.2026 nach einem ruhigen Durchgang durch das Tool. Nichts davon ist beschlossen; eine Idee wird erst durch eine eigene Story mit Akzeptanzkriterien zum Umfang.
 
 **Vom Nutzer**
-- Board und Liste zu einer Seite zusammenführen, mit Ansichts-Umschalter.
+- Board und Liste zu einer Seite zusammenführen, mit Ansichts-Umschalter. *(Eingeplant nach Story 12; Story folgt.)*
 - Wow-Faktor finden: Was hebt das Tool von Notion-Vorlagen oder Jobstep ab?
 - E-Mail-Konto verknüpfen: Antworten von Firmen automatisch erkennen, Mailverlauf an der Bewerbung hinterlegen.
 - Tipps zur jeweiligen Bewerbung erzeugen.
 - Bewerbung im Tool durchführen: Lebenslauf und Anschreiben auf die Stelle anpassen, als PDF erzeugen, dann zur Originalanzeige springen.
 - Stellen vom Handy teilen (bereits als Story 13 eingeplant).
-- Alternative Version mit Gamification: Jobsuche als Spiel, mit Belohnungen, Erfahrungspunkten und Leveln, aber professionell und organisiert.
+- Alternative Version mit Gamification: Jobsuche als Spiel, mit Belohnungen, Erfahrungspunkten und Leveln, aber professionell und organisiert. *(Für später. Grundsatz: Belohnt werden Handlungen, nie Ergebnisse, also z. B. eine Bewerbung abschicken oder nachfassen, nicht eine Zusage.)*
 - Wissensbereich mit aktuellen Tipps: Online-Bewerbung, Gespräche, Formulare, Dokumente, Unterschiede nach Land und Branche.
 - Bewerbungsgespräch für ein bestimmtes Unternehmen üben.
 - Werkzeuge, um die eigenen Skills realistisch einzuschätzen.

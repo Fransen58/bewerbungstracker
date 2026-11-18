@@ -353,6 +353,9 @@ Dieses Dokument hält fest, wie der Bewerbungs-Tracker Story für Story mit Clau
 - „Nichts raten“ muss man der KI ausdrücklich sagen und am Ergebnis prüfen. Mit klaren Regeln hält sich auch ein kleines Modell daran.
 - Kosten vorher aufschlüsseln und danach messen schafft Vertrauen. Die Schätzung lag deutlich über dem echten Wert.
 
+**Nachtrag nach dem zweiten Nutzertest:** Beim LinkedIn-Link („Hamburg or Remote from Germany“) blieb das Arbeitsmodell leer. Die Regel „remote nur bei komplett remote“ war zu streng, denn die Anzeige sagt eindeutig, dass Remote möglich ist. Neue Regel: remote, sobald komplett remote möglich ist, auch als eine von mehreren Optionen; hybrid bei Büro plus Homeoffice oder mobilem Arbeiten; vor Ort nur, wenn die Anzeige das klar sagt; leer, wenn sie nichts dazu sagt (ein Ort allein heißt nicht „vor Ort“). Geprüft mit fünf neuen Testsätzen, den bisherigen Anzeigen und dem LinkedIn-Link, alle elf Fälle richtig. Dabei aufgefallen: LinkedIn blockt wiederholte Abrufe zeitweise (Fehler 429). Für Nutzer greift dann die bestehende Meldung mit dem Rückfallweg „Text einfügen“.
+Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss eindeutige Aussagen auch dann einordnen, wenn sie nicht wörtlich zur Kategorie passen.
+
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
 - Das Prozentzeichen springt beim Sprachwechsel. Vermutete Ursache: „80 %“ (Deutsch, mit Leerzeichen) und „80%“ (Englisch) sind unterschiedlich breit. Noch zu prüfen.

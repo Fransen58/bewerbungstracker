@@ -140,7 +140,7 @@ Rules:
 - Only use what the ad states explicitly. If a fact is missing or unclear, return null (or an empty list). Never guess or infer from typical industry values.
 - is_job_ad: false if the text is not a job ad (e.g. a login page, cookie notice, error page or job list without a single posting).
 - company, role: as written in the ad.
-- work_model: "remote" only for fully remote, "hybrid" for a mix of remote and office days, "onsite" for office only. null if the ad does not say.
+- work_model: "remote" if working fully remote is possible, even as one option among others (e.g. "Hamburg or remote", "remote possible"). "hybrid" for a mix of office and home/mobile work (e.g. "2 days in the office", "mobiles Arbeiten möglich", "flexible home office"). "onsite" only if the ad clearly says on-site only. null only if the ad says nothing about where people work; a city alone does not mean onsite.
 - workation: only if the ad explicitly mentions working from abroad or workation, short, e.g. "90 days EU". Otherwise null.
 - salary_range: only if the ad states a salary, short, e.g. "60–70k €". Otherwise null.
 - requirements: the must-have requirements only (not "nice to have"), each as one short line. Keep the language of the ad.`;
