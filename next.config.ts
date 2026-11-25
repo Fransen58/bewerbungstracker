@@ -4,8 +4,8 @@ const nextConfig: NextConfig = {
   // Board and list became one page in story 15; old links keep working.
   async redirects() {
     return [
-      { source: "/board", destination: "/applications?view=board", permanent: true },
-      { source: "/list", destination: "/applications?view=list", permanent: true },
+      { source: "/board", destination: "/applications?view=board", permanent: false },
+      { source: "/list", destination: "/applications?view=list", permanent: false },
     ];
   },
   turbopack: {

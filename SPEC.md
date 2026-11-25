@@ -131,7 +131,7 @@ Als Bewerber möchte ich das Projekt öffentlich zeigen, damit es als Nachweis m
 
 ## Ausbaustufe 2 (nach dem MVP)
 
-_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann 14 (vorgezogen am 25.11.2026 für mehr sichtbaren Nutzen im Portfolio), dann 15 (Board und Liste zusammenführen), dann 16 (eigene Datumsauswahl), dann CV-Vergleich (Story noch zu schreiben), dann 13, dann 10. Dokumente und E-Mail erst nach dem Cloud-Sync._
+_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann 14 (vorgezogen am 25.11.2026 für mehr sichtbaren Nutzen im Portfolio), dann 15 (Board und Liste zusammenführen), dann 16 (eigene Datumsauswahl), dann 17 (CV-Versionen vergleichen), dann 13, dann 10. Dokumente und E-Mail erst nach dem Cloud-Sync._
 
 ### 10. Cloud-Sync und Login
 - Optionale Speicherung in Supabase mit Login per Magic Link und Row Level Security, damit die Daten geräteübergreifend und sicher verfügbar sind.
@@ -183,6 +183,17 @@ Als Nutzer möchte ich, dass die Datumsauswahl zum Design der App passt.
 - Bedienbar mit Maus, Touch und Tastatur (Pfeiltasten, Enter, Escape).
 - Gespeichert wird weiter `YYYY-MM-DD`; Daten, Backups und die Pflichtprüfung beim Verlaufseintrag bleiben unverändert.
 
+### 17. CV-Versionen vergleichen
+Als Nutzer möchte ich sehen, welche CV-Version wie oft eine Antwort bekommt, damit ich meine Versionen gezielter einsetze.
+- Die Übersicht zeigt einen Block „CV-Versionen“: je Version die Zahl der Bewerbungen, die Zahl der Antworten und die Antwortquote.
+- „Antwort“ zählt wie bei der bestehenden Antwortquote: Die Bewerbung ist über „Entdeckt“ hinaus, und Status oder Verlauf zeigen eine Rückmeldung (Erstgespräch, weitere Runde, Angebot, Zusage, Absage). Die Quote bezieht sich auf die abgeschickten Bewerbungen.
+- Gleiche Versionen werden zusammengefasst, auch bei anderer Groß-/Kleinschreibung oder zusätzlichen Leerzeichen; angezeigt wird die häufigste Schreibweise. Das Feld bleibt Freitext.
+- Bewerbungen ohne CV-Version erscheinen als eigene Zeile „Ohne Angabe“, immer am Ende.
+- Sortiert nach Antwortquote, bei Gleichstand nach Zahl der Bewerbungen.
+- Bei weniger als drei abgeschickten Bewerbungen einer Version steht ein Hinweis, dass die Zahl noch wenig aussagt.
+- Neutrale Darstellung: keine Wertung wie „beste Version“, keine Auszeichnung (Prinzip „Handlungen belohnen, nie Ergebnisse“).
+- Der Block erscheint, sobald mindestens eine abgeschickte Bewerbung eine CV-Version hat. Keine Datenänderung, keine Migration.
+
 ---
 
 ## Ideen-Speicher (noch nicht eingeplant)
@@ -205,7 +216,8 @@ Gesammelt am 16.11.2026 nach einem ruhigen Durchgang durch das Tool. Nichts davo
 - Konstruktives, professionelles Feedback auf Dokumente und Bewerbungen, angepasst an Markt, Branche und Arbeitgeber.
 
 **Von Claude ergänzt**
-- CV-Versionen vergleichen: Welche CV-Version bekommt die meisten Antworten? Die Daten (cv_version, Verlauf) sind schon da.
+- CV-Versionen vergleichen. *(Eingeplant als Story 17.)*
+- CV-Versionen als Dateien ablegen und im Bewerbungsdialog auswählen statt eintippen. Erst nach dem Cloud-Sync, weil der Browser-Speicher für PDFs zu klein ist; baut auf den Versionsnamen aus Story 17 auf.
 - Nachfass-Assistent: Wenn eine Bewerbung nach X Tagen ohne Antwort ist, erinnern und einen höflichen Nachfass-Entwurf vorschlagen.
 - Gesprächsvorbereitung je Stelle aus Anforderungen und eigenem Profil: wahrscheinliche Fragen, eigene passende Beispiele, Rückfragen an die Firma.
 - Arbeitszeugnis-Übersetzer (DACH-typisch): Zeugnisformulierungen in Klartext übersetzen.

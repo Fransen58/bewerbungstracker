@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CalendarIcon } from "lucide-react";
 import { de, enUS } from "react-day-picker/locale";
 import { cn } from "@/lib/utils";
@@ -40,6 +40,9 @@ export function DatePicker({
   const t = useT();
   const lang = useLang();
   const [open, setOpen] = useState(false);
+  // A click outside (e.g. on the next date field) must not pull focus back
+  // to this field, or the newly opened picker closes right away.
+  const restoreFocus = useRef(true);
   const [inner, setInner] = useState<string | null>(defaultValue);
   const current = value !== undefined ? value : inner;
 
@@ -52,7 +55,13 @@ export function DatePicker({
   return (
     <>
       {name && <input type="hidden" name={name} value={current ?? ""} />}
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover
+        open={open}
+        onOpenChange={(next, details) => {
+          restoreFocus.current = details.reason !== "outside-press";
+          setOpen(next);
+        }}
+      >
         <PopoverTrigger
           id={id}
           aria-invalid={invalid || undefined}
@@ -75,10 +84,12 @@ export function DatePicker({
           }}
           className="max-h-(--available-height) w-auto overflow-y-auto rounded-xl p-2 shadow-elevated ring-0"
           // Start on the chosen day (or today), so arrow keys move days.
+          finalFocus={() => restoreFocus.current}
           initialFocus={() => {
+            // Only the opening popup; a closing one may still be in the DOM.
             const pick = (day: string) =>
               document.querySelector<HTMLElement>(
-                `[data-slot=popover-content] .rdp-day[${day}] button`
+                `[data-slot=popover-content][data-open] .rdp-day[${day}] button`
               );
             return pick("data-selected") ?? pick("data-today");
           }}

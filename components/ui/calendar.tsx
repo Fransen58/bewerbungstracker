@@ -12,6 +12,23 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "lucide-react"
 
+// Where the last pointer press happened; any key press resets it. Lets day
+// buttons tell a click outside (leave focus alone) from keyboard navigation.
+let lastPointerDown: EventTarget | null = null
+
+function useLastPointerDown() {
+  React.useEffect(() => {
+    const press = (e: PointerEvent) => (lastPointerDown = e.target)
+    const key = () => (lastPointerDown = null)
+    document.addEventListener("pointerdown", press, true)
+    document.addEventListener("keydown", key, true)
+    return () => {
+      document.removeEventListener("pointerdown", press, true)
+      document.removeEventListener("keydown", key, true)
+    }
+  }, [])
+}
+
 function Calendar({
   className,
   classNames,
@@ -26,6 +43,7 @@ function Calendar({
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
 }) {
   const defaultClassNames = getDefaultClassNames()
+  useLastPointerDown()
 
   return (
     <DayPicker
@@ -191,7 +209,13 @@ function CalendarDayButton({
 
   const ref = React.useRef<HTMLButtonElement>(null)
   React.useEffect(() => {
-    if (modifiers.focused) ref.current?.focus()
+    // Keep keyboard focus on the focused day (e.g. across month changes),
+    // but not when the user just clicked outside, e.g. into a text input.
+    const calendar = ref.current?.closest("[data-slot=calendar]")
+    const target = lastPointerDown
+    const clickedOutside =
+      target instanceof Node && !!calendar && !calendar.contains(target)
+    if (modifiers.focused && !clickedOutside) ref.current?.focus()
   }, [modifiers.focused])
 
   return (
