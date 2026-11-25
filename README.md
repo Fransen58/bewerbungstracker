@@ -41,9 +41,18 @@ Das Projekt ist zugleich ein Portfolio-Nachweis: Es ist Schritt für Schritt mit
 
 1. Die App **Kurzbefehle** öffnen und mit **+** einen neuen Kurzbefehl anlegen, Name z. B. „Bewerbungs-Tracker“.
 2. In den Details des Kurzbefehls **Im Share-Sheet anzeigen** einschalten. Als Eingabe **URLs** und **Text** zulassen.
-3. Die Aktion **URL codieren** hinzufügen, als Eingabe **Kurzbefehleingabe**.
-4. Die Aktion **Text** hinzufügen: `https://bewerbungstracker-bice.vercel.app/share?text=` und direkt dahinter die Variable **Codierter Text** aus Schritt 3.
-5. Die Aktion **URLs öffnen** hinzufügen, als Eingabe der Text aus Schritt 4.
+3. Die Aktion **URL codieren** hinzufügen (Suche: „codieren“; nicht die Aktion „URL“), als Eingabe **Kurzbefehleingabe**. Sie verpackt Sonderzeichen so, dass sie in eine Adresse passen.
+4. Die Aktion **Text** hinzufügen: `https://bewerbungstracker-bice.vercel.app/share?text=` eintippen, dann direkt dahinter (ohne Leerzeichen) über der Tastatur die blaue Variable **URL-codierter Text** antippen. Hinter `text=` muss eine blaue Blase stehen; fehlt sie, meldet der Tracker „kein Link und kein Text angekommen“.
+5. Die Aktion **URLs öffnen** hinzufügen, als Eingabe der Text aus Schritt 4 (sie heißt dann „Text öffnen“).
+
+So sieht der fertige Kurzbefehl aus:
+
+```
+Apps und 2 weitere von Share-Sheet erhalten
+Kurzbefehleingabe  URL codieren
+Text: https://bewerbungstracker-bice.vercel.app/share?text=[URL-codierter Text]
+Text  öffnen
+```
 
 Danach steht „Bewerbungs-Tracker“ im Teilen-Menü jeder App. Wichtig: Eine Web-App auf dem iPhone-Home-Bildschirm hat ihren eigenen Speicher, getrennt von Safari. Der Kurzbefehl öffnet Safari, nutze den Tracker auf dem iPhone deshalb in Safari (gern als Lesezeichen), nicht als Home-Bildschirm-App.
 
