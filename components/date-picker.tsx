@@ -43,6 +43,7 @@ export function DatePicker({
   // A click outside (e.g. on the next date field) must not pull focus back
   // to this field, or the newly opened picker closes right away.
   const restoreFocus = useRef(true);
+  const popup = useRef<HTMLDivElement>(null);
   const [inner, setInner] = useState<string | null>(defaultValue);
   const current = value !== undefined ? value : inner;
 
@@ -84,7 +85,16 @@ export function DatePicker({
           }}
           className="max-h-(--available-height) w-auto overflow-y-auto rounded-xl p-2 shadow-elevated ring-0"
           // Start on the chosen day (or today), so arrow keys move days.
-          finalFocus={() => restoreFocus.current}
+          // Back to the field, unless focus has already moved on, e.g. to
+          // another date field opened while this popup was still closing.
+          finalFocus={() => {
+            const active = document.activeElement;
+            return (
+              restoreFocus.current &&
+              (active === document.body || !!popup.current?.contains(active))
+            );
+          }}
+          ref={popup}
           initialFocus={() => {
             // Only the opening popup; a closing one may still be in the DOM.
             const pick = (day: string) =>
@@ -102,7 +112,10 @@ export function DatePicker({
             selected={current ? fromISODay(current) : undefined}
             defaultMonth={current ? fromISODay(current) : undefined}
             onSelect={(d) => d && choose(toISODay(d))}
-            className="[--cell-radius:9999px] [--cell-size:--spacing(8)]"
+            // Cells shrink (down to 24px) when the space above and below the
+            // field is short, so all six rows fit without scrolling. 175px
+            // is everything around the rows: padding, caption, weekdays, footer.
+            className="[--cell-radius:9999px] [--cell-size:clamp(--spacing(6),calc((var(--available-height)-175px)/6),--spacing(8))]"
             classNames={{ week: "mt-1 flex w-full" }}
           />
           <div className="sticky bottom-0 -mb-2 flex justify-between gap-2 border-t bg-popover px-1 py-2">

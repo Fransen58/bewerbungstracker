@@ -146,7 +146,7 @@ function Row({ app }: { app: Application }) {
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th scope="col" className="label-caps px-3 py-2.5 font-medium">
+    <th scope="col" className="label-caps px-3 py-2.5 font-medium whitespace-nowrap">
       {children}
     </th>
   );
@@ -178,7 +178,7 @@ function SortTh({
         type="button"
         onClick={() => onSort(sortKey)}
         className={cn(
-          "label-caps -mx-2 inline-flex items-center gap-1 rounded-full px-2 py-1 transition-colors duration-200 ease-soft hover:bg-muted hover:text-foreground",
+          "label-caps -mx-2 inline-flex items-center gap-1 rounded-full px-2 py-1 whitespace-nowrap transition-colors duration-200 ease-soft hover:bg-muted hover:text-foreground",
           active && "text-foreground"
         )}
       >

@@ -167,4 +167,8 @@
   html {
     @apply font-sans;
   }
+  /* Set by lib/lang-script.ts until English texts are applied. */
+  html.lang-pending body {
+    visibility: hidden;
+  }
 }

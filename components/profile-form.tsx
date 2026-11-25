@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CircleCheckIcon,
   FileUpIcon,
@@ -55,6 +55,8 @@ function ProfileEditor() {
   // Text read from a CV, waiting for confirmation to replace the field.
   const [pending, setPending] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
+  const unsaved = value.trim() !== (profile ?? "");
+  useLeaveWarning(unsaved, p.unsaved);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -188,4 +190,29 @@ function ProfileEditor() {
       </Dialog>
     </form>
   );
+}
+
+// While there are unsaved changes, asks before the page is left: on reload
+// or closing the tab (browser dialog) and on clicks on links inside the app.
+function useLeaveWarning(active: boolean, message: string) {
+  useEffect(() => {
+    if (!active) return;
+    const onBeforeUnload = (e: BeforeUnloadEvent) => e.preventDefault();
+    // Capture phase on document runs before Next.js handles the link click.
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as Element | null)?.closest?.("a[href]");
+      if (!(link instanceof HTMLAnchorElement) || link.target === "_blank") return;
+      if (link.origin !== window.location.origin) return;
+      if (!window.confirm(message)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    document.addEventListener("click", onClick, true);
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+      document.removeEventListener("click", onClick, true);
+    };
+  }, [active, message]);
 }

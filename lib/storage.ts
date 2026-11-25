@@ -208,17 +208,24 @@ export function changeStatus(applicationId: string, status: Status) {
 }
 
 // Replaces all editable fields. A status change is logged as an event.
+// Leaving "discovered" without an application date sets it to today, so
+// every application that was sent has one.
 export function updateApplication(applicationId: string, input: NewApplication) {
   const data = read();
   const current = data.applications.find((a) => a.id === applicationId);
   if (!current) return;
 
   const statusChanged = current.status !== input.status;
+  const appliedAt =
+    input.applied_at ??
+    (current.status === "discovered" && input.status !== "discovered"
+      ? todayISO()
+      : null);
   write({
     ...data,
     applications: data.applications.map((a) =>
       a.id === applicationId
-        ? { ...a, ...input, updated_at: new Date().toISOString() }
+        ? { ...a, ...input, applied_at: appliedAt, updated_at: new Date().toISOString() }
         : a
     ),
     events: statusChanged

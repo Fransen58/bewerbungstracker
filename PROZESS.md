@@ -470,6 +470,46 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 
 **Prüfung:** Browser-Tests für die Vorbelegung beim Bearbeiten, Pfeiltaste plus Enter über einen Monatswechsel, „Leeren“, „Heute“, Escape (schließt nur den Kalender, nicht den Dialog), Speichern, die Pflichtprüfung im Verlauf, Englisch (Woche ab Sonntag, englische Monatsnamen), Dunkelmodus und Tippen auf dem Handy.
 
+## Testbericht vom 25.11.2026
+
+**Ziel:** Ein ausführlicher Testbericht zur Live-Version mit 5 Punkten hoher, 12 mittlerer und 15 niedriger Priorität. Erst Fehler beheben, dann mit Story 17 weitermachen.
+
+**Vorgehen:** Jeden Punkt zuerst am Code geprüft und, wo unklar, im Browser nachgestellt. Danach sortiert in echte Fehler (behoben), Wünsche nach neuen Funktionen (in den Ideen-Speicher der SPEC, nicht umgesetzt) und Punkte, die bei genauem Hinsehen keine Fehler sind. Jeder Fix hat einen Browser-Test. Die KI-Antworten waren dabei simuliert, es entstanden also keine API-Kosten.
+
+**Behoben:**
+- Datenverlust und falsche Daten:
+  - Die KI-Passung überschrieb eine selbst gesetzte Passung. Jetzt bleibt der eigene Wert stehen, der KI-Wert steht daneben, und ein Knopf übernimmt ihn.
+  - „Felder ausfüllen“ überschrieb Eingaben. Jetzt füllt der Import nur leere Felder oder seine eigenen früheren Vorschläge.
+  - Wer den Bewerbungsdialog schließt (Escape, X, Abbrechen), wird bei Änderungen gefragt.
+  - Das Profil warnt vor dem Verlassen mit ungespeichertem Text.
+  - E-Mail-Adressen werden geprüft.
+  - Beim Verlassen von „Entdeckt“ wird ein leeres „Beworben am“ auf heute gesetzt.
+- Englische Oberfläche: Der Tab-Titel blieb deutsch, weil Next.js ihn nach dem Laden aus den Metadaten wieder auf Deutsch setzte. Jetzt rendert ihn eine Komponente, die die Sprache kennt. Außerdem blitzten beim Laden deutsche Texte auf. Jetzt versteckt ein kleines Skript die Seite, bis die englischen Texte stehen, ähnlich wie das Theme-Skript gegen den hellen Blitz (höchstens 2 Sekunden).
+- Weitere Fehler:
+  - Eigene 404-Seite.
+  - Der Kalender passt jetzt auch in engen Fenstern ganz hinein; die Tage werden dafür bis auf 24 Pixel kleiner.
+  - Eine leere Notiz lässt sich nicht mehr speichern.
+  - Ein Statuswechsel auf „Zusage“ oder „Zurückgezogen“ hieß im Verlauf „Notiz“; der Titel ist jetzt der neue Status.
+  - Fehlerhafte Felder werden beim Speichern angesprungen.
+  - Die Import-Meldung im Backup verschwindet, sobald die Daten wechseln.
+  - Backups mit fehlenden optionalen Feldern werden angenommen.
+  - Ein nicht lesbarer Link landet trotzdem im Feld „Link zur Stellenanzeige“.
+  - Die Filter zeigen einheitlich „Status: Beworben“.
+  - Die Tabellenköpfe brechen nicht mehr um.
+  - Der Hinweis zum Demo-Modus steht jetzt auf der Backup-Seite.
+  - Die Fehlermeldung für fast leere Seiten ist klarer.
+
+**Keine Fehler:**
+- Die Antwortquote zählte die zurückgezogene Bewerbung zu Recht: Sie hatte vorher ein Erstgespräch, also eine Antwort der Firma. Eine Erklärung im UI steht im Ideen-Speicher.
+- Die ganze Tabellenzeile ist bereits klickbar (nachgemessen).
+- Die Demo-Texte entstehen in der Sprache, in der die Demo gestartet wird. Das war so entschieden.
+
+**Beim Testen gefunden:** Nach einer Datumsauswahl per Enter konnte ein sofortiger Klick auf das nächste Datumsfeld wirkungslos bleiben. Der schließende Kalender holte den Fokus zu seinem Feld zurück, der neue schloss sich. Den Fehler gab es schon seit Story 16, er fiel jetzt nur durch anderes Timing auf. Jetzt bekommt das Feld den Fokus nur zurück, wenn er nicht schon woanders ist.
+
+**Grenze:** Die Warnung im Profil greift bei Links und beim Neuladen. Gegen die Zurück-Taste des Browsers lässt sich das in Next.js nicht sauber abfangen.
+
+**Learning:** Ein fremder Testbericht ist wertvoll, aber er ist eine Liste von Beobachtungen, keine Liste von Aufträgen. Erst nachstellen, dann sortieren: Drei Punkte waren keine Fehler, zwölf sind neue Funktionen und gehören als Entscheidung zu mir, nicht still in einen Fix.
+
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
 - ~~Das Prozentzeichen springt beim Sprachwechsel.~~ Behoben in Story 15.

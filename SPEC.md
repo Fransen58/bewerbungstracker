@@ -74,6 +74,7 @@ Als Bewerber möchte ich eine neue Stelle schnell anlegen, damit ich nichts verg
 - Pflichtfelder: Firma, Rolle, Status. Alle anderen Felder optional.
 - Nach dem Speichern erscheint die Bewerbung sofort in Board und Liste.
 - Ungültige URL wird mit verständlicher Fehlermeldung abgelehnt.
+- Eine ungültige E-Mail-Adresse wird ebenso abgelehnt; beim Speichern springt der Fokus auf das erste fehlerhafte Feld. Schließen mit ungespeicherten Eingaben fragt vorher nach. *(Ergänzt nach dem Testbericht vom 25.11.2026.)*
 - Daten bleiben nach dem Neuladen der Seite erhalten.
 
 ### 2. Board-Ansicht
@@ -82,6 +83,7 @@ Als Bewerber möchte ich alle Bewerbungen als Kanban-Board nach Status sehen, da
 - Karten lassen sich per Drag & Drop in einen anderen Status ziehen; der Wechsel wird gespeichert und als Event protokolliert.
 - Bewerbungen mit überfälligem nächsten Schritt sind sichtbar markiert.
 - Auf dem Handy ist das Board horizontal scrollbar und der Status auch ohne Drag & Drop änderbar.
+- Verlässt eine Bewerbung „Entdeckt“ und hat noch kein Datum „Beworben am“, wird das heutige gesetzt. *(Ergänzt nach dem Testbericht vom 25.11.2026.)*
 
 ### 3. Listen-Ansicht mit Filter
 Als Bewerber möchte ich alle Bewerbungen als Tabelle sehen und filtern, damit ich gezielt suchen kann.
@@ -92,6 +94,7 @@ Als Bewerber möchte ich alle Bewerbungen als Tabelle sehen und filtern, damit i
 Als Bewerber möchte ich zu jeder Bewerbung alle Infos und den Verlauf sehen, damit ich mich schnell auf ein Gespräch vorbereiten kann.
 - Alle Felder sind bearbeitbar.
 - Verlauf zeigt Events chronologisch; neue Events lassen sich hinzufügen.
+- Ein Statuswechsel trägt im Verlauf den neuen Status als Titel; eine Notiz ohne Text wird nicht gespeichert. *(Ergänzt nach dem Testbericht vom 25.11.2026.)*
 - Eine Bewerbung lässt sich nach Rückfrage löschen.
 
 ### 5. Übersicht (Dashboard)
@@ -104,6 +107,7 @@ Als Bewerber möchte ich meine Daten sichern und wiederherstellen, damit sie nic
 - Export lädt alle Bewerbungen und Events als JSON-Datei herunter.
 - Import liest eine solche Datei ein; vorher wird gefragt, ob die aktuellen Daten ersetzt werden sollen.
 - Eine ungültige Datei wird mit verständlicher Fehlermeldung abgelehnt, ohne vorhandene Daten zu verändern.
+- Fehlen in einer Datei optionale Felder, gelten sie als leer; abgelehnt werden nur vorhandene, aber ungültige Werte. *(Ergänzt nach dem Testbericht vom 25.11.2026.)*
 - Ein Hinweis erklärt, dass die Daten nur in diesem Browser liegen und ein Export als Backup empfohlen ist.
 
 ### 7. Demo-Modus
@@ -119,6 +123,7 @@ Als Nutzer möchte ich Sprache und Hell/Dunkel-Modus selbst wählen.
 - Umschalter Deutsch/Englisch ist jederzeit gut sichtbar in der Navigation; alle Oberflächentexte werden übersetzt. *(Angepasst: auf dem Desktop in der Kopfzeile, auf dem Handy im Menü neben Hell/Dunkel.)*
 - Umschalter Hell/Dunkel (Standard: Systemeinstellung). *(Vorgezogen im Designschritt nach Story 2: Knopf in der Kopfzeile, Wahl wird gespeichert.)*
 - Beide Einstellungen bleiben nach dem Neuladen erhalten.
+- Die Seite erscheint direkt in der gewählten Sprache, ohne kurz deutsche Texte zu zeigen; auch der Titel im Browser-Tab ist übersetzt. *(Ergänzt nach dem Testbericht vom 25.11.2026.)*
 
 ### 9. Veröffentlichung und Dokumentation
 Als Bewerber möchte ich das Projekt öffentlich zeigen, damit es als Nachweis meiner Fähigkeiten dient.
@@ -142,6 +147,7 @@ Als Bewerber möchte ich den Link oder den Text einer Stellenanzeige einfügen, 
 - KI extrahiert Firma, Rolle, Arbeitsmodell, Workation, Gehalt und Pflichtanforderungen.
 - Ich prüfe und korrigiere die Vorschläge vor dem Speichern; nichts wird ungefragt gespeichert.
 - Felder, die die Anzeige nicht hergibt, bleiben leer statt geraten.
+- Der Vorschlag füllt nur leere Felder (oder ersetzt einen eigenen früheren Vorschlag); was ich eingetragen habe, bleibt. Ein Link, der sich nicht lesen lässt, landet trotzdem im Feld „Link zur Stellenanzeige“. *(Ergänzt nach dem Testbericht vom 25.11.2026.)*
 
 ### 12. Passung einschätzen
 Als Bewerber möchte ich eine erste Einschätzung, wie gut eine Stelle zu meinem Profil passt.
@@ -149,6 +155,7 @@ Als Bewerber möchte ich eine erste Einschätzung, wie gut eine Stelle zu meinem
 - Ich kann meinen Lebenslauf als PDF hochladen; die KI macht daraus einen Profiltext ohne Kontaktdaten, den ich prüfe und speichere. Die Datei selbst wird nicht gespeichert. *(Ergänzt nach dem ersten Test von Story 12.)*
 - Ausgabe: Passung in Prozent, größte Lücke, ein Satz Begründung.
 - Die Einschätzung ist als KI-Vorschlag gekennzeichnet und überschreibbar.
+- Eine selbst gesetzte Passung bleibt beim (Neu-)Einschätzen erhalten; der KI-Wert steht daneben und lässt sich per Knopf übernehmen. *(Ergänzt nach dem Testbericht vom 25.11.2026.)*
 - Zusätzlich wird eine Konfidenz (niedrig/mittel/hoch) angezeigt, die davon abhängt, wie viele Angaben zu Stelle und Profil vorliegen.
 - Nach dem Import kann ich die Passung optional prüfen, bevor ich speichere. Bei geringer Passung (unter 50 %, bei mindestens mittlerer Konfidenz) schlägt die App vor, die Stelle zu verwerfen; die Entscheidung bleibt bei mir. *(Ergänzt im Test: Bei niedriger Konfidenz kommt stattdessen der Hinweis, Angaben zu ergänzen.)*
 - Ohne Klick auf „Passung prüfen“ läuft keine Einschätzung; Import und Anlegen funktionieren wie bisher.
@@ -233,9 +240,24 @@ Gesammelt am 16.11.2026 nach einem ruhigen Durchgang durch das Tool. Nichts davo
 - Nachbereitung je Runde: gestellte Fragen und Eindrücke erfassen, die nächste Runde darauf aufbauen.
 - Probeinterview: Fragen nacheinander beantworten, Rückmeldung gegen ein Raster (Üben mit Rückmeldung wirkt laut Forschung am stärksten).
 
+**Aus dem Testbericht (25.11.2026), noch nicht umgesetzt**
+- Verlaufseinträge bearbeiten und löschen (Löschen mit Rückfrage), mindestens die manuellen.
+- Ein Verlaufseintrag „Absage“ oder „Angebot“ bietet an, den Status mitzuändern.
+- Quelle beim KI-Import erkennen; StepStone, Indeed und XING als Quellen ergänzen (ändert die Auswahlwerte).
+- Antwortquote im UI kurz erklären (z. B. Tooltip): Was zählt als Antwort, warum zählt eine zurückgezogene Bewerbung nur nach einem Gespräch.
+- Demo-Persona an das Portfolio anpassen: Product-Manager- und Product-Owner-Rollen statt Design-Rollen.
+- Liste auch nach Firma und Status sortieren.
+- Suche und Filter in der Adresse speichern (teilen, Zurück-Taste).
+- Übersicht: Klick auf eine Status-Zeile öffnet die gefilterte Liste.
+- Board auf dem Desktop: Hinweis, dass sich weitere Spalten seitlich anschließen. Auf dem Handy leere Spalten einklappen oder Status-Tabs.
+- Liste auf dem Handy als Karten statt breiter Tabelle.
+- „Demo starten“ auch im Handy-Menü.
+- Rückmeldung nach Speichern und Löschen, Löschen mit „Rückgängig“ für einige Sekunden.
+
 ---
 
 ## Qualität
 - Oberfläche auf Deutsch und Englisch umschaltbar, responsiv (Desktop und Handy).
 - Modernes, professionelles, ruhiges Design mit konsistentem Design-System, Hell- und Dunkelmodus.
 - Leere Zustände sind gestaltet (z. B. „Noch keine Bewerbung – leg die erste an").
+- Unbekannte Adressen zeigen eine eigene, übersetzte Fehlerseite mit Weg zurück zur Übersicht. *(Ergänzt nach dem Testbericht vom 25.11.2026.)*

@@ -151,12 +151,21 @@ export function NoProfileHint({ newTab = false }: { newTab?: boolean }) {
 export function FitSection({ app }: { app: Application }) {
   const t = useT();
 
+  // A fit the user set themselves (no AI value, or a changed one) is kept;
+  // the new assessment is stored next to it and can be adopted.
+  const ownScore =
+    app.fit_score !== null && app.fit_score !== app.fit_assessment?.score;
+
   function store(assessment: FitAssessment) {
     updateApplication(app.id, {
       ...app,
-      fit_score: assessment.score,
+      fit_score: ownScore ? app.fit_score : assessment.score,
       fit_assessment: assessment,
     });
+  }
+
+  function adopt(assessment: FitAssessment) {
+    updateApplication(app.id, { ...app, fit_score: assessment.score });
   }
 
   return (
@@ -166,11 +175,23 @@ export function FitSection({ app }: { app: Application }) {
       ) : (
         <FitSummary score={app.fit_score} assessment={app.fit_assessment} />
       )}
-      <AssessButton
-        job={jobFromApplication(app)}
-        label={app.fit_assessment ? t.fit.reassess : t.fit.assess}
-        onResult={store}
-      />
+      <div className="flex flex-wrap items-start gap-2">
+        <AssessButton
+          job={jobFromApplication(app)}
+          label={app.fit_assessment ? t.fit.reassess : t.fit.assess}
+          onResult={store}
+        />
+        {app.fit_assessment && ownScore && (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() => adopt(app.fit_assessment!)}
+          >
+            {t.fit.adopt(app.fit_assessment.score)}
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

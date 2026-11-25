@@ -23,6 +23,7 @@ import { todayISO } from "@/lib/date";
 import {
   replaceAppData,
   useAppData,
+  useAppMode,
   useStorageReady,
   type AppData,
 } from "@/lib/storage";
@@ -55,14 +56,17 @@ function errorMessage(t: Messages, error: BackupError): string {
 }
 
 // Stores the data of a message, not its text, so it follows language switches.
+// A success message belongs to the imported data and disappears once that
+// data is replaced (demo reset, switching between demo and real data).
 type Message =
-  | { kind: "success"; count: number }
+  | { kind: "success"; count: number; data: AppData }
   | { kind: "error"; error: BackupError };
 
 export function BackupPanel() {
   const t = useT();
   const data = useAppData();
   const ready = useStorageReady();
+  const mode = useAppMode();
   const fileInput = useRef<HTMLInputElement>(null);
   const [pending, setPending] = useState<AppData | null>(null);
   const [message, setMessage] = useState<Message | null>(null);
@@ -97,11 +101,13 @@ export function BackupPanel() {
   function confirmImport() {
     if (!pending) return;
     replaceAppData(pending);
-    setMessage({ kind: "success", count: pending.applications.length });
+    setMessage({ kind: "success", count: pending.applications.length, data: pending });
     setPending(null);
   }
 
   if (!ready) return null;
+  const shown =
+    message?.kind === "success" && message.data !== data ? null : message;
 
   return (
     <div className="max-w-2xl space-y-10">
@@ -110,6 +116,9 @@ export function BackupPanel() {
         <div>
           <p className="font-medium tracking-[-0.02em]">{b.hintTitle}</p>
           <p className="mt-1 text-sm text-muted-foreground">{b.hint}</p>
+          {mode === "demo" && (
+            <p className="mt-2 text-sm font-medium">{b.demoHint}</p>
+          )}
         </div>
       </div>
 
@@ -137,28 +146,28 @@ export function BackupPanel() {
           {b.importButton}
         </Button>
 
-        {message && (
+        {shown && (
           <div
-            role={message.kind === "error" ? "alert" : "status"}
+            role={shown.kind === "error" ? "alert" : "status"}
             className={
-              message.kind === "error"
+              shown.kind === "error"
                 ? "flex gap-2 text-sm text-destructive"
                 : "flex gap-2 text-sm text-success"
             }
           >
-            {message.kind === "error" ? (
+            {shown.kind === "error" ? (
               <CircleAlertIcon className="mt-0.5 size-4 shrink-0" />
             ) : (
               <CircleCheckIcon className="mt-0.5 size-4 shrink-0" />
             )}
             <div>
-              {message.kind === "error" && (
+              {shown.kind === "error" && (
                 <p className="font-medium">{b.errorTitle}</p>
               )}
               <p>
-                {message.kind === "error"
-                  ? errorMessage(t, message.error)
-                  : b.success(message.count)}
+                {shown.kind === "error"
+                  ? errorMessage(t, shown.error)
+                  : b.success(shown.count)}
               </p>
             </div>
           </div>

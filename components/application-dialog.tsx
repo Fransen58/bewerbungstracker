@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -60,6 +61,16 @@ type Errors = Partial<Record<FieldName, ErrorKind>>;
 // draft when creating.
 type FormValues = Partial<Record<FieldName, string | number | null>>;
 
+// All form values as one string, to compare before and after editing.
+function serialize(form: HTMLFormElement) {
+  return JSON.stringify([...new FormData(form).entries()]);
+}
+
+// Deliberately loose: something@domain.tld, no spaces.
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
 function isValidUrl(value: string) {
   try {
     const url = new URL(value);
@@ -87,11 +98,13 @@ function parseForm(
   const status = text("status");
   const jobUrl = text("job_url");
   const fitRaw = text("fit_score");
+  const email = text("contact_email");
 
   if (!company) errors.company = "required";
   if (!role) errors.role = "required";
   if (!status) errors.status = "required";
   if (jobUrl && !isValidUrl(jobUrl)) errors.job_url = "url";
+  if (email && !isValidEmail(email)) errors.contact_email = "email";
 
   const fitScore = fitRaw === null ? null : Number(fitRaw);
   if (
@@ -115,7 +128,7 @@ function parseForm(
       salary_range: text("salary_range"),
       fit_score: fitScore,
       contact_name: text("contact_name"),
-      contact_email: text("contact_email"),
+      contact_email: email,
       cv_version: text("cv_version"),
       requirements: text("requirements"),
       fit_assessment: fitAssessment,
@@ -250,30 +263,73 @@ function ApplicationDialog({
   // Changing the key re-creates the fields with new start values.
   const [formKey, setFormKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
+  // Values last filled in by a suggestion, per field (see fillForm).
+  const suggested = useRef<FormValues>({});
+  // The form as it was when the dialog opened, to detect unsaved changes.
+  const baseline = useRef("");
+  const [confirmDiscard, setConfirmDiscard] = useState(false);
   // Story 12: the imported ad text and an optional fit check of it.
   const [adText, setAdText] = useState<string | null>(null);
   const [assessment, setAssessment] = useState<FitAssessment | null>(null);
   const title = application ? t.form.editApplication : t.form.newApplication;
 
   function handleOpenChange(next: boolean) {
-    setOpen(next);
-    if (next) {
-      setErrors({});
-      setInitial(application);
-      setAdText(null);
-      setAssessment(null);
+    if (!next) {
+      requestClose();
+      return;
     }
+    setOpen(true);
+    setErrors({});
+    setInitial(application);
+    setAdText(null);
+    setAssessment(null);
+    suggested.current = {};
+    baseline.current = "";
   }
 
-  // Fills in the given fields; whatever the user typed elsewhere stays.
+  // The fields mount with the dialog; remember their start values once.
+  const rememberBaseline = (form: HTMLFormElement | null) => {
+    formRef.current = form;
+    if (form && baseline.current === "") baseline.current = serialize(form);
+  };
+
+  // Escape, X, outside click and Cancel: asks first if anything changed.
+  function requestClose() {
+    const changed =
+      adText !== null ||
+      (formRef.current !== null && serialize(formRef.current) !== baseline.current);
+    if (changed) setConfirmDiscard(true);
+    else setOpen(false);
+  }
+
+  function discard() {
+    setConfirmDiscard(false);
+    setOpen(false);
+  }
+
+  // Fills in suggested values (import, fit check), but only where a field
+  // is empty or still holds an earlier suggestion. What the user entered
+  // is never replaced.
   function fillForm(values: FormValues) {
-    const typed = [...new FormData(formRef.current!).entries()].filter(
-      ([, v]) => v !== ""
-    );
-    const found = Object.entries(values).filter(([, v]) => v !== null);
-    setInitial(Object.fromEntries([...typed, ...found]) as FormValues);
+    const current = readForm();
+    const next: FormValues = { ...current };
+    for (const [name, value] of Object.entries(values) as [FieldName, FormValues[FieldName]][]) {
+      if (value == null) continue;
+      const own = current[name] ?? "";
+      if (own === "" || own === String(suggested.current[name] ?? "")) {
+        next[name] = value;
+        suggested.current[name] = value;
+      }
+    }
+    setInitial(next);
     setErrors({});
     setFormKey((k) => k + 1);
+  }
+
+  function readForm(): Partial<Record<FieldName, string>> {
+    return Object.fromEntries(
+      [...new FormData(formRef.current!).entries()].map(([k, v]) => [k, String(v)])
+    );
   }
 
   function applyDraft(draft: JobDraft, url: string | null, text: string) {
@@ -296,6 +352,15 @@ function ApplicationDialog({
     );
     if ("errors" in result) {
       setErrors(result.errors);
+      // Once the errors are rendered, bring the topmost invalid field into
+      // view and focus it, so the message next to it is seen.
+      requestAnimationFrame(() => {
+        const field = formRef.current?.querySelector<HTMLElement>(
+          "[aria-invalid=true]"
+        );
+        field?.scrollIntoView({ block: "center" });
+        field?.focus({ preventScroll: true });
+      });
       return;
     }
     if (application) updateApplication(application.id, result.value);
@@ -327,13 +392,18 @@ function ApplicationDialog({
         </DialogHeader>
 
         <form
-          ref={formRef}
+          ref={rememberBaseline}
           noValidate
           onSubmit={handleSubmit}
           className="flex min-h-0 flex-1 flex-col gap-4"
         >
           <div className="-mx-5 min-h-0 space-y-6 overflow-y-auto px-5 py-1">
-            {!application && <ImportBox onDraft={applyDraft} />}
+            {!application && (
+              <ImportBox
+                onDraft={applyDraft}
+                onUrl={(url) => fillForm({ job_url: url })}
+              />
+            )}
             {adText && (
               <FitCheck
                 job={adText}
@@ -430,7 +500,7 @@ function ApplicationDialog({
               <Field name="contact_name">
                 <Input {...input("contact_name")} />
               </Field>
-              <Field name="contact_email">
+              <Field name="contact_email" error={errors.contact_email}>
                 <Input {...input("contact_email")} type="email" />
               </Field>
               <Field name="next_step">
@@ -459,17 +529,32 @@ function ApplicationDialog({
           </div>
 
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={requestClose}>
               {t.form.cancel}
             </Button>
             <Button type="submit">{t.form.save}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
+
+      <Dialog open={confirmDiscard} onOpenChange={setConfirmDiscard}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-xl font-medium tracking-[-0.03em]">
+              {t.form.discardTitle}
+            </DialogTitle>
+            <DialogDescription>{t.form.discardText}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline" />}>
+              {t.form.keepEditing}
+            </DialogClose>
+            <Button variant="destructive" onClick={discard}>
+              {t.form.discardConfirm}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
 }
@@ -482,8 +567,11 @@ type ImportState =
 // suggested fields to the form. Nothing is saved until the user clicks Save.
 function ImportBox({
   onDraft,
+  onUrl,
 }: {
   onDraft: (draft: JobDraft, url: string | null, text: string) => void;
+  // A link that could not be read still goes into the job link field.
+  onUrl: (url: string) => void;
 }) {
   const t = useT();
   const m = t.form.import;
@@ -504,12 +592,14 @@ function ImportBox({
       if (!response.ok || !data.draft) {
         const code = data.error in m.errors ? data.error : "aiFailed";
         setState({ kind: "error", code });
+        if (isUrl && code !== "invalidUrl") onUrl(input);
         return;
       }
       onDraft(data.draft, isUrl ? input : null, data.text);
       setState({ kind: "success" });
     } catch {
       setState({ kind: "error", code: "aiFailed" });
+      if (isUrl) onUrl(input);
     }
   }
 

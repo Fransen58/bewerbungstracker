@@ -262,7 +262,11 @@ function EventItem({ event: e }: { event: ApplicationEvent }) {
       />
       <div className="flex flex-wrap items-baseline gap-x-3">
         <p className="font-medium tracking-[-0.02em]">
-          {t.options.event_type[e.type]}
+          {/* A status change is titled by its new status: event types have
+              no "accepted" or "withdrawn", which would read as "Note". */}
+          {e.to_status
+            ? t.options.status[e.to_status]
+            : t.options.event_type[e.type]}
         </p>
         <p className="font-mono text-xs text-muted-foreground tabular-nums">
           {formatDate(e.date, t.locale)}
@@ -296,14 +300,16 @@ function AddEventForm({ applicationId }: { applicationId: string }) {
   const [date, setDate] = useState(todayISO);
   const [note, setNote] = useState("");
   const [dateError, setDateError] = useState(false);
+  // A plain note without text would be an empty entry.
+  const [noteError, setNoteError] = useState(false);
   const h = t.detail.history;
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!date) {
-      setDateError(true);
-      return;
-    }
+    const missingNote = type === "note" && note.trim() === "";
+    setDateError(!date);
+    setNoteError(missingNote);
+    if (!date || missingNote) return;
     addEvent({
       application_id: applicationId,
       type,
@@ -311,7 +317,6 @@ function AddEventForm({ applicationId }: { applicationId: string }) {
       note: note.trim() === "" ? null : note.trim(),
     });
     setNote("");
-    setDateError(false);
   }
 
   return (
@@ -362,7 +367,14 @@ function AddEventForm({ applicationId }: { applicationId: string }) {
           value={note}
           onChange={(e) => setNote(e.target.value)}
           placeholder={h.notePlaceholder}
+          aria-invalid={noteError || undefined}
+          aria-describedby={noteError ? "event-note-error" : undefined}
         />
+        {noteError && (
+          <p id="event-note-error" className="text-sm text-destructive">
+            {h.noteRequired}
+          </p>
+        )}
       </div>
       <div className="sm:col-span-2">
         <Button type="submit">{h.add}</Button>

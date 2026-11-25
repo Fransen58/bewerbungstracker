@@ -90,6 +90,7 @@ export const de = {
       type: "Art",
       date: "Datum",
       note: "Notiz",
+      noteRequired: "Bei einer Notiz bitte einen Text eingeben.",
       notePlaceholder: "z. B. Gehalt angesprochen, Rückmeldung bis Freitag",
     },
   },
@@ -101,6 +102,7 @@ export const de = {
     privacy: "Das Profil liegt nur in diesem Browser und ist im Backup enthalten. An die KI (Anthropic) geht es nur, wenn du eine Einschätzung startest. Ein hochgeladener Lebenslauf wird nur ausgelesen und nirgends gespeichert.",
     save: "Profil speichern",
     saved: "Gespeichert.",
+    unsaved: "Dein Profil hat ungespeicherte Änderungen. Seite trotzdem verlassen?",
     cv: {
       button: "Lebenslauf (PDF) einlesen",
       loading: "Lese Lebenslauf …",
@@ -131,7 +133,8 @@ export const de = {
     gap: "Größte Lücke",
     noGap: "Keine wesentliche Lücke",
     lowConfidenceHint: "Wenige Angaben: Mehr Anforderungen zur Stelle oder ein ausführlicheres Profil machen die Einschätzung genauer.",
-    overridden: (score: number) => `Frühere KI-Einschätzung: ${score} %. Die Passung oben hast du selbst angepasst.`,
+    overridden: (score: number) => `KI-Einschätzung: ${score} %. Die Passung oben hast du selbst festgelegt.`,
+    adopt: (score: number) => `KI-Wert übernehmen (${score} %)`,
     noProfile: "Für eine Einschätzung brauchst du zuerst ein Profil.",
     toProfile: "Profil anlegen",
     discardSuggestion: "Passt eher nicht. Stelle verwerfen? Die Entscheidung liegt bei dir.",
@@ -166,6 +169,7 @@ export const de = {
     title: "Backup",
     hintTitle: "Deine Daten liegen nur in diesem Browser",
     hint: "Es gibt keinen Server und kein Konto. Löschst du die Browserdaten oder wechselst du Browser oder Gerät, sind die Bewerbungen weg. Exportiere deshalb regelmäßig ein Backup.",
+    demoHint: "Du bist im Demo-Modus: Export und Import betreffen die Beispieldaten, nicht deine echten Daten.",
     exportTitle: "Exportieren",
     exportText: (apps: number, events: number) =>
       `Lädt ${apps} ${apps === 1 ? "Bewerbung" : "Bewerbungen"} und ${events} ${events === 1 ? "Verlaufseintrag" : "Verlaufseinträge"} als JSON-Datei herunter.`,
@@ -223,6 +227,10 @@ export const de = {
       { role: "UX/UI Designer", workation: null, salary: "50–55 k €", nextStep: null, requirements: null, notes: null, history: ["Selbst zurückgezogen: kein Remote möglich."] },
     ],
   },
+  notFound: {
+    text: "Diese Seite gibt es nicht.",
+    back: "Zur Übersicht",
+  },
   common: {
     close: "Schließen",
   },
@@ -249,6 +257,10 @@ export const de = {
     description: "Pflicht sind nur Firma, Rolle und Status.",
     save: "Speichern",
     cancel: "Abbrechen",
+    discardTitle: "Änderungen verwerfen?",
+    discardText: "Deine Eingaben in diesem Formular gehen verloren.",
+    keepEditing: "Weiter bearbeiten",
+    discardConfirm: "Verwerfen",
     choose: "Bitte wählen",
     import: {
       label: "Stellenanzeige automatisch auslesen",
@@ -257,14 +269,14 @@ export const de = {
       hint: "Einfügen, dann auf „Felder ausfüllen“ klicken.",
       loading: "Liest Anzeige …",
       success:
-        "KI-Vorschlag eingetragen. Bitte prüfen und korrigieren. Leere Felder standen nicht in der Anzeige.",
+        "KI-Vorschlag in leere Felder eingetragen, deine eigenen Eingaben bleiben stehen. Bitte prüfen und korrigieren. Leere Felder standen nicht in der Anzeige.",
       errors: {
         badRequest: "Bitte einen Link oder den Text einer Anzeige einfügen.",
         invalidUrl: "Bitte einen öffentlichen Link eingeben, der mit http:// oder https:// beginnt.",
         fetchFailed:
           "Die Seite ließ sich nicht abrufen. Kopiere stattdessen den Text der Anzeige hier hinein.",
         unreadable:
-          "Die Seite lässt sich nicht automatisch lesen (z. B. Login nötig). Kopiere stattdessen den Text der Anzeige hier hinein.",
+          "Auf der Seite ist kein lesbarer Text, etwa weil sie einen Login braucht oder fast leer ist. Kopiere stattdessen den Text der Anzeige hier hinein.",
         noJobAd: "Darin wurde keine Stellenanzeige gefunden.",
         tooLong: "Der Text ist zu lang. Bitte nur die Anzeige selbst einfügen.",
         notConfigured: "Der KI-Import ist auf diesem Server nicht eingerichtet.",
@@ -300,6 +312,7 @@ export const de = {
     errors: {
       required: "Bitte ausfüllen.",
       url: "Bitte eine vollständige Adresse eingeben, die mit http:// oder https:// beginnt.",
+      email: "Bitte eine gültige E-Mail-Adresse eingeben.",
       fitScore: "Bitte eine ganze Zahl von 0 bis 100 eingeben.",
     },
   },

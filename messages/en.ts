@@ -92,6 +92,7 @@ export const en: Messages = {
       type: "Type",
       date: "Date",
       note: "Note",
+      noteRequired: "Please enter a text for a note.",
       notePlaceholder: "e.g. discussed salary, feedback by Friday",
     },
   },
@@ -103,6 +104,7 @@ export const en: Messages = {
     privacy: "Your profile stays in this browser and is part of the backup. It is only sent to the AI (Anthropic) when you start an assessment. An uploaded CV is only read and not stored anywhere.",
     save: "Save profile",
     saved: "Saved.",
+    unsaved: "Your profile has unsaved changes. Leave the page anyway?",
     cv: {
       button: "Read CV (PDF)",
       loading: "Reading CV …",
@@ -133,7 +135,8 @@ export const en: Messages = {
     gap: "Biggest gap",
     noGap: "No significant gap",
     lowConfidenceHint: "Little information: more requirements for the job or a more detailed profile make the assessment more accurate.",
-    overridden: (score: number) => `Earlier AI assessment: ${score}%. You adjusted the fit above yourself.`,
+    overridden: (score: number) => `AI assessment: ${score}%. You set the fit above yourself.`,
+    adopt: (score: number) => `Use AI value (${score}%)`,
     noProfile: "To get an assessment, add your profile first.",
     toProfile: "Add profile",
     discardSuggestion: "Not a good fit. Discard this job? The decision is yours.",
@@ -168,6 +171,7 @@ export const en: Messages = {
     title: "Backup",
     hintTitle: "Your data lives only in this browser",
     hint: "There is no server and no account. If you clear your browser data or switch browser or device, your applications are gone. Export a backup regularly.",
+    demoHint: "You are in demo mode: export and import apply to the sample data, not to your real data.",
     exportTitle: "Export",
     exportText: (apps: number, events: number) =>
       `Downloads ${apps} ${apps === 1 ? "application" : "applications"} and ${events} history ${events === 1 ? "entry" : "entries"} as a JSON file.`,
@@ -225,6 +229,10 @@ export const en: Messages = {
       { role: "UX/UI Designer", workation: null, salary: "€50–55k", nextStep: null, requirements: null, notes: null, history: ["Withdrawn myself: no remote option."] },
     ],
   },
+  notFound: {
+    text: "This page does not exist.",
+    back: "Go to overview",
+  },
   common: {
     close: "Close",
   },
@@ -251,6 +259,10 @@ export const en: Messages = {
     description: "Only company, role and status are required.",
     save: "Save",
     cancel: "Cancel",
+    discardTitle: "Discard changes?",
+    discardText: "What you entered in this form will be lost.",
+    keepEditing: "Keep editing",
+    discardConfirm: "Discard",
     choose: "Please choose",
     import: {
       label: "Read job ad automatically",
@@ -259,14 +271,14 @@ export const en: Messages = {
       hint: "Paste, then click “Fill in fields”.",
       loading: "Reading ad …",
       success:
-        "AI suggestion filled in. Please review and correct it. Empty fields were not in the ad.",
+        "AI suggestion filled into empty fields; what you entered stays. Please review and correct it. Empty fields were not in the ad.",
       errors: {
         badRequest: "Please paste a link or the text of a job ad.",
         invalidUrl: "Please enter a public link starting with http:// or https://.",
         fetchFailed:
           "The page could not be loaded. Paste the text of the ad here instead.",
         unreadable:
-          "The page cannot be read automatically (e.g. login required). Paste the text of the ad here instead.",
+          "The page has no readable text, for example because it needs a login or is almost empty. Paste the text of the ad here instead.",
         noJobAd: "No job ad was found in it.",
         tooLong: "The text is too long. Please paste only the ad itself.",
         notConfigured: "The AI import is not set up on this server.",
@@ -302,6 +314,7 @@ export const en: Messages = {
     errors: {
       required: "Please fill in.",
       url: "Please enter a complete address starting with http:// or https://.",
+      email: "Please enter a valid e-mail address.",
       fitScore: "Please enter a whole number from 0 to 100.",
     },
   },

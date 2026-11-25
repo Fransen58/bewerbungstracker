@@ -139,6 +139,11 @@ const EVENT_FIELDS: Record<keyof ApplicationEvent, (v: unknown) => boolean> = {
   to_status: isOptOneOf(STATUSES),
 };
 
+// A missing field counts as empty (null): optional fields may be left out,
+// required ones then fail their check.
+const valueOf = (item: Obj, field: string) =>
+  item[field] === undefined ? null : item[field];
+
 // Returns the first field that fails its check, or null if all pass.
 function firstInvalidField(
   item: unknown,
@@ -146,7 +151,7 @@ function firstInvalidField(
 ): string | null {
   if (!isObj(item)) return "-";
   for (const [field, check] of Object.entries(fields)) {
-    if (!(field in item) || !check(item[field])) return field;
+    if (!check(valueOf(item, field))) return field;
   }
   return null;
 }
@@ -211,7 +216,7 @@ export function parseBackup(text: string): ParseResult {
   // Only known fields are kept; anything extra in the file is dropped.
   const pick = <T,>(item: unknown, fields: Record<string, unknown>) =>
     Object.fromEntries(
-      Object.keys(fields).map((f) => [f, (item as Obj)[f]])
+      Object.keys(fields).map((f) => [f, valueOf(item as Obj, f)])
     ) as T;
 
   return {

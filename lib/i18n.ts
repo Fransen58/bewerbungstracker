@@ -2,10 +2,9 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import { DEFAULT_LANG, messages, type Lang, type Messages } from "@/messages";
+import { LANG_KEY, LANG_PENDING_CLASS } from "./lang-script";
 
 // UI language. German is the default; the choice is stored in the browser.
-
-const LANG_KEY = "bewerbungstracker:lang";
 
 let cache: Lang | null = null;
 const listeners = new Set<() => void>();
@@ -48,11 +47,16 @@ export function useT(): Messages {
   return messages[useLang()];
 }
 
-// Keeps <html lang> and the tab title in sync with the active language.
-export function useDocumentLang() {
+// Keeps <html lang> in sync with the active language and shows the page
+// once the texts match it (see lang-script.ts); returns the texts.
+export function useDocumentLang(): Messages {
   const lang = useLang();
   useEffect(() => {
     document.documentElement.lang = lang;
-    document.title = messages[lang].app.name;
+    // Hydration renders German first; wait for the stored language.
+    if (lang === read()) {
+      document.documentElement.classList.remove(LANG_PENDING_CLASS);
+    }
   }, [lang]);
+  return messages[lang];
 }

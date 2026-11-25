@@ -4,6 +4,7 @@ import "./globals.css";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { themeInitScript } from "@/lib/theme-script";
+import { langInitScript } from "@/lib/lang-script";
 import { DocumentLang } from "@/components/document-lang";
 import { messages, DEFAULT_LANG } from "@/messages";
 
@@ -20,8 +21,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// The title is set by <DocumentLang />, so it follows the language.
 export const metadata: Metadata = {
-  title: t.app.name,
   description: t.app.description,
 };
 
@@ -35,6 +36,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         {/* Apply the theme before first paint, so there is no light flash. */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* Hide German texts until an English choice is applied. */}
+        <script dangerouslySetInnerHTML={{ __html: langInitScript }} />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <DocumentLang />

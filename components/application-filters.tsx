@@ -156,7 +156,10 @@ function FilterSelect<K extends string>({
       onValueChange={(v) => onChange((v ?? "all") as K | "all")}
     >
       <SelectTrigger className="w-full" aria-label={label}>
-        <SelectValue />
+        {/* Always "Label: value", also once a value is chosen. */}
+        <SelectValue>
+          {(v: K | "all") => (v === "all" ? items.all : `${label}: ${labels[v]}`)}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">{items.all}</SelectItem>
