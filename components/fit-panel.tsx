@@ -91,19 +91,7 @@ export function AssessButton({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<FitErrorCode | null>(null);
 
-  if (!profile) {
-    return (
-      <p className="text-sm text-muted-foreground">
-        {t.fit.noProfile}{" "}
-        <Link
-          href="/profile"
-          className="text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
-        >
-          {t.fit.toProfile}
-        </Link>
-      </p>
-    );
-  }
+  if (!profile) return <NoProfileHint />;
 
   async function handleClick() {
     setLoading(true);
@@ -132,6 +120,22 @@ export function AssessButton({
         </p>
       )}
     </div>
+  );
+}
+
+// Shown instead of an AI button while no profile is stored.
+export function NoProfileHint() {
+  const t = useT();
+  return (
+    <p className="text-sm text-muted-foreground">
+      {t.fit.noProfile}{" "}
+      <Link
+        href="/profile"
+        className="text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
+      >
+        {t.fit.toProfile}
+      </Link>
+    </p>
   );
 }
 

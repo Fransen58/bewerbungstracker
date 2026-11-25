@@ -166,6 +166,7 @@ export function createDemoData(texts: Messages["demo"]): AppData {
       cv_version: spec.cv,
       requirements: text.requirements,
       fit_assessment: null,
+      interview_prep: null,
       notes: text.notes,
       applied_at: spec.appliedDay === null ? null : day(spec.appliedDay),
       next_step: spec.nextDay === null ? null : text.nextStep,

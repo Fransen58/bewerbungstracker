@@ -85,6 +85,16 @@ const isOptAssessment = (v: unknown) =>
     isOptText(v.gap) &&
     isText(v.reason) &&
     isTimestamp(v.created_at));
+const isTextList = (v: unknown) => Array.isArray(v) && v.every(isText);
+const isOptInterviewPrep = (v: unknown) =>
+  v === null ||
+  (isObj(v) &&
+    Array.isArray(v.questions) &&
+    v.questions.every(
+      (q) => isObj(q) && isText(q.question) && isOptText(q.example)
+    ) &&
+    isTextList(v.ask) &&
+    isTimestamp(v.created_at));
 
 // One check per field, following the data model.
 const APPLICATION_FIELDS: Record<keyof Application, (v: unknown) => boolean> = {
@@ -103,6 +113,7 @@ const APPLICATION_FIELDS: Record<keyof Application, (v: unknown) => boolean> = {
   cv_version: isOptText,
   requirements: isOptText,
   fit_assessment: isOptAssessment,
+  interview_prep: isOptInterviewPrep,
   notes: isOptText,
   applied_at: isOptDay,
   next_step: isOptText,

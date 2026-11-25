@@ -16,7 +16,7 @@ const KEYS = {
   demo: "bewerbungstracker:demo",
   mode: "bewerbungstracker:mode",
 } as const;
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 export type AppMode = "real" | "demo";
 
@@ -54,7 +54,8 @@ function readMode(): AppMode {
 }
 
 // Brings data from an older schema version up to the current one.
-// Version 2 added `requirements`, version 3 `fit_assessment` and `profile`;
+// Version 2 added `requirements`, version 3 `fit_assessment` and `profile`,
+// version 4 `interview_prep`;
 // older data gets them as empty. The result is stored on the next write.
 export function migrate<
   T extends { schemaVersion: number; applications: unknown[]; profile?: unknown }
@@ -66,7 +67,7 @@ export function migrate<
     profile: data.profile ?? null,
     applications: data.applications.map((a) =>
       typeof a === "object" && a !== null
-        ? { requirements: null, fit_assessment: null, ...a }
+        ? { requirements: null, fit_assessment: null, interview_prep: null, ...a }
         : a
     ),
   };

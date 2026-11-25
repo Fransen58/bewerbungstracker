@@ -50,6 +50,16 @@ export type FitAssessment = {
   created_at: string;
 };
 
+// AI interview preparation for one job (story 14).
+export type InterviewPrep = {
+  // Likely questions, each with a matching example from the profile, or
+  // null if the profile has none.
+  questions: { question: string; example: string | null }[];
+  // Questions the user can ask the company.
+  ask: string[];
+  created_at: string;
+};
+
 // Optional fields are null when empty. Dates are ISO strings (YYYY-MM-DD),
 // timestamps full ISO date-time strings.
 export type Application = {
@@ -70,6 +80,8 @@ export type Application = {
   requirements: string | null;
   // Latest AI fit assessment (schema v3).
   fit_assessment: FitAssessment | null;
+  // AI interview preparation (schema v4).
+  interview_prep: InterviewPrep | null;
   notes: string | null;
   applied_at: string | null;
   next_step: string | null;

@@ -39,6 +39,7 @@ import {
   WORK_MODELS,
   type Application,
   type FitAssessment,
+  type InterviewPrep,
   type Source,
   type Status,
   type WorkModel,
@@ -68,10 +69,11 @@ function isValidUrl(value: string) {
 }
 
 // Reads the form, validates it and returns either errors or the new record.
-// The fit assessment is not a form field and is passed through.
+// Fit assessment and interview prep are not form fields and are passed through.
 function parseForm(
   form: FormData,
-  fitAssessment: FitAssessment | null
+  fitAssessment: FitAssessment | null,
+  interviewPrep: InterviewPrep | null
 ): { errors: Errors } | { value: NewApplication } {
   const text = (name: FieldName) => {
     const v = String(form.get(name) ?? "").trim();
@@ -116,6 +118,7 @@ function parseForm(
       cv_version: text("cv_version"),
       requirements: text("requirements"),
       fit_assessment: fitAssessment,
+      interview_prep: interviewPrep,
       notes: text("notes"),
       applied_at: text("applied_at"),
       next_step: text("next_step"),
@@ -287,7 +290,8 @@ function ApplicationDialog({
     e.preventDefault();
     const result = parseForm(
       new FormData(e.currentTarget),
-      application ? application.fit_assessment : assessment
+      application ? application.fit_assessment : assessment,
+      application?.interview_prep ?? null
     );
     if ("errors" in result) {
       setErrors(result.errors);

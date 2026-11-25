@@ -38,6 +38,7 @@ Mehrere Nutzer, Login, Cloud-Sync, Team-Funktionen, E-Mail-Integration, Mobile A
 - contact_name, contact_email (optional)
 - cv_version (Text, z. B. „DE Builder", „EN Element")
 - requirements (Langtext, Pflichtanforderungen der Stelle, eine pro Zeile; ab Schema-Version 2)
+- interview_prep (optional, KI-Gesprächsvorbereitung: Fragen mit Beispiel aus dem Profil, Rückfragen an die Firma, Zeitpunkt; ab Schema-Version 4)
 - fit_assessment (optional, letzte KI-Einschätzung der Passung: Prozent, Konfidenz niedrig/mittel/hoch, größte Lücke, Begründung, Zeitpunkt; ab Schema-Version 3)
 - notes (Langtext)
 - applied_at (Datum)
@@ -130,7 +131,7 @@ Als Bewerber möchte ich das Projekt öffentlich zeigen, damit es als Nachweis m
 
 ## Ausbaustufe 2 (nach dem MVP)
 
-_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann Board und Liste zusammenführen, dann Gesprächsvorbereitung und CV-Vergleich (Stories noch zu schreiben), dann 13, dann 10. Dokumente und E-Mail erst nach dem Cloud-Sync._
+_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann 14 (vorgezogen am 25.11.2026 für mehr sichtbaren Nutzen im Portfolio), dann Board und Liste zusammenführen, dann CV-Vergleich (Story noch zu schreiben), dann 13, dann 10. Dokumente und E-Mail erst nach dem Cloud-Sync._
 
 ### 10. Cloud-Sync und Login
 - Optionale Speicherung in Supabase mit Login per Magic Link und Row Level Security, damit die Daten geräteübergreifend und sicher verfügbar sind.
@@ -156,6 +157,14 @@ Als Bewerber möchte ich eine erste Einschätzung, wie gut eine Stelle zu meinem
 Als Bewerber möchte ich eine Stellenanzeige auf dem Handy über „Teilen“ direkt an den Tracker schicken, damit ich Stellen unterwegs in Sekunden erfasse.
 - Die App lässt sich auf dem Handy installieren (Progressive Web App) und erscheint danach im Teilen-Menü.
 - Ein geteilter Link oder Text startet den Import aus Story 11 mit denselben Regeln (prüfen vor dem Speichern, nichts raten).
+
+### 14. Gespräch vorbereiten
+Als Bewerber möchte ich mich gezielt auf ein Gespräch für eine bestimmte Stelle vorbereiten.
+- Auf der Detailseite erzeugt „Gespräch vorbereiten“ aus Stelle und Profil 5 wahrscheinliche Fragen, jeweils mit einem passenden Beispiel aus meinem Profil, und 3 Rückfragen an die Firma.
+- Gibt das Profil zu einer Frage kein Beispiel her, steht dort ein Hinweis, mir eines zu überlegen; nichts wird erfunden.
+- Die Vorbereitung wird an der Bewerbung gespeichert (ab Schema-Version 4) und lässt sich neu erzeugen.
+- Ohne Profil gibt es einen Hinweis mit Link zum Profil.
+- Die Vorbereitung ist als KI-Vorschlag gekennzeichnet und in der eingestellten Sprache.
 
 ---
 

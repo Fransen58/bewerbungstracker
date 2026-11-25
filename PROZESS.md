@@ -395,6 +395,22 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 - Prüfung: Ein erfundener Lebenslauf als PDF wurde vollständig übernommen, ohne Name, Adresse, Telefon, E-Mail und Geburtsdatum. Ein Rezept als PDF wurde als „kein Lebenslauf“ erkannt. Eine Nicht-PDF und eine zu große Datei werden mit klarer Meldung abgelehnt. Kosten: rund 2.600 Eingabe- und 430 Ausgabe-Token für eine Seite, etwa 0,05 Cent.
 - Learning: Die Testdateien (PDFs) hat das Browser-Testwerkzeug selbst erzeugt. So waren es von Anfang an erfundene Daten, und niemand musste echte Lebensläufe benutzen.
 
+## Story 14: Gespräch vorbereiten
+
+**Ziel:** Pro Stelle fünf wahrscheinliche Fragen mit passendem Beispiel aus dem eigenen Profil und drei Rückfragen an die Firma, gespeichert an der Bewerbung.
+
+**Vorgehen:** Die Story wurde vor Board/Liste und Story 13 vorgezogen, weil sie im Portfolio am meisten sichtbaren Nutzen bringt. Story 13 (Teilen vom Handy) funktioniert ohnehin nur auf Android, ein Personaler am Laptop sähe davon nichts. Umgesetzt wurde sie nach dem Muster der Passung: Schema-Version 4 mit Migration, Server-Funktion `/api/interview` mit Haiku 5.5 und festem Ausgabeformat, ein Bereich auf der Detailseite. Den Hinweis „Profil anlegen“ nutzen jetzt Passung und Gesprächsvorbereitung gemeinsam.
+
+**Entscheidungen:**
+- „Kein Beispiel“ ist ein gültiges Ergebnis. Fehlt im Profil etwas, zeigt die App den Hinweis, sich selbst ein Beispiel zu überlegen. Gerade diese Lücken sind für die Vorbereitung am wertvollsten.
+- Die Eingabe sind die gespeicherten Felder, nicht der ursprüngliche Anzeigentext. Der wird nicht gespeichert. Gepflegte Anforderungen machen die Fragen also besser.
+
+**Probleme:**
+- Im ersten Durchlauf schrieb die KI bei einer Frage statt eines Beispiels einen Kommentar über das Profil („…sind im Profil aber nicht genannt“). Die Regel wurde geschärft: ein sagbarer Punkt oder null, nie eine Erklärung, was fehlt.
+- Wieder hatte der lange laufende Entwicklungsserver eine Änderung nicht übernommen. Nach dem Neustart lief es. Learning für die nächsten Stories: Nach Änderungen an gemeinsam genutzten Modulen den Server neu starten, bevor man den Fehler im Code sucht.
+
+**Prüfung:** Test mit einem erfundenen Profil gegen eine echte Anzeige (nur lokal): Bei fehlender KI-Erfahrung kam korrekt „kein Beispiel“, die Rückfragen waren firmenspezifisch. Browser-Test im Demo-Modus: erzeugen, anzeigen, nach dem Neuladen noch da.
+
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
 - Das Prozentzeichen springt beim Sprachwechsel. Vermutete Ursache: „80 %“ (Deutsch, mit Leerzeichen) und „80%“ (Englisch) sind unterschiedlich breit. Noch zu prüfen.

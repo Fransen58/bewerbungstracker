@@ -21,7 +21,7 @@ const AssessmentSchema = z.object({
 
 export type FitResult = Omit<FitAssessment, "created_at">;
 
-const LANGUAGES = { de: "German", en: "English" } as const;
+export const LANGUAGES = { de: "German", en: "English" } as const;
 export type FitLang = keyof typeof LANGUAGES;
 
 const SYSTEM = `You assess how well a job fits a job seeker, for a job application tracker.

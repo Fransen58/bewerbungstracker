@@ -29,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { EditApplicationDialog } from "@/components/application-dialog";
 import { EmptyState } from "@/components/empty-state";
 import { FitSection } from "@/components/fit-panel";
+import { InterviewSection } from "@/components/interview-panel";
 import { PageHeader } from "@/components/page-header";
 import { StatusBadge, StatusDot } from "@/components/status-badge";
 import { formatDate, formatTimestamp, isOverdue, todayISO } from "@/lib/date";
@@ -170,6 +171,10 @@ function Facts({ app }: { app: Application }) {
 
       <Section title={t.detail.sections.fit}>
         <FitSection app={app} />
+      </Section>
+
+      <Section title={t.detail.sections.interview}>
+        <InterviewSection app={app} />
       </Section>
 
       <Section title={t.detail.sections.requirements}>
