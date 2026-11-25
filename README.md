@@ -21,6 +21,10 @@ Das Projekt ist zugleich ein Portfolio-Nachweis: Es ist Schritt für Schritt mit
 - **Demo-Modus:** 12 erfundene Beispiel-Bewerbungen mit Verlauf, getrennt von den eigenen Daten gespeichert.
 - **Deutsch/Englisch** umschaltbar, **Hell/Dunkel** (Standard: Systemeinstellung), responsiv für Desktop und Handy.
 
+| KI als Türsteher: Passung direkt nach dem Import | Passung und Gesprächsvorbereitung auf der Detailseite |
+|---|---|
+| ![Neue Bewerbung mit KI-Passung und Verwerfen-Vorschlag](docs/screenshots/ai-gatekeeper.png) | ![Passung und Gesprächsvorbereitung](docs/screenshots/ai-detail.png) |
+
 | Board | Detailseite mit Verlauf |
 |---|---|
 | ![Kanban-Board](docs/screenshots/board-light.png) | ![Detailseite](docs/screenshots/detail-light.png) |

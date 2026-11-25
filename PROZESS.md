@@ -452,3 +452,9 @@ So sahen meine Eingaben an Claude Code typischerweise aus. Die Zitate sind wört
 - **Arbeitsteilung beim Testen:** Was ohne Browser prüfbar ist (Logik, Typen, Build), hat Claude selbst getestet. Ich habe die Oberfläche getestet. Fast jede Story hatte nach meinem Test noch eine Verbesserung, die keiner der automatischen Tests gefunden hätte.
 - **Der statische Export hat die Architektur geprägt:** Speicherung im Browser, ID als Parameter in der Adresse, Warten auf die Browserdaten, Sprachwechsel auf dem Client. Das war mehr Arbeit als erwartet, macht die App aber kostenlos und ohne Server betreibbar.
 - **KI ersetzt keine Entscheidungen.** Die interessantesten Momente waren die, in denen ich etwas nicht verstanden oder anders gewollt habe.
+
+**Nach der Ausbaustufe 2 (Stories 11, 12, 14):**
+- **Aus dem Verwalten wurde ein Assistent.** Der Tracker liest Anzeigen aus, schätzt die Passung ein, sortiert als Türsteher unpassende Stellen aus und bereitet Gespräche vor. Alles läuft nur auf Klick, und alles ist als KI-Vorschlag erkennbar.
+- **Die besten Produktentscheidungen kamen aus Einwänden.** „Je mehr Infos, desto genauer“ führte zur Konfidenz. „Ich will direkt sehen, ob es passt“ führte zum Türsteher. Der Grenzfall „wenig bekannt, also verwerfen?“ fiel erst im Test auf.
+- **„Nichts raten“ ist eine Produktregel, kein Prompt-Detail.** Es zieht sich durch alle KI-Funktionen: leere Felder statt geschätzter, „kein Beispiel“ statt erfundener Erfahrung, Kontaktdaten aus dem Lebenslauf weglassen. Jede Regel wurde mit erfundenen Gegenbeispielen geprüft.
+- **Kosten vorher aufschlüsseln, danach messen.** Jeder KI-Aufruf kostet Bruchteile eines Cents. Ein Ausgabenlimit in der Anthropic-Konsole deckelt das Risiko der öffentlichen App.
