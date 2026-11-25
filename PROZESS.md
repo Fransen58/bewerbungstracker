@@ -543,6 +543,29 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 
 **Learning:** Wo zwei Funktionen dieselbe Regel brauchen, hier „gleiche CV-Version“, gehört sie an genau eine Stelle. Sonst zählt die Auswertung anders, als das Formular vorschlägt.
 
+## Story 13: Stelle vom Handy teilen
+
+**Ziel:** Eine Anzeige unterwegs über „Teilen“ an den Tracker schicken, der Import aus Story 11 startet sofort.
+
+**Vorgehen:**
+- Erst geklärt, was technisch geht: Eine installierte Web-App kann sich über das Manifest (`share_target`) im Teilen-Menü anmelden, das klappt aber nur auf Android. Ich nutze ein iPhone. Deshalb habe ich vor dem Bauen zusammen mit Claude entschieden, die Teilen-Seite so zu bauen, dass auch ein iPhone-Kurzbefehl sie öffnen kann.
+- Gebaut wurden dann:
+  - Manifest
+  - App-Icon: drei Board-Spalten, Papier auf Tinte
+  - ein minimaler Service Worker
+  - die Seite `/share`: Sie öffnet „Neue Bewerbung“ und startet den Import.
+
+**Entscheidungen:**
+- `/share` nimmt Link, Text und Titel als normale Adressparameter (GET). Das funktioniert mit der statischen Seite ohne Server, und Android wie der iPhone-Kurzbefehl nutzen dieselbe Adresse.
+- Viele Apps teilen einen kurzen Satz mit Link. Dann wird der Link importiert, denn ihn kann der Server lesen. Ein langer Text ist vermutlich die Anzeige selbst und wird als Text importiert. Die Grenze liegt bei 200 Zeichen.
+- Der Import startet ohne weiteren Klick, denn Teilen ist schon die bewusste Aktion. Gespeichert wird weiter erst nach Prüfung. Nach Speichern oder Verwerfen geht es zur Seite „Bewerbungen“.
+- Der Service Worker speichert nichts zwischen. Er ist nur da, weil manche Browser sonst nicht zum Installieren anbieten. Offline-Betrieb steht nicht in der SPEC.
+- Auf dem iPhone hat eine Web-App auf dem Home-Bildschirm einen eigenen Speicher, getrennt von Safari. Der Kurzbefehl öffnet Safari. Deshalb empfiehlt die README dort Safari statt Home-Bildschirm. Sonst lägen geteilte Stellen in einem zweiten, leeren Datenbestand.
+
+**Prüfung:** Browser-Tests mit nachgebauten Teilen-Adressen (Link im Satz, nicht lesbarer Link, reiner Text, nichts), Manifest, Icons und Service Worker. Den echten Test im Teilen-Menü kann nur das Handy machen, er steht noch aus.
+
+**Learning:** Plattformgrenzen gehören vor den Plan, nicht in den Test. Die Frage „Welches Handy?“ hat aus „Android-Funktion“ eine Lösung gemacht, die auf beiden Plattformen läuft, mit fast demselben Code.
+
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
 - ~~Das Prozentzeichen springt beim Sprachwechsel.~~ Behoben in Story 15.

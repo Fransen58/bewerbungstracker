@@ -238,6 +238,11 @@ export const de = {
       { role: "Product Owner E-Commerce", workation: null, salary: "55–60 k €", nextStep: null, requirements: null, notes: null, history: ["Selbst zurückgezogen: kein Remote möglich."] },
     ],
   },
+  share: {
+    title: "Stelle übernehmen",
+    empty: "Beim Teilen ist kein Link und kein Text angekommen.",
+    toApplications: "Zu den Bewerbungen",
+  },
   notFound: {
     text: "Diese Seite gibt es nicht.",
     back: "Zur Übersicht",

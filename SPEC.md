@@ -164,6 +164,9 @@ Als Bewerber möchte ich eine erste Einschätzung, wie gut eine Stelle zu meinem
 Als Bewerber möchte ich eine Stellenanzeige auf dem Handy über „Teilen“ direkt an den Tracker schicken, damit ich Stellen unterwegs in Sekunden erfasse.
 - Die App lässt sich auf dem Handy installieren (Progressive Web App) und erscheint danach im Teilen-Menü.
 - Ein geteilter Link oder Text startet den Import aus Story 11 mit denselben Regeln (prüfen vor dem Speichern, nichts raten).
+- Ist ein geteilter Text nur ein kurzer Satz mit Link (z. B. „Schau dir diese Stelle an: https://…“), wird der Link importiert, sonst der Text. Kommt nichts an, sagt die App das.
+- *(Ergänzt bei der Planung am 25.11.2026:)* Das Teilen-Menü nimmt Web-Apps nur auf Android auf. Auf dem iPhone übernimmt das ein Kurzbefehl (Shortcuts-App), der dieselbe Adresse öffnet; die README erklärt, wie man ihn anlegt. Weil eine Web-App auf dem iPhone-Home-Bildschirm einen eigenen Speicher getrennt von Safari hat, nutzt man den Tracker auf dem iPhone dann in Safari.
+- Keine Offline-Funktion; die App braucht weiter eine Verbindung.
 
 ### 14. Gespräch vorbereiten
 Als Bewerber möchte ich mich gezielt auf ein Gespräch für eine bestimmte Stelle vorbereiten.
@@ -221,7 +224,7 @@ Gesammelt am 16.11.2026 nach einem ruhigen Durchgang durch das Tool. Nichts davo
 - E-Mail-Konto verknüpfen: Antworten von Firmen automatisch erkennen, Mailverlauf an der Bewerbung hinterlegen.
 - Tipps zur jeweiligen Bewerbung erzeugen.
 - Bewerbung im Tool durchführen: Lebenslauf und Anschreiben auf die Stelle anpassen, als PDF erzeugen, dann zur Originalanzeige springen.
-- Stellen vom Handy teilen (bereits als Story 13 eingeplant).
+- Stellen vom Handy teilen. *(Umgesetzt als Story 13.)*
 - Alternative Version mit Gamification: Jobsuche als Spiel, mit Belohnungen, Erfahrungspunkten und Leveln, aber professionell und organisiert. *(Für später. Grundsatz: Belohnt werden Handlungen, nie Ergebnisse, also z. B. eine Bewerbung abschicken oder nachfassen, nicht eine Zusage.)*
 - Wissensbereich mit aktuellen Tipps: Online-Bewerbung, Gespräche, Formulare, Dokumente, Unterschiede nach Land und Branche.
 - Bewerbungsgespräch für ein bestimmtes Unternehmen üben.

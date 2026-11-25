@@ -240,6 +240,11 @@ export const en: Messages = {
       { role: "Product Owner E-commerce", workation: null, salary: "€55–60k", nextStep: null, requirements: null, notes: null, history: ["Withdrawn myself: no remote option."] },
     ],
   },
+  share: {
+    title: "Add shared job",
+    empty: "No link or text arrived with the share.",
+    toApplications: "Go to applications",
+  },
   notFound: {
     text: "This page does not exist.",
     back: "Go to overview",

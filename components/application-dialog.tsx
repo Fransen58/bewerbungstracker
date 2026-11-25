@@ -1,6 +1,12 @@
 "use client";
 
-import { useRef, useState, type ReactElement, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import {
   LoaderCircleIcon,
   PencilIcon,
@@ -246,18 +252,34 @@ export function EditApplicationDialog({
   );
 }
 
+// Story 13: opened by a share (see /share). Starts the import of the shared
+// link or text right away; `onClosed` runs once the dialog is closed.
+export function SharedApplicationDialog({
+  input,
+  onClosed,
+}: {
+  input: string;
+  onClosed: () => void;
+}) {
+  return <ApplicationDialog sharedInput={input} onClosed={onClosed} />;
+}
+
 // Shared dialog for creating (no application) and editing an application.
 function ApplicationDialog({
   application,
   triggerButton,
   triggerContent,
+  sharedInput,
+  onClosed,
 }: {
   application?: Application;
-  triggerButton: ReactElement;
-  triggerContent: ReactNode;
+  triggerButton?: ReactElement;
+  triggerContent?: ReactNode;
+  sharedInput?: string;
+  onClosed?: () => void;
 }) {
   const t = useT();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(sharedInput !== undefined);
   const [errors, setErrors] = useState<Errors>({});
   // Snapshot of the values when the dialog opened. Saving updates the
   // application while the close animation still runs; the form must keep
@@ -303,12 +325,17 @@ function ApplicationDialog({
       adText !== null ||
       (formRef.current !== null && serialize(formRef.current) !== baseline.current);
     if (changed) setConfirmDiscard(true);
-    else setOpen(false);
+    else close();
   }
 
   function discard() {
     setConfirmDiscard(false);
+    close();
+  }
+
+  function close() {
     setOpen(false);
+    onClosed?.();
   }
 
   // Fills in suggested values (import, fit check), but only where a field
@@ -369,7 +396,7 @@ function ApplicationDialog({
     }
     if (application) updateApplication(application.id, result.value);
     else addApplication(result.value);
-    setOpen(false);
+    close();
   }
 
   // Shared props for plain text inputs, prefilled when editing.
@@ -386,7 +413,9 @@ function ApplicationDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger render={triggerButton}>{triggerContent}</DialogTrigger>
+      {triggerButton && (
+        <DialogTrigger render={triggerButton}>{triggerContent}</DialogTrigger>
+      )}
       <DialogContent className="flex max-h-[90dvh] flex-col sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-medium tracking-[-0.03em]">
@@ -404,6 +433,7 @@ function ApplicationDialog({
           <div className="-mx-5 min-h-0 space-y-6 overflow-y-auto px-5 py-1">
             {!application && (
               <ImportBox
+                initialValue={sharedInput}
                 onDraft={applyDraft}
                 onUrl={(url) => fillForm({ job_url: url })}
               />
@@ -413,7 +443,7 @@ function ApplicationDialog({
                 job={adText}
                 assessment={assessment}
                 onResult={applyAssessment}
-                onDiscard={() => setOpen(false)}
+                onDiscard={close}
               />
             )}
             <div key={formKey} className="grid gap-4 sm:grid-cols-2">
@@ -571,20 +601,32 @@ type ImportState =
 // Story 11: reads a job ad (link or pasted text) on the server and hands the
 // suggested fields to the form. Nothing is saved until the user clicks Save.
 function ImportBox({
+  initialValue,
   onDraft,
   onUrl,
 }: {
+  // A shared link or text (story 13); its import starts right away.
+  initialValue?: string;
   onDraft: (draft: JobDraft, url: string | null, text: string) => void;
   // A link that could not be read still goes into the job link field.
   onUrl: (url: string) => void;
 }) {
   const t = useT();
   const m = t.form.import;
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(initialValue ?? "");
   const [state, setState] = useState<ImportState>({ kind: "idle" });
+  // Effects run twice in development; the shared input is imported once.
+  const started = useRef(false);
+  useEffect(() => {
+    if (!initialValue || started.current) return;
+    started.current = true;
+    handleImport(initialValue);
+    // Runs once on mount with the shared input.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  async function handleImport() {
-    const input = value.trim();
+  async function handleImport(raw = value) {
+    const input = raw.trim();
     const isUrl = /^https?:\/\/\S+$/i.test(input);
     setState({ kind: "loading" });
     try {
@@ -628,7 +670,7 @@ function ImportBox({
           type="button"
           size="sm"
           disabled={loading || value.trim() === ""}
-          onClick={handleImport}
+          onClick={() => handleImport()}
         >
           {loading ? (
             <LoaderCircleIcon className="animate-spin" />
