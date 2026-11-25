@@ -77,6 +77,8 @@ export function DatePicker({
         >
           <Calendar
             mode="single"
+            // Always six week rows, so the popup keeps its size per month.
+            fixedWeeks
             locale={LOCALES[lang]}
             selected={current ? fromISODay(current) : undefined}
             defaultMonth={current ? fromISODay(current) : undefined}

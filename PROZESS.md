@@ -457,6 +457,8 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 - Beim Öffnen landete der Fokus auf „voriger Monat“ statt auf dem Tag. Die Pfeiltasten taten deshalb nichts. Jetzt startet der Fokus auf dem gewählten Tag oder auf heute.
 - Über eine Monatsgrenze ging der Fokus verloren. Ursache war eine fehlende Zeile im generierten Kalender-Baustein: Er merkt sich, welcher Tag den Fokus bekommen soll, reichte die Referenz aber nicht an den Knopf weiter. Gefunden hat das erst der Tastaturtest, mit der Maus fällt es nicht auf.
 
+- Nachtrag aus dem Nutzertest: Beim Monatswechsel sprang der Kalender. Ursache: Monate brauchen 4 bis 6 Wochenzeilen, die Box änderte also ihre Höhe. Öffnete sie sich oberhalb des Feldes, wanderte sie dabei mit. Jetzt zeigt der Kalender immer 6 Zeilen und füllt sie mit ausgegrauten Tagen der Nachbarmonate auf, gemessen bleiben Position und Größe gleich.
+
 **Learning:** Fertige Bausteine sparen viel Arbeit, ungeprüft übernehmen sollte man sie trotzdem nicht. Ein kurzer Tastaturtest gehört zu jeder neuen Bedienkomponente.
 
 **Prüfung:** Browser-Tests für die Vorbelegung beim Bearbeiten, Pfeiltaste plus Enter über einen Monatswechsel, „Leeren“, „Heute“, Escape (schließt nur den Kalender, nicht den Dialog), Speichern, die Pflichtprüfung im Verlauf, Englisch (Woche ab Sonntag, englische Monatsnamen), Dunkelmodus und Tippen auf dem Handy.
