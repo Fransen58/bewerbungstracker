@@ -458,6 +458,8 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 - Über eine Monatsgrenze ging der Fokus verloren. Ursache war eine fehlende Zeile im generierten Kalender-Baustein: Er merkt sich, welcher Tag den Fokus bekommen soll, reichte die Referenz aber nicht an den Knopf weiter. Gefunden hat das erst der Tastaturtest, mit der Maus fällt es nicht auf.
 
 - Nachtrag aus dem Nutzertest: Beim Monatswechsel sprang der Kalender. Ursache: Monate brauchen 4 bis 6 Wochenzeilen, die Box änderte also ihre Höhe. Öffnete sie sich oberhalb des Feldes, wanderte sie dabei mit. Jetzt zeigt der Kalender immer 6 Zeilen und füllt sie mit ausgegrauten Tagen der Nachbarmonate auf, gemessen bleiben Position und Größe gleich.
+- Nachtrag aus dem Nutzertest: Der Kalender öffnete sich manchmal links oder rechts neben dem Feld. Ursache: Passte er weder unter noch über das Feld, wich die Positionierung von Base UI auf die Seite aus, abhängig davon, wo das Feld gerade stand. Nachgestellt bei 1280 × 720 Pixeln. Jetzt geht er nur unter oder über dem Feld auf. Damit er auch auf kleinen Handys (667 Pixel hoch) nicht abgeschnitten wird, ist er etwas kompakter, lässt sich in Grenzfällen innen scrollen und hält „Heute“ und „Leeren“ unten fest.
+- Beim Nachmessen fiel noch auf: Der Fokus startete auf heute statt auf dem gewählten Tag, wenn heute im Monat davor lag. Die Suche nahm einfach das erste passende Element. Jetzt sucht sie zuerst den gewählten Tag.
 
 **Learning:** Fertige Bausteine sparen viel Arbeit, ungeprüft übernehmen sollte man sie trotzdem nicht. Ein kurzer Tastaturtest gehört zu jeder neuen Bedienkomponente.
 

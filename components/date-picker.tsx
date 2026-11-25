@@ -67,13 +67,21 @@ export function DatePicker({
         </PopoverTrigger>
         <PopoverContent
           align="start"
-          className="w-auto rounded-xl p-2 shadow-elevated ring-0"
+          // Only below or above the field, never beside it.
+          collisionAvoidance={{
+            side: "flip",
+            align: "shift",
+            fallbackAxisSide: "none",
+          }}
+          className="max-h-(--available-height) w-auto overflow-y-auto rounded-xl p-2 shadow-elevated ring-0"
           // Start on the chosen day (or today), so arrow keys move days.
-          initialFocus={() =>
-            document.querySelector<HTMLElement>(
-              "[data-slot=popover-content] .rdp-day[data-selected] button, [data-slot=popover-content] .rdp-today button"
-            )
-          }
+          initialFocus={() => {
+            const pick = (day: string) =>
+              document.querySelector<HTMLElement>(
+                `[data-slot=popover-content] .rdp-day[${day}] button`
+              );
+            return pick("data-selected") ?? pick("data-today");
+          }}
         >
           <Calendar
             mode="single"
@@ -83,9 +91,10 @@ export function DatePicker({
             selected={current ? fromISODay(current) : undefined}
             defaultMonth={current ? fromISODay(current) : undefined}
             onSelect={(d) => d && choose(toISODay(d))}
-            className="[--cell-radius:9999px] [--cell-size:--spacing(9)]"
+            className="[--cell-radius:9999px] [--cell-size:--spacing(8)]"
+            classNames={{ week: "mt-1 flex w-full" }}
           />
-          <div className="flex justify-between gap-2 border-t px-1 pt-2">
+          <div className="sticky bottom-0 -mb-2 flex justify-between gap-2 border-t bg-popover px-1 py-2">
             <Button
               type="button"
               variant="ghost"
