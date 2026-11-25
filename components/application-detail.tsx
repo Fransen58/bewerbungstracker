@@ -36,6 +36,7 @@ import { formatDate, formatTimestamp, isOverdue, todayISO } from "@/lib/date";
 import {
   addEvent,
   deleteApplication,
+  deleteEvent,
   useAppData,
   useStorageReady,
 } from "@/lib/storage";
@@ -44,6 +45,7 @@ import {
   type Application,
   type ApplicationEvent,
   type EventType,
+  type Status,
 } from "@/lib/types";
 import { useT } from "@/lib/i18n";
 
@@ -93,7 +95,7 @@ export function ApplicationDetail() {
 
       <div className="grid gap-10 lg:grid-cols-[3fr_2fr]">
         <Facts app={app} />
-        <History applicationId={app.id} events={history} />
+        <History app={app} events={history} />
       </div>
     </>
   );
@@ -222,10 +224,10 @@ function Fact({ label, children }: { label: string; children: ReactNode }) {
 // ---------- History ----------
 
 function History({
-  applicationId,
+  app,
   events,
 }: {
-  applicationId: string;
+  app: Application;
   events: ApplicationEvent[];
 }) {
   const t = useT();
@@ -247,7 +249,7 @@ function History({
         </ol>
       )}
 
-      <AddEventForm applicationId={applicationId} />
+      <AddEventForm app={app} />
     </section>
   );
 }
@@ -261,6 +263,7 @@ function EventItem({ event: e }: { event: ApplicationEvent }) {
         className="absolute top-[7px] -left-5 size-[7px] rounded-full bg-foreground ring-4 ring-background"
       />
       <div className="flex flex-wrap items-baseline gap-x-3">
+        {!e.to_status && <DeleteEventButton event={e} />}
         <p className="font-medium tracking-[-0.02em]">
           {/* A status change is titled by its new status: event types have
               no "accepted" or "withdrawn", which would read as "Note". */}
@@ -294,9 +297,64 @@ function EventItem({ event: e }: { event: ApplicationEvent }) {
   );
 }
 
-function AddEventForm({ applicationId }: { applicationId: string }) {
+// Story 18: manual entries can be deleted after a confirmation. Status
+// changes have no delete button (see deleteEvent).
+function DeleteEventButton({ event }: { event: ApplicationEvent }) {
   const t = useT();
+  const h = t.detail.history;
+  return (
+    <Dialog>
+      <DialogTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={h.delete}
+            className="order-last ml-auto self-center text-muted-foreground"
+          />
+        }
+      >
+        <Trash2Icon />
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="text-xl font-medium tracking-[-0.03em]">
+            {h.deleteTitle}
+          </DialogTitle>
+          <DialogDescription>
+            {h.deleteText(
+              t.options.event_type[event.type],
+              formatDate(event.date, t.locale)
+            )}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose render={<Button variant="outline" />}>
+            {t.form.cancel}
+          </DialogClose>
+          <Button variant="destructive" onClick={() => deleteEvent(event.id)}>
+            {h.deleteConfirm}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// Event types that can move the application to the matching status.
+const EVENT_STATUS: Partial<Record<EventType, Status>> = {
+  rejection: "rejected",
+  offer: "offer",
+};
+
+function AddEventForm({ app }: { app: Application }) {
+  const t = useT();
+  const applicationId = app.id;
   const [type, setType] = useState<EventType>("note");
+  // Story 18: offered (and preselected) for a rejection or an offer.
+  const [alsoStatus, setAlsoStatus] = useState(true);
+  const offeredStatus = EVENT_STATUS[type];
+  const canChangeStatus = !!offeredStatus && offeredStatus !== app.status;
   const [date, setDate] = useState(todayISO);
   const [note, setNote] = useState("");
   const [dateError, setDateError] = useState(false);
@@ -310,12 +368,15 @@ function AddEventForm({ applicationId }: { applicationId: string }) {
     setDateError(!date);
     setNoteError(missingNote);
     if (!date || missingNote) return;
-    addEvent({
-      application_id: applicationId,
-      type,
-      date,
-      note: note.trim() === "" ? null : note.trim(),
-    });
+    addEvent(
+      {
+        application_id: applicationId,
+        type,
+        date,
+        note: note.trim() === "" ? null : note.trim(),
+      },
+      canChangeStatus && alsoStatus ? offeredStatus : undefined
+    );
     setNote("");
   }
 
@@ -330,7 +391,11 @@ function AddEventForm({ applicationId }: { applicationId: string }) {
         <Select<EventType>
           items={t.options.event_type}
           value={type}
-          onValueChange={(v) => v && setType(v)}
+          onValueChange={(v) => {
+            if (!v) return;
+            setType(v);
+            setAlsoStatus(true);
+          }}
         >
           <SelectTrigger id="event-type" className="w-full">
             <SelectValue />
@@ -376,6 +441,17 @@ function AddEventForm({ applicationId }: { applicationId: string }) {
           </p>
         )}
       </div>
+      {canChangeStatus && (
+        <label className="flex items-center gap-2 text-sm sm:col-span-2">
+          <input
+            type="checkbox"
+            checked={alsoStatus}
+            onChange={(e) => setAlsoStatus(e.target.checked)}
+            className="size-4 accent-foreground"
+          />
+          {h.alsoStatus(t.options.status[offeredStatus!])}
+        </label>
+      )}
       <div className="sm:col-span-2">
         <Button type="submit">{h.add}</Button>
       </div>

@@ -53,6 +53,31 @@ function respondedCheck(events: ApplicationEvent[]) {
     RESPONSE_STATUSES.has(a.status) || everResponded.has(a.id);
 }
 
+// CV versions are free text: compare them without case and extra spaces.
+const cvSpelling = (cv: string | null) => cv?.trim().replace(/\s+/g, " ") || null;
+const cvKey = (spelling: string) => spelling.toLowerCase();
+
+// Ties keep the spelling that came first.
+const mostCommon = (counts: Map<string, number>) =>
+  [...counts].reduce((best, c) => (c[1] > best[1] ? c : best))[0];
+
+// Story 18: versions used so far, for suggestions in the form. One entry
+// per version in its most common spelling, most used first.
+export function cvVersionNames(apps: Application[]): string[] {
+  const groups = new Map<string, { spellings: Map<string, number>; count: number }>();
+  for (const app of apps) {
+    const spelling = cvSpelling(app.cv_version);
+    if (!spelling) continue;
+    const group = groups.get(cvKey(spelling)) ?? { spellings: new Map(), count: 0 };
+    group.spellings.set(spelling, (group.spellings.get(spelling) ?? 0) + 1);
+    group.count++;
+    groups.set(cvKey(spelling), group);
+  }
+  return [...groups.values()]
+    .sort((a, b) => b.count - a.count)
+    .map((g) => mostCommon(g.spellings));
+}
+
 export type CvVersionStats = {
   // Most common spelling of the version; null for "no version given".
   name: string | null;
@@ -76,8 +101,8 @@ export function responseByCv(
 
   for (const app of apps) {
     if (app.status === "discovered") continue;
-    const spelling = app.cv_version?.trim().replace(/\s+/g, " ") || null;
-    const key = spelling?.toLowerCase() ?? null;
+    const spelling = cvSpelling(app.cv_version);
+    const key = spelling && cvKey(spelling);
     const group = groups.get(key) ?? { spellings: new Map(), applied: 0, responded: 0 };
     if (spelling) group.spellings.set(spelling, (group.spellings.get(spelling) ?? 0) + 1);
     group.applied++;
@@ -87,11 +112,7 @@ export function responseByCv(
 
   return [...groups.entries()]
     .map(([key, g]) => ({
-      // Ties keep the spelling that came first.
-      name:
-        key === null
-          ? null
-          : [...g.spellings].reduce((best, s) => (s[1] > best[1] ? s : best))[0],
+      name: key === null ? null : mostCommon(g.spellings),
       applied: g.applied,
       responded: g.responded,
       rate: g.responded / g.applied,

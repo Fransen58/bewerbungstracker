@@ -207,20 +207,20 @@ export function changeStatus(applicationId: string, status: Status) {
   updateApplication(applicationId, { ...current, status });
 }
 
-// Replaces all editable fields. A status change is logged as an event.
 // Leaving "discovered" without an application date sets it to today, so
 // every application that was sent has one.
+function appliedAtAfter(from: Status, to: Status, appliedAt: string | null) {
+  return appliedAt ?? (from === "discovered" && to !== "discovered" ? todayISO() : null);
+}
+
+// Replaces all editable fields. A status change is logged as an event.
 export function updateApplication(applicationId: string, input: NewApplication) {
   const data = read();
   const current = data.applications.find((a) => a.id === applicationId);
   if (!current) return;
 
   const statusChanged = current.status !== input.status;
-  const appliedAt =
-    input.applied_at ??
-    (current.status === "discovered" && input.status !== "discovered"
-      ? todayISO()
-      : null);
+  const appliedAt = appliedAtAfter(current.status, input.status, input.applied_at);
   write({
     ...data,
     applications: data.applications.map((a) =>
@@ -260,14 +260,43 @@ export type NewEvent = Pick<
   "application_id" | "type" | "date" | "note"
 >;
 
-// Adds a manual event (not a status change).
-export function addEvent(input: NewEvent) {
+// Adds a manual event. With `status` (story 18: rejection or offer), the
+// application moves to it and the same event records the change, so the
+// history shows one entry, not two.
+export function addEvent(input: NewEvent, status?: Status) {
   const data = read();
+  const app = data.applications.find((a) => a.id === input.application_id);
+  const from = status && app && app.status !== status ? app.status : null;
   const event: ApplicationEvent = {
     ...input,
     id: crypto.randomUUID(),
-    from_status: null,
-    to_status: null,
+    from_status: from,
+    to_status: from ? status! : null,
   };
-  write({ ...data, events: [...data.events, event] });
+  write({
+    ...data,
+    applications: from
+      ? data.applications.map((a) =>
+          a.id === input.application_id
+            ? {
+                ...a,
+                status: status!,
+                applied_at: appliedAtAfter(from, status!, a.applied_at),
+                updated_at: new Date().toISOString(),
+              }
+            : a
+        )
+      : data.applications,
+    events: [...data.events, event],
+  });
+}
+
+// Removes a manual event. Events from a status change stay: they record
+// how the application got to its status.
+export function deleteEvent(eventId: string) {
+  const data = read();
+  write({
+    ...data,
+    events: data.events.filter((e) => e.id !== eventId || e.to_status !== null),
+  });
 }

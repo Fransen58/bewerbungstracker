@@ -527,6 +527,22 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 
 **Learning:** Eine bestehende Regel wiederzuverwenden ist mehr als sauberer Code. Es garantiert, dass zwei Zahlen auf derselben Seite zusammenpassen.
 
+## Story 18: Feinschliff nach dem Testbericht
+
+**Ziel:** Vier Punkte aus dem Testbericht und aus Story 17. Die Demo soll zu einem PM-Portfolio passen. Fehleinträge im Verlauf sollen sich löschen lassen. Verlauf und Status sollen sich nicht widersprechen. Und das Feld „CV-Version“ soll weniger Tippfehler zulassen, denn davon hängt die Auswertung aus Story 17 ab.
+
+**Vorgehen:** Erst die Datenschicht, also Eintrag löschen, Statuswechsel aus einem Verlaufseintrag und die Liste der bisherigen CV-Versionen. Danach der Verlauf auf der Detailseite, die Vorschläge im Formular und zuletzt die Demo-Texte. Jeder Teil hat einen Browser-Test. Die Tests aus dem Testbericht liefen danach noch einmal komplett.
+
+**Entscheidungen:**
+- Löschen lassen sich nur eigene Einträge. Ein Statuswechsel belegt, wie die Bewerbung zu ihrem Status kam, und die Antwortquote zählt ihn mit. Ein falscher Wechsel wird durch einen neuen korrigiert, nicht gelöscht.
+- Bei „Absage“ oder „Angebot“ ist „Status mitändern“ vorausgewählt, weil das der häufige Fall ist. Es lässt sich aber abwählen. Daraus wird ein einziger Eintrag mit Notiz und Statuswechsel, kein doppelter.
+- Die CV-Vorschläge nutzen die Autocomplete-Komponente von Base UI statt der Vorschlagsliste des Browsers, damit sie wie die übrigen Auswahllisten aussehen. Sie fassen Schreibweisen nach derselben Regel zusammen wie Story 17, die Logik ist geteilt.
+- Die neue Demo-Persona ist eine Product Managerin bzw. ein Product Owner. Status, Daten und die Zahl der Verlaufseinträge sind gleich geblieben, nur die Texte sind neu. Die README-Screenshots sind neu aufgenommen.
+
+**Probleme:** Solange die Vorschlagsliste offen ist, blendet Base UI den Rest des Dialogs für Screenreader aus. Die Liste bleibt beim Tippen offen, auch ohne Treffer. Mein Test fand deshalb den Speichern-Knopf nicht. Mit Maus und Tastatur funktioniert alles: Ein Klick auf „Speichern“ wirkt sofort, Escape schließt nur die Liste. Die leere Liste ist jetzt unsichtbar.
+
+**Learning:** Wo zwei Funktionen dieselbe Regel brauchen, hier „gleiche CV-Version“, gehört sie an genau eine Stelle. Sonst zählt die Auswertung anders, als das Formular vorschlägt.
+
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
 - ~~Das Prozentzeichen springt beim Sprachwechsel.~~ Behoben in Story 15.

@@ -136,7 +136,7 @@ Als Bewerber möchte ich das Projekt öffentlich zeigen, damit es als Nachweis m
 
 ## Ausbaustufe 2 (nach dem MVP)
 
-_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann 14 (vorgezogen am 25.11.2026 für mehr sichtbaren Nutzen im Portfolio), dann 15 (Board und Liste zusammenführen), dann 16 (eigene Datumsauswahl), dann 17 (CV-Versionen vergleichen), dann 13, dann 10. Dokumente und E-Mail erst nach dem Cloud-Sync._
+_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann 14 (vorgezogen am 25.11.2026 für mehr sichtbaren Nutzen im Portfolio), dann 15 (Board und Liste zusammenführen), dann 16 (eigene Datumsauswahl), dann 17 (CV-Versionen vergleichen), dann 18 (Feinschliff nach dem Testbericht), dann 13, dann 10. Dokumente und E-Mail erst nach dem Cloud-Sync._
 
 ### 10. Cloud-Sync und Login
 - Optionale Speicherung in Supabase mit Login per Magic Link und Row Level Security, damit die Daten geräteübergreifend und sicher verfügbar sind.
@@ -201,6 +201,14 @@ Als Nutzer möchte ich sehen, welche CV-Version wie oft eine Antwort bekommt, da
 - Neutrale Darstellung: keine Wertung wie „beste Version“, keine Auszeichnung (Prinzip „Handlungen belohnen, nie Ergebnisse“).
 - Der Block erscheint, sobald mindestens eine abgeschickte Bewerbung eine CV-Version hat. Keine Datenänderung, keine Migration.
 
+### 18. Feinschliff nach dem Testbericht
+Als Nutzer möchte ich, dass Verlauf, Status und CV-Versionen zueinander passen und die Demo zu meinem Profil passt.
+- Die Demo zeigt eine Product-Managerin bzw. einen Product Owner: Rollen, Anforderungen, Notizen, Verlauf und Demo-Profil passen dazu, auf Deutsch und Englisch. Firmen und Personen bleiben frei erfunden.
+- Manuelle Verlaufseinträge lassen sich nach Rückfrage löschen. Einträge aus einem Statuswechsel bleiben stehen, weil sie den Weg der Bewerbung belegen.
+- Beim Eintrag „Absage“ oder „Angebot“ bietet das Formular an, den Status mitzuändern (vorausgewählt, abwählbar), wenn die Bewerbung nicht schon diesen Status hat. Daraus entsteht ein einziger Eintrag mit Notiz und Statuswechsel, keine Dopplung.
+- Das Feld „CV-Version“ schlägt beim Tippen die bisher verwendeten Versionen vor (häufigste Schreibweise, häufigste zuerst). Freitext bleibt möglich.
+- Keine Änderung am Datenmodell, keine Migration.
+
 ---
 
 ## Ideen-Speicher (noch nicht eingeplant)
@@ -241,11 +249,9 @@ Gesammelt am 16.11.2026 nach einem ruhigen Durchgang durch das Tool. Nichts davo
 - Probeinterview: Fragen nacheinander beantworten, Rückmeldung gegen ein Raster (Üben mit Rückmeldung wirkt laut Forschung am stärksten).
 
 **Aus dem Testbericht (25.11.2026), noch nicht umgesetzt**
-- Verlaufseinträge bearbeiten und löschen (Löschen mit Rückfrage), mindestens die manuellen.
-- Ein Verlaufseintrag „Absage“ oder „Angebot“ bietet an, den Status mitzuändern.
+- Verlaufseinträge bearbeiten. *(Löschen manueller Einträge eingeplant als Story 18.)*
 - Quelle beim KI-Import erkennen; StepStone, Indeed und XING als Quellen ergänzen (ändert die Auswahlwerte).
 - Antwortquote im UI kurz erklären (z. B. Tooltip): Was zählt als Antwort, warum zählt eine zurückgezogene Bewerbung nur nach einem Gespräch.
-- Demo-Persona an das Portfolio anpassen: Product-Manager- und Product-Owner-Rollen statt Design-Rollen.
 - Liste auch nach Firma und Status sortieren.
 - Suche und Filter in der Adresse speichern (teilen, Zurück-Taste).
 - Übersicht: Klick auf eine Status-Zeile öffnet die gefilterte Liste.

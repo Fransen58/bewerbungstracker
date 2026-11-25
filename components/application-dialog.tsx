@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/date-picker";
+import { SuggestInput } from "@/components/suggest-input";
+import { cvVersionNames } from "@/lib/metrics";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -33,6 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   addApplication,
   updateApplication,
+  useAppData,
   type NewApplication,
 } from "@/lib/storage";
 import {
@@ -271,6 +274,7 @@ function ApplicationDialog({
   // Story 12: the imported ad text and an optional fit check of it.
   const [adText, setAdText] = useState<string | null>(null);
   const [assessment, setAssessment] = useState<FitAssessment | null>(null);
+  const { applications } = useAppData();
   const title = application ? t.form.editApplication : t.form.newApplication;
 
   function handleOpenChange(next: boolean) {
@@ -492,8 +496,9 @@ function ApplicationDialog({
                 />
               </Field>
               <Field name="cv_version">
-                <Input
+                <SuggestInput
                   {...input("cv_version")}
+                  suggestions={cvVersionNames(applications)}
                   placeholder={t.form.placeholders.cv_version}
                 />
               </Field>
