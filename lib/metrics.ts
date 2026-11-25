@@ -33,19 +33,75 @@ export function responseRate(
   events: ApplicationEvent[]
 ): { responded: number; applied: number; rate: number | null } {
   const applied = apps.filter((a) => a.status !== "discovered");
-  const everResponded = new Set(
-    events
-      .filter((e) => e.to_status && RESPONSE_STATUSES.has(e.to_status))
-      .map((e) => e.application_id)
-  );
-  const responded = applied.filter(
-    (a) => RESPONSE_STATUSES.has(a.status) || everResponded.has(a.id)
-  ).length;
+  const responded = applied.filter(respondedCheck(events)).length;
   return {
     responded,
     applied: applied.length,
     rate: applied.length === 0 ? null : responded / applied.length,
   };
+}
+
+// Returns a check whether an application got a response, from its current
+// status or its history.
+function respondedCheck(events: ApplicationEvent[]) {
+  const everResponded = new Set(
+    events
+      .filter((e) => e.to_status && RESPONSE_STATUSES.has(e.to_status))
+      .map((e) => e.application_id)
+  );
+  return (a: Application) =>
+    RESPONSE_STATUSES.has(a.status) || everResponded.has(a.id);
+}
+
+export type CvVersionStats = {
+  // Most common spelling of the version; null for "no version given".
+  name: string | null;
+  applied: number;
+  responded: number;
+  rate: number;
+};
+
+// Story 17: response rate per CV version, over sent applications only.
+// Versions are grouped regardless of case and extra spaces. Sorted by rate,
+// then by number of applications; "no version" always comes last.
+export function responseByCv(
+  apps: Application[],
+  events: ApplicationEvent[]
+): CvVersionStats[] {
+  const responded = respondedCheck(events);
+  const groups = new Map<
+    string | null,
+    { spellings: Map<string, number>; applied: number; responded: number }
+  >();
+
+  for (const app of apps) {
+    if (app.status === "discovered") continue;
+    const spelling = app.cv_version?.trim().replace(/\s+/g, " ") || null;
+    const key = spelling?.toLowerCase() ?? null;
+    const group = groups.get(key) ?? { spellings: new Map(), applied: 0, responded: 0 };
+    if (spelling) group.spellings.set(spelling, (group.spellings.get(spelling) ?? 0) + 1);
+    group.applied++;
+    if (responded(app)) group.responded++;
+    groups.set(key, group);
+  }
+
+  return [...groups.entries()]
+    .map(([key, g]) => ({
+      // Ties keep the spelling that came first.
+      name:
+        key === null
+          ? null
+          : [...g.spellings].reduce((best, s) => (s[1] > best[1] ? s : best))[0],
+      applied: g.applied,
+      responded: g.responded,
+      rate: g.responded / g.applied,
+    }))
+    .sort(
+      (a, b) =>
+        Number(a.name === null) - Number(b.name === null) ||
+        b.rate - a.rate ||
+        b.applied - a.applied
+    );
 }
 
 export function averageFit(apps: Application[]): {

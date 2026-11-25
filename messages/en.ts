@@ -26,6 +26,11 @@ export const en: Messages = {
           ? "No values yet"
           : `from ${count} ${count === 1 ? "application" : "applications"} with a value`,
       total: "Total applications",
+      cvVersions: "CV versions",
+      cvNone: "Not specified",
+      cvDetail: (responded: number, applied: number) =>
+        `${responded} of ${applied} ${applied === 1 ? "application" : "applications"} answered`,
+      cvFewData: "little data so far",
       byStatus: "By status",
       due: "Due this week",
       dueEmpty: "Nothing due this week.",

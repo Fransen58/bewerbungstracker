@@ -15,7 +15,7 @@ Das Projekt ist zugleich ein Portfolio-Nachweis: Es ist Schritt für Schritt mit
 - **Gespräch vorbereiten:** Für jede Stelle fünf wahrscheinliche Fragen, jeweils mit einem passenden Beispiel aus dem eigenen Profil, und drei gezielte Rückfragen an die Firma. Wo das Profil eine Lücke hat, berät die App wie ein Coach: Lücke einordnen, Brücke zu echter Erfahrung, konkreter erster Lernschritt und ein ehrlicher Formulierungsvorschlag. Die Regeln dafür beruhen auf einer Recherche zu strukturierten Interviews und Länderunterschieden. Erfunden wird nichts.
 - **Bewerbungen als Board oder Liste:** eine Seite mit Umschalter. Das Board ist eine Kanban-Ansicht nach Status, die Karten lassen sich per Drag & Drop verschieben (Maus, Touch, Tastatur), auf dem Handy auch über ein Auswahlfeld. Die Liste ist eine Tabelle mit Sortierung nach Datum, Passung und nächstem Schritt. Suche und Filter (Status, Arbeitsmodell, Quelle) gelten für beide Ansichten. Überfällige nächste Schritte sind markiert.
 - **Detailseite:** alle Angaben auf einen Blick und bearbeitbar, dazu ein Verlauf mit automatisch protokollierten Statuswechseln und eigenen Einträgen (Gespräch, Case, Notiz …).
-- **Übersicht:** Antwortquote, durchschnittliche Passung, Anzahl je Status und „Diese Woche fällig“.
+- **Übersicht:** Antwortquote, durchschnittliche Passung, Anzahl je Status, „Diese Woche fällig“ und die Antwortquote je CV-Version.
 - **Backup:** Export als JSON-Datei und Import mit gründlicher Prüfung. Ungültige Dateien werden abgelehnt, ohne Daten zu verändern.
 - **Demo-Modus:** 12 erfundene Beispiel-Bewerbungen mit Verlauf, getrennt von den eigenen Daten gespeichert.
 - **Deutsch/Englisch** umschaltbar, **Hell/Dunkel** (Standard: Systemeinstellung), responsiv für Desktop und Handy.
@@ -82,7 +82,7 @@ Ohne Schlüssel funktioniert alles andere wie gewohnt, Import und Einschätzung 
 
 **Live:** <https://bewerbungstracker-bice.vercel.app>
 
-Features: AI job ad import, AI fit assessment, AI interview prep, applications as Kanban board (drag & drop) or sortable list with shared search and filters, detail page with editable fields and history, dashboard (response rate, average fit, due this week), JSON backup import/export with validation, demo mode with separate sample data, German/English UI and light/dark theme.
+Features: AI job ad import, AI fit assessment, AI interview prep, applications as Kanban board (drag & drop) or sortable list with shared search and filters, detail page with editable fields and history, dashboard (response rate, average fit, due this week, response rate per CV version), JSON backup import/export with validation, demo mode with separate sample data, German/English UI and light/dark theme.
 
 The project was built step by step with Claude Code as a portfolio piece. The process (approach, decisions, prompts, problems and learnings) is documented in [PROZESS.md](PROZESS.md) (German).
 

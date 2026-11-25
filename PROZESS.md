@@ -510,6 +510,23 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 
 **Learning:** Ein fremder Testbericht ist wertvoll, aber er ist eine Liste von Beobachtungen, keine Liste von Aufträgen. Erst nachstellen, dann sortieren: Drei Punkte waren keine Fehler, zwölf sind neue Funktionen und gehören als Entscheidung zu mir, nicht still in einen Fix.
 
+## Story 17: CV-Versionen vergleichen
+
+**Ziel:** Sehen, welche CV-Version wie oft eine Antwort bekommt, damit ich meine Versionen gezielter einsetze.
+
+**Vorgehen:** Zuerst die Rechnung als reine Funktion (`responseByCv` in `lib/metrics.ts`), geprüft an den Demo-Daten und an Grenzfällen. Danach der Block „CV-Versionen“ auf der Übersicht, im Stil von „Nach Status“.
+
+**Entscheidungen:**
+- Die Antwort-Regel ist dieselbe wie bei der Antwortquote. Dafür habe ich die Prüfung „hat geantwortet“ aus `responseRate` herausgezogen und teile sie, statt sie zu kopieren. Die Summe über alle Versionen ergibt so genau die Gesamtquote, in der Demo 8 von 10.
+- Gezählt werden nur abgeschickte Bewerbungen, also alles außer „Entdeckt“. Sonst würde eine gemerkte, aber nie verschickte Stelle die Quote einer Version drücken.
+- Schreibweisen wie „DE Builder“ und „de  builder“ zählen als eine Version, angezeigt wird die häufigste. Das Feld bleibt Freitext. Dateien für CV-Versionen kommen erst nach dem Cloud-Sync (Ideen-Speicher).
+- „Ohne Angabe“ ist eine eigene Zeile und steht immer am Ende. Unter drei Bewerbungen steht „noch wenig Daten“.
+- Die Darstellung ist neutral, ohne „beste Version“ und ohne Hervorhebung, nach dem Grundsatz „Handlungen belohnen, nie Ergebnisse“.
+
+**Prüfung:** Die Rechnung habe ich mit den Demo-Daten (EN Element 4 von 4, DE Builder 4 von 6) und mit Grenzfällen getestet: unterschiedliche Schreibweisen, ohne Version, nur „Entdeckt“. Im Browser geprüft: Deutsch, Englisch, hell, dunkel, Handy. Der Block bleibt verborgen, solange keine abgeschickte Bewerbung eine Version hat.
+
+**Learning:** Eine bestehende Regel wiederzuverwenden ist mehr als sauberer Code. Es garantiert, dass zwei Zahlen auf derselben Seite zusammenpassen.
+
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
 - ~~Das Prozentzeichen springt beim Sprachwechsel.~~ Behoben in Story 15.

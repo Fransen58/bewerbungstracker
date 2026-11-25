@@ -11,6 +11,7 @@ import {
   averageFit,
   countByStatus,
   dueThisWeek,
+  responseByCv,
   responseRate,
 } from "@/lib/metrics";
 import { useAppData, useStorageReady } from "@/lib/storage";
@@ -57,6 +58,7 @@ export function Dashboard() {
       <div className="grid gap-12 lg:grid-cols-2">
         <StatusCounts />
         <DueList />
+        <CvVersions />
       </div>
     </div>
   );
@@ -111,6 +113,48 @@ function StatusCounts() {
               )}
             >
               {counts[status]}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+// Below this many sent applications, a version's rate says little.
+const FEW_APPLICATIONS = 3;
+
+// Story 17: response rate per CV version. Deliberately neutral: no ranking
+// labels or highlights, only the numbers.
+function CvVersions() {
+  const t = useT();
+  const { applications, events } = useAppData();
+  const stats = responseByCv(applications, events);
+  const o = t.pages.overview;
+
+  // Shown once at least one sent application names a version.
+  if (!stats.some((s) => s.name !== null)) return null;
+
+  return (
+    <section>
+      <h2 className="label-caps border-b pb-2">{o.cvVersions}</h2>
+      <ul className="divide-y">
+        {stats.map((s) => (
+          <li
+            key={s.name ?? ""}
+            className="flex items-baseline justify-between gap-4 py-2.5 text-sm"
+          >
+            <span className="min-w-0">
+              <span className={cn("break-words", s.name === null && "text-muted-foreground")}>
+                {s.name ?? o.cvNone}
+              </span>
+              <span className="block text-[13px] leading-[18px] text-muted-foreground">
+                {o.cvDetail(s.responded, s.applied)}
+                {s.applied < FEW_APPLICATIONS && ` · ${o.cvFewData}`}
+              </span>
+            </span>
+            <span className="shrink-0 text-right font-mono text-[13px] tabular-nums">
+              <Percent value={s.rate * 100} />
             </span>
           </li>
         ))}

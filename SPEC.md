@@ -223,7 +223,7 @@ Gesammelt am 16.11.2026 nach einem ruhigen Durchgang durch das Tool. Nichts davo
 - Konstruktives, professionelles Feedback auf Dokumente und Bewerbungen, angepasst an Markt, Branche und Arbeitgeber.
 
 **Von Claude ergänzt**
-- CV-Versionen vergleichen. *(Eingeplant als Story 17.)*
+- CV-Versionen vergleichen. *(Umgesetzt als Story 17.)*
 - CV-Versionen als Dateien ablegen und im Bewerbungsdialog auswählen statt eintippen. Erst nach dem Cloud-Sync, weil der Browser-Speicher für PDFs zu klein ist; baut auf den Versionsnamen aus Story 17 auf.
 - Nachfass-Assistent: Wenn eine Bewerbung nach X Tagen ohne Antwort ist, erinnern und einen höflichen Nachfass-Entwurf vorschlagen.
 - Gesprächsvorbereitung je Stelle aus Anforderungen und eigenem Profil: wahrscheinliche Fragen, eigene passende Beispiele, Rückfragen an die Firma.

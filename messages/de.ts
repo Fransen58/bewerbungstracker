@@ -24,6 +24,11 @@ export const de = {
           ? "Noch keine Werte"
           : `aus ${count} ${count === 1 ? "Bewerbung" : "Bewerbungen"} mit Wert`,
       total: "Bewerbungen gesamt",
+      cvVersions: "CV-Versionen",
+      cvNone: "Ohne Angabe",
+      cvDetail: (responded: number, applied: number) =>
+        `${responded} von ${applied} ${applied === 1 ? "Bewerbung" : "Bewerbungen"} mit Antwort`,
+      cvFewData: "noch wenig Daten",
       byStatus: "Nach Status",
       due: "Diese Woche fällig",
       dueEmpty: "Diese Woche ist nichts fällig.",
