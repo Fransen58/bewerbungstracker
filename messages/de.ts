@@ -238,6 +238,11 @@ export const de = {
   empty: {
     applications: "Noch keine Bewerbung – leg die erste an.",
   },
+  datePicker: {
+    placeholder: "Datum wählen",
+    today: "Heute",
+    clear: "Leeren",
+  },
   form: {
     newApplication: "Neue Bewerbung",
     editApplication: "Bewerbung bearbeiten",

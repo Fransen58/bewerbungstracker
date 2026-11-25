@@ -441,10 +441,30 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 
 **Prüfung:** Browser-Tests für Start mit Board, Suche auf dem Board, Wechsel zur Liste mit erhaltenem Filter, gemerkte Ansicht nach dem Neuladen, beide alten Adressen, „keine Treffer“, Handy ohne seitliches Scrollen, Filter-Knopf auf dem Handy und gleiche Position des Prozentzeichens in beiden Sprachen. Alle README-Screenshots sind neu aufgenommen.
 
+## Story 16: Eigene Datumsauswahl
+
+**Ziel:** Die drei Datumsfelder (Beworben am, Datum nächster Schritt, Datum im Verlauf) öffnen einen Kalender im Stil der App statt der Auswahl des Browsers.
+
+**Vorgehen:**
+1. Die shadcn-Bausteine *Calendar* (auf Basis der Bibliothek react-day-picker) und *Popover* hinzugefügt. Der Installer wollte dabei unseren angepassten Knopf überschreiben, das wurde abgelehnt.
+2. Eine gemeinsame Komponente `DatePicker` gebaut: ein Feld im Stil der Eingabefelder, darunter der Kalender mit runden Tagen, „Heute“ und „Leeren“. Sprache und Wochenbeginn kommen aus der App-Sprache.
+3. Im Bewerbungsdialog schreibt die Komponente ihren Wert in ein verstecktes Feld. So blieb das Formular unverändert, und der KI-Import kann Daten weiterhin vorbelegen. Im Verlauf ist sie direkt an den Zustand gebunden.
+4. Gespeichert wird weiter `YYYY-MM-DD`. Zwei kleine Hilfsfunktionen in `lib/date.ts` wandeln zwischen diesem Format und dem Datum des Kalenders.
+
+**Entscheidungen (mit dem Nutzer):** Der eigene Kalender kommt auch auf dem Handy, damit alles einheitlich aussieht. Ein Datum wird nur ausgewählt, nicht eingetippt, das spart eine eigene Eingabeprüfung je Sprachformat.
+
+**Probleme:**
+- Beim Öffnen landete der Fokus auf „voriger Monat“ statt auf dem Tag. Die Pfeiltasten taten deshalb nichts. Jetzt startet der Fokus auf dem gewählten Tag oder auf heute.
+- Über eine Monatsgrenze ging der Fokus verloren. Ursache war eine fehlende Zeile im generierten Kalender-Baustein: Er merkt sich, welcher Tag den Fokus bekommen soll, reichte die Referenz aber nicht an den Knopf weiter. Gefunden hat das erst der Tastaturtest, mit der Maus fällt es nicht auf.
+
+**Learning:** Fertige Bausteine sparen viel Arbeit, ungeprüft übernehmen sollte man sie trotzdem nicht. Ein kurzer Tastaturtest gehört zu jeder neuen Bedienkomponente.
+
+**Prüfung:** Browser-Tests für die Vorbelegung beim Bearbeiten, Pfeiltaste plus Enter über einen Monatswechsel, „Leeren“, „Heute“, Escape (schließt nur den Kalender, nicht den Dialog), Speichern, die Pflichtprüfung im Verlauf, Englisch (Woche ab Sonntag, englische Monatsnamen), Dunkelmodus und Tippen auf dem Handy.
+
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
 - ~~Das Prozentzeichen springt beim Sprachwechsel.~~ Behoben in Story 15.
-- Aufklappende Fenster wie der Kalender der Datumsfelder sehen anders aus als die Knöpfe und Felder, die sie öffnen. Ursache: Das ist die eingebaute Datumsauswahl des Browsers, die sich kaum gestalten lässt. Abhilfe wäre eine eigene Kalender-Komponente.
+- ~~Aufklappende Fenster wie der Kalender der Datumsfelder sehen anders aus als die Knöpfe und Felder, die sie öffnen.~~ Behoben in Story 16 mit einer eigenen Datumsauswahl.
 
 ## Ausgewählte Prompts
 

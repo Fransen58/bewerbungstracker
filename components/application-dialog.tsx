@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/date-picker";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -360,7 +361,13 @@ function ApplicationDialog({
                 />
               </Field>
               <Field name="applied_at">
-                <Input {...input("applied_at")} type="date" />
+                <DatePicker
+                  id="applied_at"
+                  name="applied_at"
+                  defaultValue={(initial?.applied_at as string | null) ?? null}
+                  invalid={!!errors.applied_at}
+                  describedBy={errors.applied_at ? "applied_at-error" : undefined}
+                />
               </Field>
               <Field
                 name="job_url"
@@ -430,7 +437,13 @@ function ApplicationDialog({
                 <Input {...input("next_step")} />
               </Field>
               <Field name="next_step_date">
-                <Input {...input("next_step_date")} type="date" />
+                <DatePicker
+                  id="next_step_date"
+                  name="next_step_date"
+                  defaultValue={(initial?.next_step_date as string | null) ?? null}
+                  invalid={!!errors.next_step_date}
+                  describedBy={errors.next_step_date ? "next_step_date-error" : undefined}
+                />
               </Field>
               <Field name="requirements" className="sm:col-span-2">
                 <Textarea

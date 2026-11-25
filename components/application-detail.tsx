@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/date-picker";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -341,13 +341,12 @@ function AddEventForm({ applicationId }: { applicationId: string }) {
       </div>
       <div className="grid gap-1.5">
         <Label htmlFor="event-date">{h.date}</Label>
-        <Input
+        <DatePicker
           id="event-date"
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          aria-invalid={dateError || undefined}
-          aria-describedby={dateError ? "event-date-error" : undefined}
+          value={date || null}
+          onChange={(v) => setDate(v ?? "")}
+          invalid={dateError}
+          describedBy={dateError ? "event-date-error" : undefined}
         />
         {dateError && (
           <p id="event-date-error" className="text-sm text-destructive">

@@ -131,7 +131,7 @@ Als Bewerber möchte ich das Projekt öffentlich zeigen, damit es als Nachweis m
 
 ## Ausbaustufe 2 (nach dem MVP)
 
-_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann 14 (vorgezogen am 25.11.2026 für mehr sichtbaren Nutzen im Portfolio), dann 15 (Board und Liste zusammenführen), dann eigene Kalender-Komponente, dann CV-Vergleich (Story noch zu schreiben), dann 13, dann 10. Dokumente und E-Mail erst nach dem Cloud-Sync._
+_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann 14 (vorgezogen am 25.11.2026 für mehr sichtbaren Nutzen im Portfolio), dann 15 (Board und Liste zusammenführen), dann 16 (eigene Datumsauswahl), dann CV-Vergleich (Story noch zu schreiben), dann 13, dann 10. Dokumente und E-Mail erst nach dem Cloud-Sync._
 
 ### 10. Cloud-Sync und Login
 - Optionale Speicherung in Supabase mit Login per Magic Link und Row Level Security, damit die Daten geräteübergreifend und sicher verfügbar sind.
@@ -174,6 +174,14 @@ Als Nutzer möchte ich alle Bewerbungen auf einer Seite sehen und zwischen Board
 - Alte Links auf `/board` und `/list` führen auf die neue Seite mit der passenden Ansicht.
 - Das Prozentzeichen springt beim Sprachwechsel nicht mehr.
 - Der Hinweis „Profil anlegen“ im Import-Dialog verliert die importierten Felder nicht.
+
+### 16. Eigene Datumsauswahl
+Als Nutzer möchte ich, dass die Datumsauswahl zum Design der App passt.
+- Alle Datumsfelder öffnen eine eigene Kalender-Ansicht im Stil der App, hell und dunkel, auch auf dem Handy.
+- Das Feld zeigt das Datum im gewohnten Format der Sprache; Monatsnamen und Wochentage sind übersetzt, im Deutschen beginnt die Woche am Montag.
+- Knöpfe „Heute“ und „Leeren“; ein Datum wird nur ausgewählt, nicht eingetippt.
+- Bedienbar mit Maus, Touch und Tastatur (Pfeiltasten, Enter, Escape).
+- Gespeichert wird weiter `YYYY-MM-DD`; Daten, Backups und die Pflichtprüfung beim Verlaufseintrag bleiben unverändert.
 
 ---
 

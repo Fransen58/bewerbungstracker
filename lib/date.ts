@@ -1,9 +1,18 @@
 // Date helpers. Dates are stored as local calendar days (YYYY-MM-DD).
 
 export function todayISO(): string {
-  const d = new Date();
+  return toISODay(new Date());
+}
+
+// Local calendar day of a Date as YYYY-MM-DD, and back.
+export function toISODay(d: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+export function fromISODay(date: string): Date {
+  const [y, m, d] = date.split("-").map(Number);
+  return new Date(y, m - 1, d);
 }
 
 // ISO day strings compare correctly as plain strings.

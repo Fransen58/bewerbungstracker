@@ -240,6 +240,11 @@ export const en: Messages = {
   empty: {
     applications: "No applications yet – add your first one.",
   },
+  datePicker: {
+    placeholder: "Pick a date",
+    today: "Today",
+    clear: "Clear",
+  },
   form: {
     newApplication: "New application",
     editApplication: "Edit application",
