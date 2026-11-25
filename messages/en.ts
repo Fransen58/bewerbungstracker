@@ -9,8 +9,7 @@ export const en: Messages = {
   },
   nav: {
     overview: "Overview",
-    board: "Board",
-    list: "List",
+    applications: "Applications",
     openMenu: "Open menu",
     backup: "Backup",
     profile: "Profile",
@@ -32,8 +31,12 @@ export const en: Messages = {
       dueEmpty: "Nothing due this week.",
       today: "Today",
     },
+    applications: {
+      title: "Applications",
+      view: "View",
+      views: { board: "Board", list: "List" },
+    },
     board: {
-      title: "Board",
       overdue: "Overdue",
       changeStatus: "Change status",
       dragInstructions:
@@ -48,8 +51,9 @@ export const en: Messages = {
       },
     },
     list: {
-      title: "List",
       search: "Search company or role",
+      filters: "Filters",
+      filtersActive: (n: number) => `Filters (${n})`,
       all: "All",
       companyRole: "Company / Role",
       noResults: "No matches for these filters.",
@@ -123,7 +127,6 @@ export const en: Messages = {
     check: "Check fit",
     checkHint: "Optional: compares the ad with your profile.",
     loading: "Assessing …",
-    percent: (n: number) => `${n}%`,
     aiLabel: "AI suggestion",
     confidence: "Confidence",
     confidenceLevels: { low: "low", medium: "medium", high: "high" },

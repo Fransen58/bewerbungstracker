@@ -421,9 +421,29 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 
 **Arbeitsort:** Gebaut wird mit Claude Code im Terminal auf dem eigenen Rechner, nicht in der Web-Version. So bleibt der API-Schlüssel lokal, und Entwicklungsserver und Browser-Tests mit dem eigenen Chrome laufen direkt. Die Web-Version wäre die Wahl für Aufgaben, die unterwegs oder parallel laufen sollen.
 
+## Story 15: Bewerbungen, Board und Liste auf einer Seite
+
+**Ziel:** Eine Seite „Bewerbungen“ mit Umschalter zwischen Board und Liste. Suche und Filter gelten für beide Ansichten. Dazu zwei offene Punkte aus dem Nutzertest: der Prozentsprung beim Sprachwechsel und der Profil-Link im Import-Dialog.
+
+**Vorgehen:**
+1. Filter aus der Liste in eine eigene Komponente gezogen. Board und Liste bekommen jetzt die schon gefilterten Bewerbungen. Das war der einzige Umbau und nötig, damit beide denselben Filter teilen.
+2. Neue Seite `/applications`. Die Ansicht steht in der Adresse (`?view=list`) und wird im Browser gemerkt. Die Filter liegen auf der Seite selbst und bleiben deshalb beim Wechsel der Ansicht erhalten.
+3. Alte Adressen `/board` und `/list` leiten in `next.config.ts` weiter. Das geht, weil die App seit Story 11 nicht mehr rein statisch exportiert wird.
+4. Prozentsprung: Die Ursache war die Schreibweise je Sprache, „80 %“ mit geschütztem Leerzeichen gegen „80%“. Bei großer Schrift sind das gut 12 Pixel. Jetzt werden Zahl und Prozentzeichen getrennt gesetzt, mit demselben schmalen Abstand in beiden Sprachen. Gemessen ist die Position des Zeichens in beiden Sprachen gleich.
+5. Profil-Link im Dialog: Er öffnet jetzt einen neuen Tab. Offene Tabs gleichen sich schon seit Story 1 ab, nach dem Speichern dort erscheint im Dialog direkt „Passung prüfen“.
+
+**Entscheidungen:**
+- Ergänzt im Test: Auf dem Handy nahmen die drei Filter fast die halbe Bildschirmhöhe ein. Sie liegen jetzt hinter einem Knopf „Filter“, der die Zahl der aktiven Filter zeigt. Die Suche bleibt sichtbar.
+- Ergänzt im Test: Mit Status-Filter zeigte das Board weiter alle Spalten, auf dem Handy also zuerst eine leere. Jetzt zeigt es nur die gefilterte Spalte. Den Status ändert man dann über das Auswahlfeld auf der Karte.
+- Für die Prozentzahl wurden drei Wege abgewogen: einheitlicher schmaler Abstand, nur ein schmales Leerzeichen im Deutschen (springt weiter, nur weniger) oder alles lassen. Entschieden hat der Nutzer, für den einheitlichen Abstand.
+
+**Probleme:** Generierte Typdateien verwiesen nach dem Löschen der alten Seiten noch auf diese. Ein neuer Build hat sie erneuert. Zwei Testskripte waren falsch aufgesetzt: Eine Handy-Sitzung ohne Demo-Daten zeigt korrekt keinen Umschalter, und ein Suchmuster „Filter“ traf auch „Filter zurücksetzen“.
+
+**Prüfung:** Browser-Tests für Start mit Board, Suche auf dem Board, Wechsel zur Liste mit erhaltenem Filter, gemerkte Ansicht nach dem Neuladen, beide alten Adressen, „keine Treffer“, Handy ohne seitliches Scrollen, Filter-Knopf auf dem Handy und gleiche Position des Prozentzeichens in beiden Sprachen. Alle README-Screenshots sind neu aufgenommen.
+
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
-- Das Prozentzeichen springt beim Sprachwechsel. Vermutete Ursache: „80 %“ (Deutsch, mit Leerzeichen) und „80%“ (Englisch) sind unterschiedlich breit. Noch zu prüfen.
+- ~~Das Prozentzeichen springt beim Sprachwechsel.~~ Behoben in Story 15.
 - Aufklappende Fenster wie der Kalender der Datumsfelder sehen anders aus als die Knöpfe und Felder, die sie öffnen. Ursache: Das ist die eingebaute Datumsauswahl des Browsers, die sich kaum gestalten lässt. Abhilfe wäre eine eigene Kalender-Komponente.
 
 ## Ausgewählte Prompts

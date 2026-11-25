@@ -1,8 +1,10 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { NoApplications } from "@/components/no-applications";
+import { Percent } from "@/components/percent";
 import { StatusBadge, StatusDot } from "@/components/status-badge";
 import { formatDate, todayISO } from "@/lib/date";
 import {
@@ -32,7 +34,6 @@ export function Dashboard() {
   const o = t.pages.overview;
   const response = responseRate(applications, events);
   const fit = averageFit(applications);
-  const percent = new Intl.NumberFormat(t.locale, { style: "percent" });
   const whole = new Intl.NumberFormat(t.locale, { maximumFractionDigits: 0 });
 
   return (
@@ -40,7 +41,9 @@ export function Dashboard() {
       <div className="grid gap-x-8 gap-y-6 sm:grid-cols-3">
         <Kpi
           label={o.responseRate}
-          value={response.rate === null ? "–" : percent.format(response.rate)}
+          value={
+            response.rate === null ? "–" : <Percent value={response.rate * 100} />
+          }
           detail={o.responseDetail(response.responded, response.applied)}
         />
         <Kpi
@@ -65,7 +68,7 @@ function Kpi({
   detail,
 }: {
   label: string;
-  value: string;
+  value: ReactNode;
   detail?: string;
 }) {
   return (

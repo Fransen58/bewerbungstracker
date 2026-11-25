@@ -60,7 +60,7 @@ export function ApplicationDetail() {
   if (!app) {
     return (
       <EmptyState text={t.detail.notFound}>
-        <Button render={<Link href="/list" />} nativeButton={false}>
+        <Button render={<Link href="/applications?view=list" />} nativeButton={false}>
           {t.detail.backToList}
         </Button>
       </EmptyState>
@@ -380,7 +380,7 @@ function DeleteButton({ application }: { application: Application }) {
 
   function handleDelete() {
     deleteApplication(application.id);
-    router.push("/board");
+    router.push("/applications");
   }
 
   return (

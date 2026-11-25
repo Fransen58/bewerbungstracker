@@ -25,17 +25,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { NoApplications } from "@/components/no-applications";
 import { StatusBadge, StatusDot } from "@/components/status-badge";
 import { formatDate, isOverdue } from "@/lib/date";
-import { changeStatus, useAppData, useStorageReady } from "@/lib/storage";
+import { changeStatus } from "@/lib/storage";
 import { STATUSES, type Application, type Status } from "@/lib/types";
 import { useT } from "@/lib/i18n";
 
-export function Board() {
+// Board view (story 2); receives the already filtered applications. All
+// columns stay visible, so cards can be dropped into any status, unless a
+// status filter narrows the board to one column.
+export function Board({
+  applications,
+  statuses = STATUSES,
+}: {
+  applications: Application[];
+  statuses?: readonly Status[];
+}) {
   const t = useT();
-  const { applications } = useAppData();
-  const ready = useStorageReady();
   const [activeId, setActiveId] = useState<string | null>(null);
 
   // Mouse drags start after moving 5px, touch drags after a short press,
@@ -47,15 +53,6 @@ export function Board() {
     }),
     useSensor(KeyboardSensor)
   );
-
-  // Avoid flashing the empty state before browser data is available.
-  if (!ready) return null;
-
-  if (applications.length === 0) {
-    return (
-      <NoApplications />
-    );
-  }
 
   const byId = new Map(applications.map((a) => [a.id, a]));
   const active = activeId ? byId.get(activeId) : undefined;
@@ -95,7 +92,7 @@ export function Board() {
     >
       {/* Horizontal scroll on all screen sizes; one column per status. */}
       <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-4 md:-mx-8 md:px-8">
-        {STATUSES.map((status) => (
+        {statuses.map((status) => (
           <Column
             key={status}
             status={status}

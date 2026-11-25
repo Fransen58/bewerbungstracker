@@ -131,7 +131,7 @@ Als Bewerber möchte ich das Projekt öffentlich zeigen, damit es als Nachweis m
 
 ## Ausbaustufe 2 (nach dem MVP)
 
-_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann 14 (vorgezogen am 25.11.2026 für mehr sichtbaren Nutzen im Portfolio), dann Board und Liste zusammenführen, dann CV-Vergleich (Story noch zu schreiben), dann 13, dann 10. Dokumente und E-Mail erst nach dem Cloud-Sync._
+_Reihenfolge (entschieden nach dem MVP): Story 11, dann 12, dann 14 (vorgezogen am 25.11.2026 für mehr sichtbaren Nutzen im Portfolio), dann 15 (Board und Liste zusammenführen), dann eigene Kalender-Komponente, dann CV-Vergleich (Story noch zu schreiben), dann 13, dann 10. Dokumente und E-Mail erst nach dem Cloud-Sync._
 
 ### 10. Cloud-Sync und Login
 - Optionale Speicherung in Supabase mit Login per Magic Link und Row Level Security, damit die Daten geräteübergreifend und sicher verfügbar sind.
@@ -166,6 +166,15 @@ Als Bewerber möchte ich mich gezielt auf ein Gespräch für eine bestimmte Stel
 - Ohne Profil gibt es einen Hinweis mit Link zum Profil.
 - Die Vorbereitung ist als KI-Vorschlag gekennzeichnet und in der eingestellten Sprache.
 
+### 15. Bewerbungen: Board und Liste auf einer Seite
+Als Nutzer möchte ich alle Bewerbungen auf einer Seite sehen und zwischen Board und Liste wechseln.
+- Eine Seite „Bewerbungen“ ersetzt Board und Liste in der Navigation; ein Umschalter wechselt zwischen Board- und Listenansicht.
+- Die gewählte Ansicht bleibt nach dem Neuladen erhalten; beim ersten Besuch startet das Board.
+- Suche und Filter (Status, Arbeitsmodell, Quelle) gelten für beide Ansichten und bleiben beim Wechsel erhalten. *(Ergänzt im Test: Auf dem Handy liegen die Filter hinter einem Knopf „Filter“; mit Status-Filter zeigt das Board nur diese Spalte.)*
+- Alte Links auf `/board` und `/list` führen auf die neue Seite mit der passenden Ansicht.
+- Das Prozentzeichen springt beim Sprachwechsel nicht mehr.
+- Der Hinweis „Profil anlegen“ im Import-Dialog verliert die importierten Felder nicht.
+
 ---
 
 ## Ideen-Speicher (noch nicht eingeplant)
@@ -173,7 +182,7 @@ Als Bewerber möchte ich mich gezielt auf ein Gespräch für eine bestimmte Stel
 Gesammelt am 16.11.2026 nach einem ruhigen Durchgang durch das Tool. Nichts davon ist beschlossen; eine Idee wird erst durch eine eigene Story mit Akzeptanzkriterien zum Umfang.
 
 **Vom Nutzer**
-- Board und Liste zu einer Seite zusammenführen, mit Ansichts-Umschalter. *(Eingeplant nach Story 12; Story folgt.)*
+- Board und Liste zu einer Seite zusammenführen, mit Ansichts-Umschalter. *(Umgesetzt als Story 15.)*
 - Wow-Faktor finden: Was hebt das Tool von Notion-Vorlagen oder Jobstep ab?
 - E-Mail-Konto verknüpfen: Antworten von Firmen automatisch erkennen, Mailverlauf an der Bewerbung hinterlegen.
 - Tipps zur jeweiligen Bewerbung erzeugen.

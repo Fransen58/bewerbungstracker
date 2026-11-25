@@ -7,8 +7,7 @@ export const de = {
   },
   nav: {
     overview: "Übersicht",
-    board: "Board",
-    list: "Liste",
+    applications: "Bewerbungen",
     openMenu: "Menü öffnen",
     backup: "Backup",
     profile: "Profil",
@@ -30,8 +29,12 @@ export const de = {
       dueEmpty: "Diese Woche ist nichts fällig.",
       today: "Heute",
     },
+    applications: {
+      title: "Bewerbungen",
+      view: "Ansicht",
+      views: { board: "Board", list: "Liste" },
+    },
     board: {
-      title: "Board",
       overdue: "Überfällig",
       changeStatus: "Status ändern",
       dragInstructions:
@@ -46,8 +49,9 @@ export const de = {
       },
     },
     list: {
-      title: "Liste",
       search: "Firma oder Rolle suchen",
+      filters: "Filter",
+      filtersActive: (n: number) => `Filter (${n})`,
       all: "Alle",
       companyRole: "Firma / Rolle",
       noResults: "Keine Treffer für diese Filter.",
@@ -121,8 +125,6 @@ export const de = {
     check: "Passung prüfen",
     checkHint: "Optional: vergleicht die Anzeige mit deinem Profil.",
     loading: "Schätze ein …",
-    // Narrow no-break space, as usual in German typography.
-    percent: (n: number) => `${n}\u202F%`,
     aiLabel: "KI-Vorschlag",
     confidence: "Konfidenz",
     confidenceLevels: { low: "niedrig", medium: "mittel", high: "hoch" },

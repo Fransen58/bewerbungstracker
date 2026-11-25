@@ -566,7 +566,12 @@ function FitCheck({
         <FitSummary score={assessment.score} assessment={assessment} />
       ) : (
         <div className="flex flex-wrap items-center gap-3">
-          <AssessButton job={job} label={t.fit.check} onResult={onResult} />
+          <AssessButton
+            job={job}
+            label={t.fit.check}
+            onResult={onResult}
+            newTab
+          />
           <p className="text-sm text-muted-foreground">{t.fit.checkHint}</p>
         </div>
       )}

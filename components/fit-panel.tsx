@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { InfoIcon, LoaderCircleIcon, SparklesIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Percent } from "@/components/percent";
 import {
   jobFromApplication,
   requestFit,
@@ -33,7 +34,7 @@ export function FitSummary({
       {score !== null && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="font-mono text-2xl tracking-[-0.02em] tabular-nums">
-            {f.percent(score)}
+            <Percent value={score} />
           </span>
           {isAi && (
             <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium">
@@ -79,11 +80,13 @@ export function AssessButton({
   label,
   onResult,
   variant = "secondary",
+  newTab = false,
 }: {
   job: string;
   label: string;
   onResult: (assessment: FitAssessment) => void;
   variant?: "default" | "secondary";
+  newTab?: boolean;
 }) {
   const t = useT();
   const lang = useLang();
@@ -91,7 +94,7 @@ export function AssessButton({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<FitErrorCode | null>(null);
 
-  if (!profile) return <NoProfileHint />;
+  if (!profile) return <NoProfileHint newTab={newTab} />;
 
   async function handleClick() {
     setLoading(true);
@@ -123,14 +126,18 @@ export function AssessButton({
   );
 }
 
-// Shown instead of an AI button while no profile is stored.
-export function NoProfileHint() {
+// Shown instead of an AI button while no profile is stored. In a dialog the
+// link opens a new tab, so the form keeps what was imported; open tabs sync,
+// so the button appears here once the profile is saved there.
+export function NoProfileHint({ newTab = false }: { newTab?: boolean }) {
   const t = useT();
   return (
     <p className="text-sm text-muted-foreground">
       {t.fit.noProfile}{" "}
       <Link
         href="/profile"
+        target={newTab ? "_blank" : undefined}
+        rel={newTab ? "noopener" : undefined}
         className="text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
       >
         {t.fit.toProfile}
