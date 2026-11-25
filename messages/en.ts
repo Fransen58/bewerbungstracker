@@ -145,11 +145,20 @@ export const en: Messages = {
   interview: {
     prepare: "Prepare for interview",
     regenerate: "Generate again",
-    loading: "Preparing …",
+    loading: "Preparing, takes about 20 seconds …",
     intro: "Likely questions for this job, with matching examples from your profile.",
     questions: "Likely questions",
     example: "Your example",
     noExample: "Your profile has no example for this. Think of one from your experience.",
+    adviceIntro: "How to handle it:",
+    quote: (text: string) => `“${text}”`,
+    noExampleAdvice: "No matching example in your profile.",
+    advice: {
+      assessment: "Assessment",
+      bridge: "Bridge",
+      first_step: "First step",
+      wording: "Suggested wording",
+    },
     ask: "Your questions for the company",
   },
   backup: {

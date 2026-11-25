@@ -86,12 +86,19 @@ const isOptAssessment = (v: unknown) =>
     isText(v.reason) &&
     isTimestamp(v.created_at));
 const isTextList = (v: unknown) => Array.isArray(v) && v.every(isText);
+const isAdvice = (v: unknown) =>
+  isObj(v) &&
+  ["assessment", "bridge", "first_step", "wording"].every((k) => isText(v[k]));
 const isOptInterviewPrep = (v: unknown) =>
   v === null ||
   (isObj(v) &&
     Array.isArray(v.questions) &&
     v.questions.every(
-      (q) => isObj(q) && isText(q.question) && isOptText(q.example)
+      (q) =>
+        isObj(q) &&
+        isText(q.question) &&
+        isOptText(q.example) &&
+        (q.advice === undefined || q.advice === null || isAdvice(q.advice))
     ) &&
     isTextList(v.ask) &&
     isTimestamp(v.created_at));

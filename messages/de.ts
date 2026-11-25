@@ -144,11 +144,20 @@ export const de = {
   interview: {
     prepare: "Gespräch vorbereiten",
     regenerate: "Neu erzeugen",
-    loading: "Bereite vor …",
+    loading: "Bereite vor, dauert etwa 20 Sekunden …",
     intro: "Wahrscheinliche Fragen zu dieser Stelle, mit passenden Beispielen aus deinem Profil.",
     questions: "Wahrscheinliche Fragen",
     example: "Dein Beispiel",
     noExample: "Dein Profil liefert dafür kein Beispiel. Überlege dir eines aus deiner Erfahrung.",
+    adviceIntro: "So gehst du damit um:",
+    quote: (text: string) => `„${text}“`,
+    noExampleAdvice: "Kein passendes Beispiel in deinem Profil.",
+    advice: {
+      assessment: "Einordnung",
+      bridge: "Brücke",
+      first_step: "Erster Schritt",
+      wording: "Formulierung",
+    },
     ask: "Deine Rückfragen an die Firma",
   },
   backup: {

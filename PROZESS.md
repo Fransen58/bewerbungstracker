@@ -411,6 +411,16 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 
 **Prüfung:** Test mit einem erfundenen Profil gegen eine echte Anzeige (nur lokal): Bei fehlender KI-Erfahrung kam korrekt „kein Beispiel“, die Rückfragen waren firmenspezifisch. Browser-Test im Demo-Modus: erzeugen, anzeigen, nach dem Neuladen noch da.
 
+**Nachtrag: Experten-Rat bei Lücken.** Im Nutzertest kam der Einwand: „Überlege dir eines aus deiner Erfahrung“ ist zu wenig Hilfe, das Tool soll beraten wie ein Experte.
+- Vorgehen mit zwei Werkzeugen: Für die Recherche habe ich Claude Chat einen ausführlichen Auftrag geschrieben (Claude Code hat ihn formuliert). Gefragt war, was in Bewerbungsgesprächen nachweislich zählt, was überbewertet ist und wie es sich nach Land, Branche und Erfahrungsstufe unterscheidet. Das Ergebnis war ein 15-seitiger Bericht mit Quellen und der Kennzeichnung belegt, Praxis oder Meinung, dazu eine fertige Regelliste für die KI. Claude Code hat den Bericht gelesen, die Regeln auf das feste Ausgabeformat gekürzt und vor dem Einbau zur Freigabe vorgelegt.
+- Kernerkenntnisse der Recherche: Strukturierte Interviews prüfen Verhalten entlang der Anforderungen, die Fragen lassen sich also aus der Anzeige ableiten. Ehrliche Selbstdarstellung wirkt plausibler als geschönte. Bei Lücken hilft ein Dreischritt: ehrlich einordnen, Brücke zu echter Erfahrung, konkretes Lernangebot. Länder unterscheiden sich vor allem darin, wie stark man sich selbst darstellt.
+- Umsetzung: Zu jeder Frage ohne oder mit nur teilweisem Beispiel liefert die KI Einordnung, Brücke, ersten Schritt und eine Formulierung. Das Land wird nur aus klaren Signalen abgeleitet (Rechtsform, Ort, Währung), sonst gilt Rat, der europaweit trägt. Ältere gespeicherte Vorbereitungen ohne Rat bleiben gültig, deshalb war keine neue Schema-Version nötig.
+- Abwägung Tempo gegen Ehrlichkeit: Mit niedriger Denkstufe kam die Antwort nach 18 statt 27 Sekunden, dehnte das Profil in den Formulierungen aber öfter („ihre Arbeit koordiniert“, obwohl nur „geführt“ im Profil stand). Gewählt wurde die normale Stufe, die Oberfläche sagt dafür, dass es etwa 20 Sekunden dauert.
+- Weitere Vorschläge aus dem Bericht (Lückenkarte, Geschichtenbank, Felder für Land und Gesprächsart, Probeinterview) stehen im Ideen-Speicher der SPEC. Der Bericht selbst liegt nicht im Repo.
+- Learning: Recherche und Umsetzung zu trennen hat gut funktioniert. Der Chat mit Websuche lieferte die Fachgrundlage, Claude Code die Umsetzung mit Tests. Die harte Regel „nichts erfinden“ musste dabei zweimal verteidigt werden: gegen Meta-Kommentare und gegen eine schnellere, aber großzügigere Denkstufe.
+
+**Arbeitsort:** Gebaut wird mit Claude Code im Terminal auf dem eigenen Rechner, nicht in der Web-Version. So bleibt der API-Schlüssel lokal, und Entwicklungsserver und Browser-Tests mit dem eigenen Chrome laufen direkt. Die Web-Version wäre die Wahl für Aufgaben, die unterwegs oder parallel laufen sollen.
+
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
 - Das Prozentzeichen springt beim Sprachwechsel. Vermutete Ursache: „80 %“ (Deutsch, mit Leerzeichen) und „80%“ (Englisch) sind unterschiedlich breit. Noch zu prüfen.

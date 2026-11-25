@@ -50,11 +50,24 @@ export type FitAssessment = {
   created_at: string;
 };
 
+// Coaching advice for a question the profile covers not or only partly.
+export type InterviewAdvice = {
+  assessment: string;
+  bridge: string;
+  first_step: string;
+  wording: string;
+};
+
 // AI interview preparation for one job (story 14).
 export type InterviewPrep = {
   // Likely questions, each with a matching example from the profile, or
-  // null if the profile has none.
-  questions: { question: string; example: string | null }[];
+  // null if the profile has none. Advice was added later; preparations
+  // stored before have no advice field, which counts as null.
+  questions: {
+    question: string;
+    example: string | null;
+    advice?: InterviewAdvice | null;
+  }[];
   // Questions the user can ask the company.
   ask: string[];
   created_at: string;

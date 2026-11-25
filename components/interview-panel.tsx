@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { NoProfileHint } from "@/components/fit-panel";
 import { jobFromApplication, type FitErrorCode } from "@/lib/fit-client";
 import { updateApplication, useAppData } from "@/lib/storage";
-import type { Application } from "@/lib/types";
+import type { Application, InterviewAdvice } from "@/lib/types";
 import { useLang, useT } from "@/lib/i18n";
 
 // Story 14: interview preparation for one job, generated from the saved
@@ -65,9 +65,12 @@ export function InterviewSection({ app }: { app: Application }) {
                         {q.example}
                       </>
                     ) : (
-                      <span className="italic">{i.noExample}</span>
+                      <span className="italic">
+                        {q.advice ? i.noExampleAdvice : i.noExample}
+                      </span>
                     )}
                   </p>
+                  {q.advice && <Advice advice={q.advice} />}
                 </li>
               ))}
             </ol>
@@ -112,6 +115,27 @@ export function InterviewSection({ app }: { app: Application }) {
       ) : (
         <NoProfileHint />
       )}
+    </div>
+  );
+}
+
+// Coaching for a question the profile covers not or only partly.
+function Advice({ advice }: { advice: InterviewAdvice }) {
+  const t = useT();
+  const labels = t.interview.advice;
+  return (
+    <div className="mt-2 space-y-1.5 rounded-xl bg-muted/60 p-3">
+      <p className="font-medium">{t.interview.adviceIntro}</p>
+      {(["assessment", "bridge", "first_step"] as const).map((key) => (
+        <p key={key}>
+          <span className="text-muted-foreground">{labels[key]}: </span>
+          {advice[key]}
+        </p>
+      ))}
+      <blockquote className="mt-2 border-l-2 border-foreground/40 pl-3">
+        <span className="text-muted-foreground">{labels.wording}: </span>
+        {t.interview.quote(advice.wording)}
+      </blockquote>
     </div>
   );
 }

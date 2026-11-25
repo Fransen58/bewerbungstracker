@@ -161,7 +161,7 @@ Als Bewerber möchte ich eine Stellenanzeige auf dem Handy über „Teilen“ di
 ### 14. Gespräch vorbereiten
 Als Bewerber möchte ich mich gezielt auf ein Gespräch für eine bestimmte Stelle vorbereiten.
 - Auf der Detailseite erzeugt „Gespräch vorbereiten“ aus Stelle und Profil 5 wahrscheinliche Fragen, jeweils mit einem passenden Beispiel aus meinem Profil, und 3 Rückfragen an die Firma.
-- Gibt das Profil zu einer Frage kein Beispiel her, steht dort ein Hinweis, mir eines zu überlegen; nichts wird erfunden.
+- Gibt das Profil zu einer Frage kein oder nur ein teilweises Beispiel her, bekomme ich einen Experten-Rat: Einordnung der Lücke, Brücke zu vorhandener Erfahrung, ein konkreter erster Lernschritt und ein Formulierungsvorschlag. Nichts wird erfunden, Lernbereitschaft ist ein Angebot, keine behauptete Tatsache. *(Geändert nach dem Nutzertest: Der bloße Hinweis „überleg dir ein Beispiel“ half zu wenig.)*
 - Die Vorbereitung wird an der Bewerbung gespeichert (ab Schema-Version 4) und lässt sich neu erzeugen.
 - Ohne Profil gibt es einen Hinweis mit Link zum Profil.
 - Die Vorbereitung ist als KI-Vorschlag gekennzeichnet und in der eingestellten Sprache.
@@ -194,6 +194,15 @@ Gesammelt am 16.11.2026 nach einem ruhigen Durchgang durch das Tool. Nichts davo
 - Arbeitszeugnis-Übersetzer (DACH-typisch): Zeugnisformulierungen in Klartext übersetzen.
 - Absagen auswerten: Muster über viele Bewerbungen erkennen (Branche, Rolle, Anforderungslücken), ohne zu verurteilen.
 - Wochenrückblick: Was lief diese Woche, was steht an, eine konkrete nächste Aktion.
+
+**Aus der Recherche zur Gesprächsvorbereitung (25.11.2026)**
+- Lückenkarte: jede Pflichtanforderung als abgedeckt, teilweise oder fehlend markieren, mit Fundstelle im Profil.
+- Geschichtenbank: 5–8 Geschichten aus dem Profil, den wahrscheinlichen Fragen zugeordnet; fehlt ein Ergebnis, fragt das Tool nach statt zu ergänzen.
+- Felder Land, Gesprächsart/Runde und Gehaltswunsch: machen Länderhinweise (Du/Sie, Selbstdarstellung, Dankes-Mail), Format-Hinweise (Case, Portfolio, Take-Home, Kommission) und Gehaltsvorbereitung verlässlich.
+- Tipps auch zu gut abgedeckten Fragen (welche Geschichte, eigene Rolle und Ergebnis betonen).
+- Checkliste vorher/nachher: Technik-Check beim Video-Interview, Notizen direkt danach, Dankes-Mail je nach Land.
+- Nachbereitung je Runde: gestellte Fragen und Eindrücke erfassen, die nächste Runde darauf aufbauen.
+- Probeinterview: Fragen nacheinander beantworten, Rückmeldung gegen ein Raster (Üben mit Rückmeldung wirkt laut Forschung am stärksten).
 
 ---
 
