@@ -562,9 +562,9 @@ Learning: „Nicht raten“ heißt nicht „im Zweifel leer“. Die Regel muss e
 - Der Service Worker speichert nichts zwischen. Er ist nur da, weil manche Browser sonst nicht zum Installieren anbieten. Offline-Betrieb steht nicht in der SPEC.
 - Auf dem iPhone hat eine Web-App auf dem Home-Bildschirm einen eigenen Speicher, getrennt von Safari. Der Kurzbefehl öffnet Safari. Deshalb empfiehlt die README dort Safari statt Home-Bildschirm. Sonst lägen geteilte Stellen in einem zweiten, leeren Datenbestand.
 
-**Prüfung:** Browser-Tests mit nachgebauten Teilen-Adressen (Link im Satz, nicht lesbarer Link, reiner Text, nichts), Manifest, Icons und Service Worker. Den echten Test im Teilen-Menü kann nur das Handy machen, er steht noch aus.
+**Prüfung:** Browser-Tests mit nachgebauten Teilen-Adressen (Link im Satz, nicht lesbarer Link, reiner Text, nichts), Manifest, Icons und Service Worker. Der echte Test lief auf meinem iPhone mit der StepStone-App. Beim ersten Versuch kam „kein Link und kein Text angekommen“. Ein Screenshot des Kurzbefehls zeigte zwei Fehler: Statt „URL codieren“ stand dort die Aktion „URL“, und hinter `text=` fehlte die Variable. Der Tracker hatte also richtig gemeldet. Nach der Korrektur hat das Teilen funktioniert. Die README-Anleitung ist an beiden Stellen jetzt genauer und zeigt den fertigen Kurzbefehl zum Vergleich.
 
-**Learning:** Plattformgrenzen gehören vor den Plan, nicht in den Test. Die Frage „Welches Handy?“ hat aus „Android-Funktion“ eine Lösung gemacht, die auf beiden Plattformen läuft, mit fast demselben Code.
+**Learning:** Die verständliche Leermeldung hat sich ausgezahlt: Sie zeigte sofort, dass der Tracker lief und nur der Inhalt fehlte. Plattformgrenzen gehören vor den Plan, nicht in den Test. Die Frage „Welches Handy?“ hat aus „Android-Funktion“ eine Lösung gemacht, die auf beiden Plattformen läuft, mit fast demselben Code.
 
 ## Offene Punkte aus dem Nutzertest (16.11.2026)
 
